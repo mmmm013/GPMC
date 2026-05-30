@@ -8,11 +8,11 @@ export default function HugsPage() {
           </p>
 
           <h1 className="text-4xl font-black leading-tight md:text-6xl">
-            HUGs by K-KUT
+            HUGs for Ones Who Matter
           </h1>
 
           <p className="mt-4 max-w-3xl text-xl font-bold text-[#147a33]">
-            A GPMx emotional-audio product lane for sending a private music moment when words alone are not enough.
+            Send a private music moment when words alone are not enough.
           </p>
 
           <div className="mt-8 grid gap-4 md:grid-cols-3">
@@ -31,19 +31,19 @@ export default function HugsPage() {
             </div>
 
             <div className="rounded-2xl border-2 border-[#08254a] bg-[#fffdf2] p-5">
-              <h2 className="text-xl font-black">Keep the system clear</h2>
+              <h2 className="text-xl font-black">Just press play</h2>
               <p className="mt-2 font-semibold">
-                GPMx explains the universe. K-KUT executes the HUG.
+                No download. No search. No checkout on the gift page.
               </p>
             </div>
           </div>
 
           <div className="mt-8 flex flex-wrap gap-3">
             <a
-              href="https://www.k-kut.com/"
+              href="https://www.k-kut.com/hug"
               className="rounded-full border-2 border-[#08254a] bg-[#08254a] px-5 py-3 font-black text-white shadow-[4px_4px_0_#f4c400]"
             >
-              Send a HUG at K-KUT
+              Start a HUG
             </a>
 
             <a
@@ -56,7 +56,7 @@ export default function HugsPage() {
         </div>
 
         <section className="mt-8 rounded-[24px] border-2 border-[#08254a] bg-white p-6">
-          <h2 className="text-2xl font-black">System role</h2>
+          <h2 className="text-2xl font-black">How GPMx and K-KUT work together</h2>
           <p className="mt-3 font-semibold leading-relaxed">
             The flagship contains the larger GPMx world: source music, product lanes,
             review paths, invention context, and platform authority. K-KUT remains the focused

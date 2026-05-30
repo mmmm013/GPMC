@@ -5,7 +5,7 @@ const primaryLanes = [
     lane: "BUYER",
     title: "I want to send a music gift",
     body: "Pick a feeling, hear real music samples, choose a K-KUT HUG, and order a private link.",
-    href: "https://www.k-kut.com/mom",
+    href: "https://www.k-kut.com/hug",
     cta: "Send a HUG",
   },
   {
@@ -129,7 +129,7 @@ export default function HomePage() {
                   href="/hugs"
                   className="inline-flex items-center justify-center rounded-full bg-[#FFD36A] px-7 py-4 text-base font-black uppercase tracking-wide text-[#201106] transition hover:bg-[#FFE7A3]"
                 >
-                  HUGs by K-KUT →
+                  HUGs for Ones Who Matter →
                 </Link>
 
                 <Link
