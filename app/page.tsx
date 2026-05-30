@@ -288,7 +288,7 @@ export default function HomePage() {
               checkout, and private-link delivery.
             </p>
             <a
-              href="https://www.k-kut.com/mom"
+              href="https://www.k-kut.com/hug"
               className="mt-7 inline-flex items-center justify-center rounded-full bg-[#FFD36A] px-7 py-4 text-base font-black uppercase tracking-wide text-[#201106] transition hover:bg-[#FFE7A3]"
             >
               Open live HUG path
