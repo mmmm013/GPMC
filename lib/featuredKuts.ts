@@ -63,11 +63,12 @@ export async function getFeaturedKuts(): Promise<KutItem[]> {
       .order('created_at', { ascending: false })
       .limit(20);
 
-    if (safeIds.length > 0) {
-      restQuery = restQuery.not('id', 'in', `(${safeIds.join(',')})`);
-    }
+    const filteredRestQuery =
+      safeIds.length > 0
+        ? (restQuery as any).not('id', 'in', `(${safeIds.join(',')})`)
+        : restQuery;
 
-    const { data: rest } = await restQuery;
+    const { data: rest } = await filteredRestQuery;
 
     // All items are K-KUT audio excerpts from original PIX via 4PE-BIZ-MSC
     const combined: KutItem[] = [

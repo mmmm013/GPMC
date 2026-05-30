@@ -60,7 +60,7 @@ async function findTrack(trackId: string): Promise<TrackRow | null> {
   const asNumber = Number(trackId);
   const isNumeric = Number.isFinite(asNumber);
 
-  const candidates: Array<Promise<TrackRow | null>> = [];
+  const candidates: Array<PromiseLike<TrackRow | null>> = [];
 
   // Main catalog table lookups
   if (isUuid || isNumeric) {
