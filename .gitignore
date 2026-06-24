@@ -21,3 +21,10 @@ tsconfig.tsbuildinfo
 *.key
 *.tsbuildinfo
 .env*.local
+
+# GPMC public-repo audio safety guard
+source-audio/
+*.wav
+*.wave
+*.aif
+*.aiff
