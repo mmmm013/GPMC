@@ -28,3 +28,10 @@ source-audio/
 *.wave
 *.aif
 *.aiff
+
+# GPMC future compressed-audio safety guard
+*.mp3
+*.m4a
+*.flac
+*.aac
+*.ogg
