@@ -23,7 +23,9 @@ Cornfield
 
 The source filename/provenance is retained in the private audio vault manifest and is not used as the public display title.
 
-The term "elle" is treated as provenance/version/metadata pending further review and is not displayed in the public title unless later confirmed as part of the actual title.
+The term "elle" is treated as version/provenance metadata, not public title language.
+
+Known family note: Cornfield has at least two vocal-version candidates: a female-vocal version and a male-vocal version. This packet covers the source file "cornfield-elle.wav" as the female-vocal version candidate pending exact creator/performer validation.
 
 ## Source Candidate
 
@@ -60,10 +62,10 @@ This review does not approve public use.
 
 1. Is this definitely a GPMC-controlled / authorized source?
 2. Is the display title correct as Cornfield?
-3. Does "elle" represent creator, vocalist, version, source note, or actual title language?
+3. Confirm whether "cornfield-elle.wav" is the female-vocal version candidate and identify the exact creator/performer attribution.
 4. Is the WAV complete and usable as a source?
 5. Does it need rights, creator, PRO, or title correction before promotion?
-6. Should this be linked later to any existing Cornfield / rural / twinkle / cue inventory?
+6. Should this be linked later to the male-vocal Cornfield version and to any existing Cornfield / rural / twinkle / cue inventory?
 
 ## Decision
 

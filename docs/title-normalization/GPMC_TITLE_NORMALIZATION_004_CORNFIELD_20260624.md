@@ -20,4 +20,6 @@ Public display titles do not include source filename clutter, artist/person name
 
 The source filename/provenance remains retained in the private audio vault manifest.
 
-The term "elle" is treated as provenance/version/metadata pending further review and is not displayed in the public title unless later confirmed as part of the actual title.
+The term "elle" is treated as version/provenance metadata, not public title language.
+
+Known family note: Cornfield has at least two vocal-version candidates: a female-vocal version and a male-vocal version. The source file "cornfield-elle.wav" is treated as the female-vocal version candidate pending exact creator/performer validation.
