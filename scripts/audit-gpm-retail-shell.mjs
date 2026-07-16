@@ -47,11 +47,13 @@ requireText(songs, 'No public records loaded in this implementation packet.', 'n
 requireText(songs, 'No K-KUTs, iMeants, pricing, or checkout are included.', 'catalog separation');
 forbidText(songs, 'buy.stripe.com', 'Stripe link in song shell');
 forbidText(songs, 'initiateCheckout', 'checkout code in song shell');
+forbidText(songs, 'stripe.checkout', 'Stripe checkout code in song shell');
 
 requireText(gift, 'The former GPM gift checkout is closed.', 'legacy commerce isolation');
 forbidText(gift, 'GIFT_TIERS', 'legacy gift tiers');
 forbidText(gift, 'initiateCheckout', 'legacy gift checkout');
-forbidText(gift, 'Heart-Tap tier', 'active Heart-Tap selling');
+forbidText(gift, 'handleCheckout', 'legacy gift checkout handler');
+forbidText(gift, 'window.location.href = url', 'legacy checkout redirect');
 
 requireText(hugs, 'HUGs live on K-KUT.', 'HUG referral separation');
 requireText(footer, 'Retail prices, download formats, customer-use terms, and checkout remain held', 'footer hold notice');
