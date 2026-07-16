@@ -19,6 +19,23 @@ function forbidText(source, text, label) {
   }
 }
 
+function forbidRetailPrice(source, label) {
+  const pricePatterns = [
+    { pattern: /\$\s*\d/u, reason: 'dollar price' },
+    { pattern: /\b(?:USD|US\$)\s*\d/iu, reason: 'currency price' },
+    {
+      pattern: /\b(?:price|retailPrice|salePrice|amount|unit_amount)\s*[:=]\s*["']?\d+(?:\.\d{1,2})?/iu,
+      reason: 'price or amount field',
+    },
+  ];
+
+  for (const { pattern, reason } of pricePatterns) {
+    if (pattern.test(source)) {
+      throw new Error(`FORBIDDEN ${reason} in ${label}`);
+    }
+  }
+}
+
 const layout = read('app/layout.tsx');
 const home = read('app/page.tsx');
 const songs = read('app/songs/page.tsx');
@@ -65,11 +82,17 @@ requireText(governance, 'No retail pricing.', 'pricing hold');
 requireText(governance, 'No retail checkout.', 'checkout hold');
 requireText(governance, 'No production deployment.', 'deployment hold');
 
-const retailFiles = [home, songs, header, footer, gift, hugs];
-for (const [index, source] of retailFiles.entries()) {
-  if (/\$\s*\d|\d+\.\d{2}/u.test(source)) {
-    throw new Error(`FORBIDDEN retail price literal in controlled file index ${index}`);
-  }
+const retailFiles = [
+  ['homepage', home],
+  ['song catalog shell', songs],
+  ['header', header],
+  ['footer', footer],
+  ['legacy gift isolation page', gift],
+  ['HUG referral page', hugs],
+];
+
+for (const [label, source] of retailFiles) {
+  forbidRetailPrice(source, label);
 }
 
 console.log('GPM RETAIL SHELL V001 AUDIT PASS');
