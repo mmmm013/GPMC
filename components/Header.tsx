@@ -1,7 +1,8 @@
 'use client';
-import Link from 'next/link';
+
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import stiLogo from '@/images/gpm_logo copy 2.png';
 
 type StiTemplateResponse = {
@@ -17,11 +18,14 @@ const asText = (value: unknown, fallback: string): string => {
   return fallback;
 };
 
-const asMenuLabel = (slot: unknown, key: string, fallback: string): string => {
-  if (!slot || typeof slot !== 'object') return fallback;
-  const value = (slot as Record<string, unknown>)[key];
-  return asText(value, fallback);
-};
+const retailLinks = [
+  { href: '/songs', label: 'Shop Songs' },
+  { href: '/songs#ino-pix', label: 'IN/O-PIX' },
+  { href: '/songs#lt-pix', label: 'LT-PIX' },
+  { href: '/commercial', label: 'Licensing' },
+  { href: '/who', label: 'About' },
+  { href: '/contact', label: 'Contact' },
+];
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -29,13 +33,11 @@ export default function Header() {
   const [templateSlots, setTemplateSlots] = useState<Record<string, unknown>>({});
 
   useEffect(() => {
-    setIsKleighDomain(window.location.hostname.includes('2kleigh.com'));
-  }, []);
-
-  useEffect(() => {
     const host = window.location.hostname;
+    setIsKleighDomain(host.includes('2kleigh.com'));
+
     fetch(`/api/sti-template?host=${encodeURIComponent(host)}`)
-      .then((r) => r.json())
+      .then((response) => response.json())
       .then((data: StiTemplateResponse) => {
         setTemplateSlots(data.slots ?? {});
       })
@@ -44,110 +46,91 @@ export default function Header() {
       });
   }, []);
 
-  // MOBILE FIX: Lock body scroll when mobile menu is open
   useEffect(() => {
-    if (menuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
     return () => {
       document.body.style.overflow = '';
     };
   }, [menuOpen]);
 
   const companyName = asText(templateSlots.ui_company_name, 'G Putnam Music');
-  const menuMip1 = asText(templateSlots.menu_item_mip1, 'MIP1');
-  const menuHeroes = asMenuLabel(templateSlots.menu_item_heroes, 'heroes', 'Heroes');
-  const menuUru = asMenuLabel(templateSlots.menu_item_uru, 'uru', 'URU');
-  const menuTT = asMenuLabel(templateSlots.menu_item_tells_tale, 'tt', 'TT');
-  const menuMsj = asText(templateSlots.menu_item_msj, 'MSJ');
-  const menuJoin = asText(templateSlots.menu_item_sponsorships, 'JOIN');
-  const checkoutHref = '/api/checkout-attribution?utm_source=header&utm_medium=site&utm_campaign=cash_sprint_apr2026&utm_content=explore_kkuts';
 
   return (
-    <nav className="w-full bg-[#2A1506] shadow-lg border-b border-[#5C3A1E]/40 relative z-50">
-      {/* MOBILE FIX: safe-area-inset-top for notch devices */}
-      <div className="w-full max-w-7xl mx-auto flex items-center justify-between px-4 py-2 pt-[env(safe-area-inset-top)]">
-        {/* LEFT: GPM Identity - Logo + Business Name */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-[#C8A882]/60 shadow-md">
+    <nav className="relative z-50 w-full border-b border-[#5C3A1E]/40 bg-[#2A1506] shadow-lg">
+      <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 pt-[env(safe-area-inset-top)]">
+        <Link href="/" className="group flex items-center gap-3">
+          <div className="relative h-10 w-10 overflow-hidden rounded-full border-2 border-[#C8A882]/60 shadow-md">
             <Image
               src={stiLogo}
-              alt="G Putnam Music Logo"
+              alt="G Putnam Music logo"
               fill
               className="object-cover"
               priority
             />
           </div>
           <div className="flex flex-col">
-            <span className="text-lg font-bold text-[#C8A882] tracking-wide leading-tight group-hover:text-[#D07CC8] transition-colors">{companyName}</span>
-            <span className="text-[10px] text-[#C8A882]/70 uppercase tracking-widest leading-tight">
-              {isKleighDomain ? 'KLEIGH Project - Tier 2 Brand' : 'The One Stop Song Shop'}
+            <span className="text-lg font-bold leading-tight tracking-wide text-[#C8A882] transition-colors group-hover:text-[#FFD54F]">
+              {isKleighDomain ? 'KLEIGH' : companyName}
+            </span>
+            <span className="text-[10px] uppercase leading-tight tracking-widest text-[#C8A882]/70">
+              {isKleighDomain ? 'A G Putnam Music artist' : 'Original Song Catalog'}
             </span>
           </div>
         </Link>
 
-        {isKleighDomain && (
-          <span className="hidden sm:inline-flex text-[10px] uppercase tracking-[0.18em] text-[#F5e6c8]/70 border border-[#C8A882]/30 rounded-full px-3 py-1">
-            KLEIGH
-          </span>
-        )}
-
-        {/* CENTER: Spacer */}
-        <div className="flex-1" />
-
-        {/* RIGHT: Desktop Menu */}
-        <div className="hidden md:flex items-center gap-5">
+        <div className="hidden items-center gap-5 md:flex">
+          {retailLinks.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="text-sm font-bold tracking-wide text-[#F5E6C8]/80 transition-colors hover:text-[#FFD54F]"
+            >
+              {item.label}
+            </Link>
+          ))}
           <a
-            href={checkoutHref}
+            href="https://www.k-kut.com/browse"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm bg-[#FFD54F] text-[#2A1506] px-4 py-1.5 rounded-full font-bold text-center hover:bg-[#FFE082] transition-colors tracking-wide"
+            className="rounded-full bg-[#FFD54F] px-4 py-2 text-sm font-black text-[#2A1506] transition-colors hover:bg-[#FFE082]"
           >
-            BUY KK NOW
+            Send a K-KUT ↗
           </a>
-          <Link href="/mip" className="text-sm text-[#FFD54F] hover:text-[#FFE082] font-bold tracking-wide transition-colors">{menuMip1}</Link>
-          <Link href="/heroes" className="text-sm text-[#C4A882] hover:text-[#C8A882] font-medium tracking-wide transition-colors">{menuHeroes}</Link>
-          <Link href="/uru" className="text-sm text-[#C4A882] hover:text-[#C8A882] font-medium tracking-wide transition-colors">{menuUru}</Link>
-          <Link href="/tt" className="text-sm text-[#C4A882] hover:text-[#C8A882] font-medium tracking-wide transition-colors">{menuTT}</Link>
-          <Link href="/scherer" className="text-sm text-[#C4A882] hover:text-[#C8A882] font-medium tracking-wide transition-colors">{menuMsj}</Link>
-          <Link href="/commercial" className="text-sm text-[#C4A882] hover:text-[#C8A882] font-medium tracking-wide transition-colors">GPMCC</Link>
-          <a href="https://2kleigh.com" target="_blank" rel="noopener noreferrer" className="text-sm text-[#C4A882] hover:text-[#C8A882] font-medium tracking-wide transition-colors">KLEIGH</a>
-          <Link href="/join" className="text-sm bg-[#C8A882] text-[#2A1506] px-4 py-1.5 rounded-full font-bold text-center hover:bg-[#D07CC8] transition-colors tracking-wide">{menuJoin}</Link>
         </div>
 
-        {/* Mobile Hamburger - MOBILE FIX: 44px+ touch target */}
         <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden flex flex-col items-center justify-center min-w-[44px] min-h-[44px] gap-1.5 p-2"
+          type="button"
+          onClick={() => setMenuOpen((value) => !value)}
+          className="flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-1.5 p-2 md:hidden"
           aria-label="Toggle menu"
+          aria-expanded={menuOpen}
         >
-          <span className={`w-6 h-0.5 bg-[#C8A882] transition-transform ${menuOpen ? 'rotate-45 translate-y-2' : ''}`} />
-          <span className={`w-6 h-0.5 bg-[#C8A882] transition-opacity ${menuOpen ? 'opacity-0' : ''}`} />
-          <span className={`w-6 h-0.5 bg-[#C8A882] transition-transform ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+          <span className={`h-0.5 w-6 bg-[#C8A882] transition-transform ${menuOpen ? 'translate-y-2 rotate-45' : ''}`} />
+          <span className={`h-0.5 w-6 bg-[#C8A882] transition-opacity ${menuOpen ? 'opacity-0' : ''}`} />
+          <span className={`h-0.5 w-6 bg-[#C8A882] transition-transform ${menuOpen ? '-translate-y-2 -rotate-45' : ''}`} />
         </button>
       </div>
 
-      {/* Mobile Menu Dropdown - MOBILE FIX: 44px+ touch targets, body scroll lock */}
       {menuOpen && (
-        <div className="md:hidden bg-[#2A1506] border-t border-[#5C3A1E]/40 px-4 py-4 flex flex-col gap-1">
-          <Link href="/mip" onClick={() => setMenuOpen(false)} className="text-sm text-[#FFD54F] hover:text-[#FFE082] font-bold tracking-wide min-h-[44px] flex items-center">{menuMip1}</Link>
-          <Link href="/heroes" onClick={() => setMenuOpen(false)} className="text-sm text-[#C4A882] hover:text-[#C8A882] font-medium tracking-wide min-h-[44px] flex items-center">{menuHeroes}</Link>
-          <Link href="/uru" onClick={() => setMenuOpen(false)} className="text-sm text-[#C4A882] hover:text-[#C8A882] font-medium tracking-wide min-h-[44px] flex items-center">{menuUru}</Link>
-          <Link href="/tt" onClick={() => setMenuOpen(false)} className="text-sm text-[#C4A882] hover:text-[#C8A882] font-medium tracking-wide min-h-[44px] flex items-center">{menuTT}</Link>
-          <Link href="/scherer" onClick={() => setMenuOpen(false)} className="text-sm text-[#C4A882] hover:text-[#C8A882] font-medium tracking-wide min-h-[44px] flex items-center">{menuMsj}</Link>
-          <Link href="/commercial" onClick={() => setMenuOpen(false)} className="text-sm text-[#C4A882] hover:text-[#C8A882] font-medium tracking-wide min-h-[44px] flex items-center">GPMCC</Link>
-          <a href="https://2kleigh.com" target="_blank" rel="noopener noreferrer" onClick={() => setMenuOpen(false)} className="text-sm text-[#C4A882] hover:text-[#C8A882] font-medium tracking-wide min-h-[44px] flex items-center">KLEIGH</a>
-          <Link href="/join" onClick={() => setMenuOpen(false)} className="text-sm bg-[#C8A882] text-[#2A1506] px-4 py-3 rounded-full font-bold text-center hover:bg-[#D07CC8] transition-colors tracking-wide mt-2">{menuJoin}</Link>
+        <div className="flex flex-col gap-1 border-t border-[#5C3A1E]/40 bg-[#2A1506] px-4 py-4 md:hidden">
+          {retailLinks.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setMenuOpen(false)}
+              className="flex min-h-[44px] items-center text-sm font-bold tracking-wide text-[#F5E6C8]/85 hover:text-[#FFD54F]"
+            >
+              {item.label}
+            </Link>
+          ))}
           <a
-            href={checkoutHref}
+            href="https://www.k-kut.com/browse"
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => setMenuOpen(false)}
-            className="text-sm bg-[#FFD54F] text-[#2A1506] px-4 py-3 rounded-full font-bold text-center hover:bg-[#FFE082] transition-colors tracking-wide"
+            className="mt-2 rounded-full bg-[#FFD54F] px-4 py-3 text-center text-sm font-black text-[#2A1506]"
           >
-            BUY KK NOW
+            Send a K-KUT ↗
           </a>
         </div>
       )}
