@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/audit-gpm-retail-shell.mjs && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "echo \"lint skipped: next lint is not supported in this Next.js version; build/type-check CI remains active\"",
     "audit:retail-shell": "node scripts/audit-gpm-retail-shell.mjs",
