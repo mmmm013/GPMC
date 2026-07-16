@@ -1,19 +1,24 @@
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import GpmVisualShowcase from '@/components/GpmVisualShowcase';
 
 const catalogLanes = [
   {
     id: 'ino-pix',
     label: 'GPM IN/O-PIX',
-    title: 'Browse the IN/O-PIX lane',
-    body: 'Approved G Putnam Music records classified in the IN/O-PIX catalog lane. Public lane wording remains held for GD approval.',
+    title: 'The opening world',
+    image: '/assets/hero.jpg',
+    position: 'center center',
+    body: 'Approved G Putnam Music records classified in the IN/O-PIX catalog lane. Exact public lane wording remains held for GD approval.',
   },
   {
     id: 'lt-pix',
     label: 'GPM LT-PIX',
-    title: 'Browse the LT-PIX lane',
-    body: 'Approved G Putnam Music records classified in the LT-PIX catalog lane. Public lane wording remains held for GD approval.',
+    title: 'The complete lyric-and-vocal world',
+    image: '/assets/MOON-1[32199].jpg',
+    position: 'center center',
+    body: 'Approved G Putnam Music records classified in the LT-PIX catalog lane. Exact public lane wording remains held for GD approval.',
   },
 ];
 
@@ -21,92 +26,89 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-[#100804] text-[#F7E7C8]">
       <Header />
+      <GpmVisualShowcase />
 
-      <section className="mx-auto max-w-7xl px-6 py-10 sm:px-10 sm:py-16">
-        <div className="overflow-hidden rounded-[2rem] border border-[#D4A017]/35 bg-[#201106] shadow-2xl shadow-black/45">
-          <div className="grid gap-0 lg:grid-cols-[1.08fr_0.92fr]">
-            <div className="p-7 sm:p-10 lg:p-14">
-              <p className="text-sm font-black uppercase tracking-[0.34em] text-[#FFD36A]">
-                G Putnam Music
-              </p>
-              <h1 className="mt-5 max-w-4xl text-5xl font-black leading-[0.95] text-[#FFD36A] sm:text-7xl">
-                Original songs. Ready to hear.
-              </h1>
-              <p className="mt-6 max-w-3xl text-xl font-bold leading-relaxed text-[#F7E7C8]/82">
-                Listen to approved G Putnam Music songs and explore the controlled IN/O-PIX and LT-PIX catalog lanes.
-              </p>
-              <p className="mt-4 max-w-3xl text-base font-bold leading-7 text-[#F7E7C8]/62">
-                Retail pricing, download formats, customer-use terms, checkout, and the first sellable song set remain held until GD approves the final catalog locks.
-              </p>
-
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Link
-                  href="/songs"
-                  className="inline-flex items-center justify-center rounded-full bg-[#FFD36A] px-7 py-4 text-base font-black uppercase tracking-wide text-[#201106] transition hover:bg-[#FFE7A3]"
-                >
-                  Browse Songs
-                </Link>
-                <Link
-                  href="/commercial"
-                  className="inline-flex items-center justify-center rounded-full border border-[#FFD36A]/45 px-7 py-4 text-base font-black uppercase tracking-wide text-[#FFD36A] transition hover:bg-[#FFD36A]/10"
-                >
-                  Commercial Licensing
-                </Link>
-              </div>
-            </div>
-
-            <div className="flex min-h-[420px] items-center justify-center border-t border-[#D4A017]/25 bg-[radial-gradient(circle_at_50%_35%,rgba(255,211,106,0.23),transparent_36%),radial-gradient(circle_at_70%_76%,rgba(212,160,23,0.17),transparent_34%)] p-8 lg:border-l lg:border-t-0">
-              <div className="w-full max-w-md rounded-[2rem] border border-[#FFD36A]/30 bg-[#100804]/85 p-7 shadow-2xl">
-                <p className="text-xs font-black uppercase tracking-[0.26em] text-[#FFD36A]">
-                  Controlled retail preparation
-                </p>
-                <h2 className="mt-4 text-3xl font-black leading-tight text-[#F7E7C8]">
-                  Approved songs only.
-                </h2>
-                <div className="mt-6 grid gap-3">
-                  {[
-                    'Canonical GPM catalog identity retained',
-                    'IN/O-PIX and LT-PIX classifications retained',
-                    'No K-KUTs or iMeants sold here',
-                    'No price or checkout until approved',
-                  ].map((item) => (
-                    <div
-                      key={item}
-                      className="rounded-xl border border-[#D4A017]/20 bg-black/25 px-4 py-3 text-sm font-black text-[#F7E7C8]/82"
-                    >
-                      {item}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+      <section className="mx-auto max-w-7xl px-6 py-16 sm:px-10 sm:py-20">
+        <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-end">
+          <div>
+            <p className="text-sm font-black uppercase tracking-[0.32em] text-[#FFD36A]">
+              Complete-song catalog
+            </p>
+            <h2 className="mt-4 text-5xl font-black leading-[0.94] text-white sm:text-7xl">
+              Original songs. Ready to hear.
+            </h2>
+          </div>
+          <div className="rounded-[2rem] border border-[#D4A017]/25 bg-[#201106] p-6 sm:p-8">
+            <p className="text-lg font-bold leading-8 text-[#F7E7C8]/78">
+              This is the future retail home for approved G Putnam Music song downloads. The catalog structure is ready; public song records, pricing, formats, customer-use terms, and checkout remain held until GD locks them.
+            </p>
           </div>
         </div>
 
-        <section className="mt-10 grid gap-5 lg:grid-cols-2">
+        <div className="mt-10 grid gap-5 lg:grid-cols-2">
           {catalogLanes.map((lane) => (
             <article
               key={lane.id}
               id={lane.id}
-              className="rounded-[2rem] border border-[#D4A017]/30 bg-[#201106] p-7 sm:p-10"
+              className="group relative min-h-[470px] overflow-hidden rounded-[2rem] border border-[#D4A017]/30 bg-[#201106] shadow-2xl shadow-black/30"
             >
-              <p className="text-sm font-black uppercase tracking-[0.3em] text-[#FFD36A]">
-                {lane.label}
-              </p>
-              <h2 className="mt-4 text-4xl font-black leading-tight text-[#F7E7C8]">
-                {lane.title}
-              </h2>
-              <p className="mt-5 text-base font-bold leading-8 text-[#F7E7C8]/72">
-                {lane.body}
-              </p>
-              <Link
-                href={`/songs#${lane.id}`}
-                className="mt-7 inline-flex items-center justify-center rounded-full border border-[#FFD36A]/45 px-6 py-3 text-sm font-black uppercase tracking-wide text-[#FFD36A] transition hover:bg-[#FFD36A]/10"
-              >
-                Open lane shell
-              </Link>
+              <img
+                src={lane.image}
+                alt=""
+                className="absolute inset-0 h-full w-full object-cover transition duration-1000 group-hover:scale-105"
+                style={{ objectPosition: lane.position }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#100804] via-[#100804]/72 to-black/12" />
+              <div className="relative flex min-h-[470px] flex-col justify-end p-7 sm:p-10">
+                <p className="text-sm font-black uppercase tracking-[0.3em] text-[#FFD36A]">
+                  {lane.label}
+                </p>
+                <h3 className="mt-3 max-w-xl text-4xl font-black leading-tight text-white sm:text-5xl">
+                  {lane.title}
+                </h3>
+                <p className="mt-4 max-w-xl text-base font-bold leading-7 text-white/72">
+                  {lane.body}
+                </p>
+                <Link
+                  href={`/songs#${lane.id}`}
+                  className="mt-7 inline-flex w-fit items-center justify-center rounded-full border border-[#FFD36A]/55 bg-black/25 px-6 py-3 text-sm font-black uppercase tracking-[0.14em] text-[#FFD36A] backdrop-blur-sm transition hover:bg-[#FFD36A] hover:text-[#201106]"
+                >
+                  Enter this catalog lane
+                </Link>
+              </div>
             </article>
           ))}
+        </div>
+
+        <section className="mt-10 overflow-hidden rounded-[2rem] border border-[#D4A017]/30 bg-[#201106]">
+          <div className="grid lg:grid-cols-[0.86fr_1.14fr]">
+            <div className="relative min-h-[360px]">
+              <img
+                src="/IMG_7720.JPG"
+                alt="G Putnam Music producer portrait"
+                className="absolute inset-0 h-full w-full object-cover"
+                style={{ objectPosition: '30% 70%' }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#201106] lg:block" />
+            </div>
+            <div className="flex flex-col justify-center p-7 sm:p-10 lg:p-14">
+              <p className="text-sm font-black uppercase tracking-[0.3em] text-[#FFD36A]">
+                Motion belongs here
+              </p>
+              <h2 className="mt-4 text-4xl font-black leading-tight text-white sm:text-6xl">
+                Film the work. Frame the people. Let the music lead.
+              </h2>
+              <p className="mt-5 text-base font-bold leading-8 text-[#F7E7C8]/72">
+                A verified MOV and video rail will occupy this stage after each media file has a confirmed title, subject, rights status, poster frame, and public-use approval. Until then, the site uses proven GPM photography and never autoplays unknown footage.
+              </p>
+              <Link
+                href="/who"
+                className="mt-7 inline-flex w-fit items-center justify-center rounded-full bg-[#FFD36A] px-7 py-4 text-sm font-black uppercase tracking-[0.14em] text-[#201106] transition hover:bg-[#FFE7A3]"
+              >
+                Open the visual story
+              </Link>
+            </div>
+          </div>
         </section>
 
         <section className="mt-10 rounded-[2rem] border border-[#D4A017]/30 bg-[#201106] p-7 sm:p-10">
@@ -115,18 +117,18 @@ export default function HomePage() {
           </p>
           <div className="mt-4 grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
             <div>
-              <h2 className="text-4xl font-black leading-tight text-[#F7E7C8]">
-                Looking for a sendable music moment?
+              <h2 className="text-4xl font-black leading-tight text-white">
+                Want to send a selected music moment?
               </h2>
               <p className="mt-4 max-w-3xl text-base font-bold leading-8 text-[#F7E7C8]/72">
-                K-KUT remains the separate home for K-KUT, HUG, TUG, and derived music-moment products. Complete GPM songs stay here.
+                K-KUT remains the separate home for K-KUT, HUG, TUG, and derived music-moment products. Complete GPM songs and their visual stories stay here.
               </p>
             </div>
             <a
               href="https://www.k-kut.com/browse"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center rounded-full bg-[#FFD36A] px-7 py-4 text-base font-black uppercase tracking-wide text-[#201106] transition hover:bg-[#FFE7A3]"
+              className="inline-flex items-center justify-center rounded-full bg-[#FFD36A] px-7 py-4 text-sm font-black uppercase tracking-[0.14em] text-[#201106] transition hover:bg-[#FFE7A3]"
             >
               Visit K-KUT ↗
             </a>
