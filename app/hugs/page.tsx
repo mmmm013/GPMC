@@ -1,81 +1,43 @@
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+
 export default function HugsPage() {
   return (
-    <main className="min-h-screen bg-[#fffdf2] text-[#08254a] px-6 py-10">
-      <section className="mx-auto max-w-5xl">
-        <div className="rounded-[28px] border-4 border-[#08254a] bg-white p-8 shadow-[10px_10px_0_#f4c400]">
-          <p className="mb-4 inline-flex rounded-full border-2 border-[#08254a] px-4 py-2 text-xs font-black tracking-[0.16em]">
-            GPMx PRODUCT LANE
-          </p>
+    <main className="min-h-screen bg-[#100804] text-[#F7E7C8]">
+      <Header />
 
-          <h1 className="text-4xl font-black leading-tight md:text-6xl">
-            HUGs for Ones Who Matter
+      <section className="mx-auto max-w-5xl px-6 py-16 sm:px-10 sm:py-24">
+        <div className="rounded-[2rem] border border-[#D4A017]/30 bg-[#201106] p-8 text-center shadow-2xl shadow-black/40 sm:p-12">
+          <p className="text-sm font-black uppercase tracking-[0.3em] text-[#FFD36A]">
+            Separate K-KUT product lane
+          </p>
+          <h1 className="mt-5 text-4xl font-black leading-tight text-[#F7E7C8] sm:text-6xl">
+            HUGs live on K-KUT.
           </h1>
-
-          <p className="mt-4 max-w-3xl text-xl font-bold text-[#147a33]">
-            Send a private music moment when words alone are not enough.
+          <p className="mx-auto mt-6 max-w-3xl text-lg font-bold leading-8 text-[#F7E7C8]/72">
+            G Putnam Music is the complete-song catalog. K-KUT remains the focused home for sendable K-KUT, HUG, and TUG music moments.
           </p>
 
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
-            <div className="rounded-2xl border-2 border-[#08254a] bg-[#fffdf2] p-5">
-              <h2 className="text-xl font-black">Choose the feeling</h2>
-              <p className="mt-2 font-semibold">
-                Start from the emotional need, not a generic song search.
-              </p>
-            </div>
-
-            <div className="rounded-2xl border-2 border-[#08254a] bg-[#fffdf2] p-5">
-              <h2 className="text-xl font-black">Send the link</h2>
-              <p className="mt-2 font-semibold">
-                K-KUT handles the clean HUG buyer and receiver path.
-              </p>
-            </div>
-
-            <div className="rounded-2xl border-2 border-[#08254a] bg-[#fffdf2] p-5">
-              <h2 className="text-xl font-black">Just press play</h2>
-              <p className="mt-2 font-semibold">
-                No download. No search. No checkout on the gift page.
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
             <a
-              href="https://www.k-kut.com/hug"
-              className="rounded-full border-2 border-[#08254a] bg-[#08254a] px-5 py-3 font-black text-white shadow-[4px_4px_0_#f4c400]"
+              href="https://www.k-kut.com/browse"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center rounded-full bg-[#FFD36A] px-7 py-4 text-base font-black uppercase tracking-wide text-[#201106] transition hover:bg-[#FFE7A3]"
             >
-              Start a HUG
+              Open K-KUT ↗
             </a>
-
             <a
-              href="/"
-              className="rounded-full border-2 border-[#08254a] bg-white px-5 py-3 font-black text-[#08254a] shadow-[4px_4px_0_#f4c400]"
+              href="/songs"
+              className="inline-flex items-center justify-center rounded-full border border-[#FFD36A]/45 px-7 py-4 text-base font-black uppercase tracking-wide text-[#FFD36A] transition hover:bg-[#FFD36A]/10"
             >
-              Return to GPMx
+              Browse Complete Songs
             </a>
           </div>
         </div>
-
-        <section className="mt-8 rounded-[24px] border-2 border-[#08254a] bg-white p-6">
-          <h2 className="text-2xl font-black">How GPMx and K-KUT work together</h2>
-          <p className="mt-3 font-semibold leading-relaxed">
-            The flagship contains the larger GPMx world: source music, product lanes,
-            review paths, invention context, and platform authority. K-KUT remains the focused
-            HUG home for buyers and receivers.
-          </p>
-
-          <div className="mt-5 grid gap-3 md:grid-cols-2">
-            <div className="rounded-xl bg-[#eef6ff] p-4">
-              <strong>GPMx / flagship</strong>
-              <p className="mt-1">Authority, catalog, source context, and system explanation.</p>
-            </div>
-
-            <div className="rounded-xl bg-[#eef6ff] p-4">
-              <strong>K-KUT</strong>
-              <p className="mt-1">HUG selection, sending, receiving, and private-link flow.</p>
-            </div>
-          </div>
-        </section>
       </section>
+
+      <Footer />
     </main>
   );
 }
