@@ -25,12 +25,7 @@ const asMenuLabel = (slot: unknown, key: string, fallback: string): string => {
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isKleighDomain, setIsKleighDomain] = useState(false);
   const [templateSlots, setTemplateSlots] = useState<Record<string, unknown>>({});
-
-  useEffect(() => {
-    setIsKleighDomain(window.location.hostname.includes('2kleigh.com'));
-  }, []);
 
   useEffect(() => {
     const host = window.location.hostname;
@@ -83,16 +78,10 @@ export default function Header() {
           <div className="flex flex-col">
             <span className="text-lg font-bold text-[#C8A882] tracking-wide leading-tight group-hover:text-[#D07CC8] transition-colors">{companyName}</span>
             <span className="text-[10px] text-[#C8A882]/70 uppercase tracking-widest leading-tight">
-              {isKleighDomain ? 'KLEIGH Project - Tier 2 Brand' : 'The One Stop Song Shop'}
+              The One Stop Song Shop
             </span>
           </div>
         </Link>
-
-        {isKleighDomain && (
-          <span className="hidden sm:inline-flex text-[10px] uppercase tracking-[0.18em] text-[#F5e6c8]/70 border border-[#C8A882]/30 rounded-full px-3 py-1">
-            KLEIGH
-          </span>
-        )}
 
         {/* CENTER: Spacer */}
         <div className="flex-1" />
@@ -113,7 +102,6 @@ export default function Header() {
           <Link href="/tt" className="text-sm text-[#C4A882] hover:text-[#C8A882] font-medium tracking-wide transition-colors">{menuTT}</Link>
           <Link href="/scherer" className="text-sm text-[#C4A882] hover:text-[#C8A882] font-medium tracking-wide transition-colors">{menuMsj}</Link>
           <Link href="/commercial" className="text-sm text-[#C4A882] hover:text-[#C8A882] font-medium tracking-wide transition-colors">GPMCC</Link>
-          <a href="https://2kleigh.com" target="_blank" rel="noopener noreferrer" className="text-sm text-[#C4A882] hover:text-[#C8A882] font-medium tracking-wide transition-colors">KLEIGH</a>
           <Link href="/join" className="text-sm bg-[#C8A882] text-[#2A1506] px-4 py-1.5 rounded-full font-bold text-center hover:bg-[#D07CC8] transition-colors tracking-wide">{menuJoin}</Link>
         </div>
 
@@ -138,7 +126,6 @@ export default function Header() {
           <Link href="/tt" onClick={() => setMenuOpen(false)} className="text-sm text-[#C4A882] hover:text-[#C8A882] font-medium tracking-wide min-h-[44px] flex items-center">{menuTT}</Link>
           <Link href="/scherer" onClick={() => setMenuOpen(false)} className="text-sm text-[#C4A882] hover:text-[#C8A882] font-medium tracking-wide min-h-[44px] flex items-center">{menuMsj}</Link>
           <Link href="/commercial" onClick={() => setMenuOpen(false)} className="text-sm text-[#C4A882] hover:text-[#C8A882] font-medium tracking-wide min-h-[44px] flex items-center">GPMCC</Link>
-          <a href="https://2kleigh.com" target="_blank" rel="noopener noreferrer" onClick={() => setMenuOpen(false)} className="text-sm text-[#C4A882] hover:text-[#C8A882] font-medium tracking-wide min-h-[44px] flex items-center">KLEIGH</a>
           <Link href="/join" onClick={() => setMenuOpen(false)} className="text-sm bg-[#C8A882] text-[#2A1506] px-4 py-3 rounded-full font-bold text-center hover:bg-[#D07CC8] transition-colors tracking-wide mt-2">{menuJoin}</Link>
           <a
             href={checkoutHref}
