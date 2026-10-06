@@ -70,11 +70,45 @@ CONTROL RULE:
   4) exit routing
 - If unclear, do not launch domain.
 
-UNDECLARED AND ALREADY LAUNCHED:
-- songandchance.com. Bought 2026-10-01 for $11.25 and attached to the k-kut
-  project ninety seconds later, with no user type, no intent, no entry
-  action and no exit routing. It has no entry in SATELLITE_LAW, no identity
-  in publicDomainIdentity and no branch in the landing logic, so it serves
-  the landing by falling through. By this rule's own words it should not
-  have launched. It needs the four answers or it should be parked.
+DECLARED DOMAINS:
+
+- songandchance.com = SONG & CHANCE, the artist brand. The duo: Gregory D
+  Putnam writes the words, Michael Scherer takes the chances. GD named it
+  himself on 2026-10-01 -- "Song & Chance?" -- because it rides "song and
+  dance" and so needs no explaining, and because chance is the truer word for
+  what a jazz player does. The changes are the chart; the chance is the
+  playing.
+
+  THE FOUR DECLARATIONS, approved by GD on 2026-10-01 and recorded here on
+  2026-10-06 on his instruction ("declare songandchance.com"):
+
+    1) USER TYPE     someone who heard the name -- a listener, a venue, a sync
+                     supervisor, a player who wants in
+    2) INTENT        artist brand. Find out who Song & Chance are, and hear them
+    3) ENTRY ACTION  listen
+    4) EXIT ROUTING  gputnammusic.com to buy the song (PIX retail)
+                     sentimeants.com to send a piece of one
+
+  The exit routing's second leg said k-kut.com until 2026-10-06. It is the
+  landing now, because k-kut.com's root 308s there and the retired brand is
+  not a destination to hand a visitor.
+
+  It is an ENTRY POINT into the existing GPMx system, not a parallel one: no
+  new database and no duplicate inventory, both of which this file forbids.
+  The page is deliberately spare -- there is no catalogue under this name yet,
+  and a page that pretends otherwise is worse than one that does not.
+
+  *** IT IS POINTED AT THE WRONG PROJECT, AND DECLARING IT DOES NOT FIX THAT.
+  The page is app/song-and-chance/page.tsx in THIS repo, which deploys as the
+  gputnam-music-final-site project. The DOMAIN is attached to the k-kut
+  project, which has no song-and-chance route at all -- so a visitor who types
+  the name reaches the Element store and never sees the duo. Its declared
+  ENTRY ACTION, "listen", cannot happen.
+
+  The fix is one Vercel change and not a code change: move songandchance.com
+  (and www) off the k-kut project and onto gputnam-music-final-site. Building
+  a second Song & Chance page inside k-kut would satisfy the routing and
+  violate the rule above it -- duplicate systems are forbidden -- so it is not
+  the answer. Until the domain is moved, this declaration describes an
+  intention and not a working entry point, and this paragraph stays here.
 
