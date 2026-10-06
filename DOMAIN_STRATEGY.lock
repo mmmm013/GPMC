@@ -7,9 +7,39 @@ CORE PRINCIPLE:
 - Domains differ by audience and intent, not by backend system.
 
 PRIMARY DOMAINS:
-- k-kut.com = HUG experience (send, receive, forward; non-downloadable).
+- sentimeants.com = THE LANDING. One front door to all three tiers
+  (HUG, TUG, BUG). Plural because it is many things meant: the store.
 - gputnammusic.com = PIX retail (downloadable songs and catalog).
 - mmmm-songs.com = SUPE / licensing / professional access (moments, hooks, phrases, sections).
+
+TIER PLATFORMS (one tier each, reached from the landing):
+- 13hugz.com = HUG, the whole song section. $7.99.
+- sentimeant.com = TUG, one line or phrase. $4.99. Singular because it is
+  one line meant.
+- i-meant.com = BUG and Story BUG, one word or sound. $1.99.
+
+RETIRED:
+- k-kut.com = the retired brand. Its ROOT PATH 308s to the landing.
+  EVERY OTHER PATH STAYS LIVE AND MUST NOT BE REDIRECTED, because every
+  Stripe payment link returns a paying buyer to
+  https://k-kut.com/delivered?session_id={CHECKOUT_SESSION_ID}. A host-wide
+  redirect strands a buyer who has already paid, on all three tiers at once.
+  Retire the host only after every live payment link has been repointed.
+
+AMENDED 2026-10-06, on GD's instruction: "amend the lock and redirect
+k-kut.com to the landing", answering his own question "why not use
+sentimeants.com as landing, and sentimeant.com for TUGs?"
+
+  WHAT THIS REPLACED, and why it had to go: this file said
+  "k-kut.com = HUG experience". That had been false in the code for some
+  time -- SATELLITE_LAW in the k-kut repo has given HUG to 13hugz.com, TUG
+  to sentimeant.com and BUG to i-meant.com, with no entry for k-kut.com at
+  all. So the lock named a primary domain for a job another host was doing,
+  while the front door sat on a brand GD dropped on 2026-10-02 ("K-KUT is
+  dropped. The product IS the tier."). The lock and the code now agree.
+
+  And sentimeants.com was a defensive typo-catcher that 308'd every path to
+  the singular: a domain paid for annually that nobody could arrive at.
 
 FUTURE DOMAINS:
 - Must map to a clear user intent (e.g., gifting, discovery, pro search, artist brand).
@@ -29,7 +59,8 @@ USER EXPERIENCE GOAL:
 CROSS-DOMAIN FLOW:
 - HUG → (needs download) → gputnammusic.com
 - HUG → (needs professional use) → mmmm-songs.com
-- SUPE → (wants to send) → k-kut.com
+- SUPE → (wants to send) → sentimeants.com
+- any tier platform → (wants another tier) → sentimeants.com
 
 CONTROL RULE:
 - Any new domain must declare:
@@ -38,4 +69,12 @@ CONTROL RULE:
   3) entry action
   4) exit routing
 - If unclear, do not launch domain.
+
+UNDECLARED AND ALREADY LAUNCHED:
+- songandchance.com. Bought 2026-10-01 for $11.25 and attached to the k-kut
+  project ninety seconds later, with no user type, no intent, no entry
+  action and no exit routing. It has no entry in SATELLITE_LAW, no identity
+  in publicDomainIdentity and no branch in the landing logic, so it serves
+  the landing by falling through. By this rule's own words it should not
+  have launched. It needs the four answers or it should be parked.
 
