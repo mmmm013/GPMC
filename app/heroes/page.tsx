@@ -1,6 +1,5 @@
 'use client';
 import React, { useState } from 'react';
-import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import BraveEaglePromo from '@/components/BraveEaglePromo';
@@ -70,9 +69,6 @@ export default function HeroesPage() {
       <Header />
       <BraveEaglePromo
         links={[
-          { href: '/mip', label: 'MIP1 Recognition Form' },
-          { href: '/uru', label: 'URU Mood List' },
-          { href: '/tt', label: 'TT Tale Tell' },
           { href: '/gift', label: 'Gift Support' },
         ]}
       />
@@ -85,14 +81,8 @@ export default function HeroesPage() {
         <h1 className="text-5xl font-extrabold mb-3 tracking-tighter">
           HERO RECOGNITION
         </h1>
-        <p className="mb-4 text-lg opacity-70 uppercase tracking-widest">
+        <p className="mb-12 text-lg opacity-70 uppercase tracking-widest">
           We honor those who serve. We share their stories.
-        </p>
-        <p className="mb-12 text-sm text-amber-300/80 max-w-2xl">
-          Every Hero story shared here can become part of your personal GPM Brand Space via{' '}
-          <Link href="/uru" className="underline hover:text-amber-300">URU</Link>. Share it privately
-          or with the world through{' '}
-          <Link href="/tt" className="underline hover:text-amber-300">TT (Tale Tell)</Link>.
         </p>
 
         {/* GRANDPA'S STORY — FEATURED EXAMPLE */}
@@ -110,18 +100,6 @@ export default function HeroesPage() {
           <p className="text-xl italic text-amber-300 mb-6 leading-relaxed">{GRANDPA_STORY.quote}</p>
           <div className="text-base leading-relaxed opacity-85 whitespace-pre-line">{GRANDPA_STORY.body}</div>
 
-          <div className="mt-8 flex flex-wrap gap-4">
-            <Link href="/mip">
-              <button className="px-6 py-2 border border-amber-400 text-amber-400 font-bold hover:bg-amber-400 hover:text-black transition-colors uppercase text-sm tracking-widest">
-                MIP1 Recognition Form
-              </button>
-            </Link>
-            <Link href="/uru">
-              <button className="px-6 py-2 border border-white/30 font-bold hover:bg-white hover:text-black transition-colors uppercase text-sm tracking-widest">
-                Add to URU Mood List
-              </button>
-            </Link>
-          </div>
         </div>
 
         {/* HERO PILLARS */}
