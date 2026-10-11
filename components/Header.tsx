@@ -94,8 +94,9 @@ export default function Header() {
             rel="noopener noreferrer"
             className="text-sm bg-[#FFD54F] text-[#2A1506] px-4 py-1.5 rounded-full font-bold text-center hover:bg-[#FFE082] transition-colors tracking-wide"
           >
-            BUY KK NOW
+            Send a HUG
           </a>
+          <Link href="/listen" className="text-sm text-[#FFD54F] hover:text-[#FFE082] font-bold tracking-wide transition-colors">Listen</Link>
           <Link href="/mip" className="text-sm text-[#FFD54F] hover:text-[#FFE082] font-bold tracking-wide transition-colors">{menuMip1}</Link>
           <Link href="/heroes" className="text-sm text-[#C4A882] hover:text-[#C8A882] font-medium tracking-wide transition-colors">{menuHeroes}</Link>
           <Link href="/uru" className="text-sm text-[#C4A882] hover:text-[#C8A882] font-medium tracking-wide transition-colors">{menuUru}</Link>
@@ -120,6 +121,7 @@ export default function Header() {
       {/* Mobile Menu Dropdown - MOBILE FIX: 44px+ touch targets, body scroll lock */}
       {menuOpen && (
         <div className="md:hidden bg-[#2A1506] border-t border-[#5C3A1E]/40 px-4 py-4 flex flex-col gap-1">
+          <Link href="/listen" onClick={() => setMenuOpen(false)} className="text-sm text-[#FFD54F] hover:text-[#FFE082] font-bold tracking-wide min-h-[44px] flex items-center">Listen</Link>
           <Link href="/mip" onClick={() => setMenuOpen(false)} className="text-sm text-[#FFD54F] hover:text-[#FFE082] font-bold tracking-wide min-h-[44px] flex items-center">{menuMip1}</Link>
           <Link href="/heroes" onClick={() => setMenuOpen(false)} className="text-sm text-[#C4A882] hover:text-[#C8A882] font-medium tracking-wide min-h-[44px] flex items-center">{menuHeroes}</Link>
           <Link href="/uru" onClick={() => setMenuOpen(false)} className="text-sm text-[#C4A882] hover:text-[#C8A882] font-medium tracking-wide min-h-[44px] flex items-center">{menuUru}</Link>
@@ -134,7 +136,7 @@ export default function Header() {
             onClick={() => setMenuOpen(false)}
             className="text-sm bg-[#FFD54F] text-[#2A1506] px-4 py-3 rounded-full font-bold text-center hover:bg-[#FFE082] transition-colors tracking-wide"
           >
-            BUY KK NOW
+            Send a HUG
           </a>
         </div>
       )}
