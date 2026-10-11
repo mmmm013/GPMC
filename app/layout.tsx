@@ -4,8 +4,8 @@ import "./globals.css";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "K-KUT",
-  description: "K-KUT – Support & Experience Platform",
+  title: "G Putnam Music",
+  description: "G Putnam Music: songs to hear, and HUGs to send.",
 };
 
 export default function RootLayout({

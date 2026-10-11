@@ -9,8 +9,8 @@ const PROMOS = [
     bg: 'bg-amber-500',
     text: 'text-black',
     label: '⚡ PRE-MADE K-KUT ACCESS IS LIVE — One tap to secure Sovereign Pass and start sending feelings now.',
-    cta: 'BUY KK NOW →',
-    href: 'https://k-kut.com',
+    cta: 'Send a HUG →',
+    href: 'https://www.k-kut.com/motivation',
   },
   {
     id: 'kub-founder',

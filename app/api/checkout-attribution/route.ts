@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const DEFAULT_TARGET = 'https://k-kut.com/api/checkout/sovereign';
+// k-kut.com/api/checkout/sovereign no longer exists (404). GD, 2026-10-11: fix the
+// buy button -- it goes to the working store.
+const DEFAULT_TARGET = 'https://www.k-kut.com/motivation';
 
 function appendUtmParams(target: URL, source: URLSearchParams) {
   const keys = [
