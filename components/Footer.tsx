@@ -41,7 +41,6 @@ export default function Footer() {
   }, []);
 
   const menuHeroes = asMenuLabel(templateSlots.menu_item_heroes, 'heroes', 'Heroes');
-  const menuUru = asMenuLabel(templateSlots.menu_item_uru, 'uru', 'URU');
   const menuGift = asText(templateSlots.menu_item_sponsorships, 'Gift');
 
   return (
@@ -62,9 +61,7 @@ export default function Footer() {
         <div className="flex flex-wrap justify-center gap-2 mb-6">
           <Link href="/who" className="text-sm text-[#C4A882]/70 hover:text-[#D4A017] transition-colors min-h-[44px] flex items-center px-3">Who</Link>
           <Link href="/heroes" className="text-sm text-[#C4A882]/70 hover:text-[#D4A017] transition-colors min-h-[44px] flex items-center px-3">{menuHeroes}</Link>
-          <Link href="/uru" className="text-sm text-[#C4A882]/70 hover:text-[#D4A017] transition-colors min-h-[44px] flex items-center px-3">{menuUru}</Link>
           <Link href="/gift" className="text-sm text-[#C4A882]/70 hover:text-[#D4A017] transition-colors min-h-[44px] flex items-center px-3">{menuGift}</Link>
-          <Link href="/join" className="text-sm text-[#C4A882]/70 hover:text-[#D4A017] transition-colors min-h-[44px] flex items-center px-3">Join</Link>
         </div>
         {/* Copyright */}
         <p className="text-center text-xs text-[#C4A882]/40">
