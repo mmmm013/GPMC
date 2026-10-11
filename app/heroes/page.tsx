@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from 'react';
+import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import BraveEaglePromo from '@/components/BraveEaglePromo';
@@ -69,6 +70,7 @@ export default function HeroesPage() {
       <Header />
       <BraveEaglePromo
         links={[
+          { href: '/mip', label: 'MIP1 Recognition Form' },
           { href: '/gift', label: 'Gift Support' },
         ]}
       />
@@ -100,6 +102,13 @@ export default function HeroesPage() {
           <p className="text-xl italic text-amber-300 mb-6 leading-relaxed">{GRANDPA_STORY.quote}</p>
           <div className="text-base leading-relaxed opacity-85 whitespace-pre-line">{GRANDPA_STORY.body}</div>
 
+          <div className="mt-8 flex flex-wrap gap-4">
+            <Link href="/mip">
+              <button className="px-6 py-2 border border-amber-400 text-amber-400 font-bold hover:bg-amber-400 hover:text-black transition-colors uppercase text-sm tracking-widest">
+                MIP1 Recognition Form
+              </button>
+            </Link>
+          </div>
         </div>
 
         {/* HERO PILLARS */}
