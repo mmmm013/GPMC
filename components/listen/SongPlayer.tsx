@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react';
 
-type Track = { id: string; artist: string; title: string; src: string };
+type Track = { id: string; artist: string; title: string; src: string; buyDownloadUrl?: string };
 
 /* One player for every G Putnam Music song. Every row shows artist and title
    (GD, 2026-10-11: "STREAMS SHOW ... ARTIST & TITLE, MINIMUM"). Stream only. */
@@ -80,6 +80,15 @@ export default function SongPlayer({ tracks }: { tracks: Track[] }) {
                 <p className="truncate text-base font-black text-[#2C2418]">{t.title}</p>
                 <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#8B4513]">{t.artist}</p>
               </div>
+              {t.buyDownloadUrl ? (
+                <a
+                  href={t.buyDownloadUrl}
+                  className="shrink-0 rounded-full border border-[#8B4513]/40 px-3 py-2 text-xs font-black text-[#8B4513] hover:bg-[#8B4513] hover:text-white"
+                  aria-label={`Download ${t.artist} – ${t.title} for $1.99`}
+                >
+                  Download · $1.99
+                </a>
+              ) : null}
             </li>
           );
         })}
