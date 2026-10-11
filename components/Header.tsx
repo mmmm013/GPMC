@@ -52,6 +52,7 @@ export default function Header() {
   }, [menuOpen]);
 
   const companyName = asText(templateSlots.ui_company_name, 'G Putnam Music');
+  const menuMip1 = asText(templateSlots.menu_item_mip1, 'MIP1');
   const menuHeroes = asMenuLabel(templateSlots.menu_item_heroes, 'heroes', 'Heroes');
   const checkoutHref = '/api/checkout-attribution?utm_source=header&utm_medium=site&utm_campaign=cash_sprint_apr2026&utm_content=explore_kkuts';
 
@@ -92,6 +93,7 @@ export default function Header() {
             Send a HUG
           </a>
           <Link href="/listen" className="text-sm text-[#FFD54F] hover:text-[#FFE082] font-bold tracking-wide transition-colors">Listen</Link>
+          <Link href="/mip" className="text-sm text-[#FFD54F] hover:text-[#FFE082] font-bold tracking-wide transition-colors">{menuMip1}</Link>
           <Link href="/heroes" className="text-sm text-[#C4A882] hover:text-[#C8A882] font-medium tracking-wide transition-colors">{menuHeroes}</Link>
           <Link href="/scherer" className="text-sm text-[#C4A882] hover:text-[#C8A882] font-medium tracking-wide transition-colors">Michael Scherer</Link>
         </div>
@@ -112,6 +114,7 @@ export default function Header() {
       {menuOpen && (
         <div className="md:hidden bg-[#2A1506] border-t border-[#5C3A1E]/40 px-4 py-4 flex flex-col gap-1">
           <Link href="/listen" onClick={() => setMenuOpen(false)} className="text-sm text-[#FFD54F] hover:text-[#FFE082] font-bold tracking-wide min-h-[44px] flex items-center">Listen</Link>
+          <Link href="/mip" onClick={() => setMenuOpen(false)} className="text-sm text-[#FFD54F] hover:text-[#FFE082] font-bold tracking-wide min-h-[44px] flex items-center">{menuMip1}</Link>
           <Link href="/heroes" onClick={() => setMenuOpen(false)} className="text-sm text-[#C4A882] hover:text-[#C8A882] font-medium tracking-wide min-h-[44px] flex items-center">{menuHeroes}</Link>
           <Link href="/scherer" onClick={() => setMenuOpen(false)} className="text-sm text-[#C4A882] hover:text-[#C8A882] font-medium tracking-wide min-h-[44px] flex items-center">Michael Scherer</Link>
           <a
