@@ -1,6 +1,3 @@
-'use client';
-
-import React, { useEffect, useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SongPlayer from '@/components/listen/SongPlayer';
@@ -9,28 +6,27 @@ import { Heart, Music2, MapPin } from 'lucide-react';
 type Track = { id: string; artist: string; title: string; src: string };
 
 /* Michael Scherer's instrumentals. The list and its signed stream addresses
-   come from C-OP (k-kut.com/api/scherer); this page never reads a database.
-   GD, 2026-10-11: "YES, REBUILD SCHERER PAGE". The page before this one is
-   kept beside it as page.before-c-op.tsx. */
-export default function SchererPage() {
-  const [tracks, setTracks] = useState<Track[]>([]);
-  const [loading, setLoading] = useState(true);
+   come from C-OP (k-kut.com/api/scherer), fetched on the server like Listen;
+   this page never reads a database. GD, 2026-10-11: "YES, REBUILD SCHERER
+   PAGE". The page before this one is kept beside it as page.before-c-op.tsx. */
+export const dynamic = 'force-dynamic';
 
-  useEffect(() => {
-    let cancelled = false;
-    fetch('https://www.k-kut.com/api/scherer', { cache: 'no-store' })
-      .then((res) => (res.ok ? res.json() : { tracks: [] }))
-      .then((body: { tracks?: Track[] }) => {
-        if (!cancelled) setTracks(body.tracks ?? []);
-      })
-      .catch(() => {})
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+async function schererTracks(): Promise<Track[]> {
+  try {
+    const res = await fetch('https://www.k-kut.com/api/scherer', {
+      cache: 'no-store',
+      headers: { 'User-Agent': 'GPM-flagship/1' },
+    });
+    if (!res.ok) return [];
+    const body = (await res.json()) as { tracks?: Track[] };
+    return body.tracks ?? [];
+  } catch {
+    return [];
+  }
+}
+
+export default async function SchererPage() {
+  const tracks = await schererTracks();
 
   return (
     <main className="min-h-screen flex flex-col text-white bg-black">
@@ -114,16 +110,16 @@ export default function SchererPage() {
         <div className="mx-auto max-w-3xl">
           <h2 className="text-4xl font-black uppercase tracking-tight text-[#8B4513] md:text-5xl">Michael Scherer</h2>
           <p className="mt-2 text-sm font-bold uppercase tracking-[0.2em] text-[#5D4037]">
-            {loading ? 'Loading…' : `${tracks.length} instrumentals · tap to play`}
+            {tracks.length} instrumentals · tap to play
           </p>
           <div className="mt-6">
             {tracks.length ? (
               <SongPlayer tracks={tracks} />
-            ) : !loading ? (
+            ) : (
               <p className="rounded-2xl border border-[#8B4513]/20 bg-white p-6">
                 The music is loading slowly. Please refresh in a moment.
               </p>
-            ) : null}
+            )}
           </div>
         </div>
       </section>
