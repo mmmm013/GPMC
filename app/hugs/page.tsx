@@ -26,7 +26,7 @@ export default function HugsPage() {
             <div className="rounded-2xl border-2 border-[#08254a] bg-[#fffdf2] p-5">
               <h2 className="text-xl font-black">Send the link</h2>
               <p className="mt-2 font-semibold">
-                K-KUT handles the clean HUG buyer and receiver path.
+                Our HUG store handles the clean HUG buyer and receiver path.
               </p>
             </div>
 
@@ -56,10 +56,10 @@ export default function HugsPage() {
         </div>
 
         <section className="mt-8 rounded-[24px] border-2 border-[#08254a] bg-white p-6">
-          <h2 className="text-2xl font-black">How GPMx and K-KUT work together</h2>
+          <h2 className="text-2xl font-black">How this site and the HUG store work together</h2>
           <p className="mt-3 font-semibold leading-relaxed">
             The flagship contains the larger GPMx world: source music, product lanes,
-            review paths, invention context, and platform authority. K-KUT remains the focused
+            review paths, invention context, and platform authority. The HUG store remains the focused
             HUG home for buyers and receivers.
           </p>
 
@@ -70,7 +70,7 @@ export default function HugsPage() {
             </div>
 
             <div className="rounded-xl bg-[#eef6ff] p-4">
-              <strong>K-KUT</strong>
+              <strong>The HUG store</strong>
               <p className="mt-1">HUG selection, sending, receiving, and private-link flow.</p>
             </div>
           </div>

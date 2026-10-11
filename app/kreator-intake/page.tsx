@@ -91,7 +91,7 @@ export default function KreatorIntakePage() {
 
       <section className="mx-auto max-w-4xl px-6 py-12">
         <p className="text-sm font-black uppercase tracking-[0.28em] text-[#FFD54F]">
-          4PE Intake Portal
+          Intake Portal
         </p>
 
         <h1 className="mt-4 text-4xl font-black sm:text-5xl">
@@ -99,8 +99,8 @@ export default function KreatorIntakePage() {
         </h1>
 
         <p className="mt-4 max-w-2xl text-lg leading-relaxed text-[#E8CFA8]">
-          Submit songs, demos, stems, lyrics, artwork, credits, notes, and reference files for GPM / 4PE review.
-          Everything enters 4PE intake first. Nothing becomes public PIX, K-KUT, HUG, or catalog material until admin review.
+          Submit songs, demos, stems, lyrics, artwork, credits, notes, and reference files for G Putnam Music review.
+          Everything enters intake first. Nothing becomes public until it is reviewed.
         </p>
 
         <div className="mt-8 rounded-3xl border border-[#FFD54F]/30 bg-[#24180f] p-6">
@@ -113,13 +113,13 @@ export default function KreatorIntakePage() {
               <p className="font-black text-green-200">Correct</p>
               <p>Thank You</p>
               <p>God Only Knows</p>
-              <p>Down Baby - INSTRO</p>
+              <p>Down Baby - Instrumental</p>
             </div>
             <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-4">
               <p className="font-black text-red-200">Do not use</p>
               <p>KLEIGH - Thank You</p>
               <p>003 - Artist - Song Title</p>
-              <p>Music Maykers - Song Title</p>
+              <p>G Putnam Music - Song Title</p>
             </div>
           </div>
         </div>
@@ -130,7 +130,7 @@ export default function KreatorIntakePage() {
             Fair review policy
           </p>
           <p className="mt-3 text-[#E8CFA8] leading-relaxed">
-            Initial interest is free. If a work is selected for deeper 4PE review, GPM may offer a paid review path.
+            Initial interest is free. If a work is selected for deeper review, GPM may offer a paid review path.
             Review fees cover real intake labor and do not guarantee acceptance, public release, sales, licensing,
             placement, or use.
           </p>
