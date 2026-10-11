@@ -1,79 +1,36 @@
 'use client';
 
-import { createClient } from '@supabase/supabase-js';
 import React, { useEffect, useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import GlobalPlayer from '@/components/GlobalPlayer';
-import { Bot, Tv, BadgeCheck, ShoppingCart, Heart, Music2, MapPin } from 'lucide-react';
+import SongPlayer from '@/components/listen/SongPlayer';
+import { Heart, Music2, MapPin } from 'lucide-react';
 
-function getSupabase() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL as string,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string
-  );
-}
+type Track = { id: string; artist: string; title: string; src: string };
 
-interface SchererTrack {
-  id: string;
-  title: string | null;
-  artist: string | null;
-  audio_url: string | null;
-  tv_network: string | null;
-  tv_show: string | null;
-  tv_spot_description: string | null;
-  tv_region: string | null;
-  gpmcc_sfw: boolean | null;
-  composition_story: string | null;
-  lemon_squeezy_url: string | null;
-  sync_tier: string | null;
-}
-
+/* Michael Scherer's instrumentals. The list and its signed stream addresses
+   come from C-OP (k-kut.com/api/scherer); this page never reads a database.
+   GD, 2026-10-11: "YES, REBUILD SCHERER PAGE". The page before this one is
+   kept beside it as page.before-c-op.tsx. */
 export default function SchererPage() {
-  const [tracks, setTracks] = useState<SchererTrack[]>([]);
+  const [tracks, setTracks] = useState<Track[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadTracks = async () => {
-      const { data, error } = await getSupabase()
-        .from('msj_tv_thoroughbreds')
-        .select('*')
-        .not('audio_url', 'is', null)
-        .limit(10);
-
-      if (error) {
-        console.error('[MSJ-BOT] Error loading Scherer tracks', error);
-      } else {
-        setTracks(data as SchererTrack[]);
-      }
-      setLoading(false);
+    let cancelled = false;
+    fetch('https://www.k-kut.com/api/scherer', { cache: 'no-store' })
+      .then((res) => (res.ok ? res.json() : { tracks: [] }))
+      .then((body: { tracks?: Track[] }) => {
+        if (!cancelled) setTracks(body.tracks ?? []);
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
     };
-
-    loadTracks();
   }, []);
-
-  const handlePlay = (track: SchererTrack) => {
-    if (!track.audio_url) return;
-
-    const playEvent = new CustomEvent('play-track', {
-      detail: {
-        title: track.title || 'Unknown Track',
-        artist: track.artist || 'Michael Scherer',
-        url: track.audio_url,
-        moodTheme: { primary: '#8B4513' },
-        meta: {
-          tv_network: track.tv_network,
-          tv_show: track.tv_show,
-          gpmcc_sfw: track.gpmcc_sfw,
-          lemon_squeezy_url: track.lemon_squeezy_url,
-          composition_story: track.composition_story,
-          sync_tier: track.sync_tier,
-        },
-      },
-    });
-
-    window.dispatchEvent(playEvent);
-  };
 
   return (
     <main className="min-h-screen flex flex-col text-white bg-black">
@@ -153,138 +110,20 @@ export default function SchererPage() {
         </div>
       </section>
 
-      <section id="catalog" className="relative flex-1 max-w-5xl mx-auto px-6 py-12 space-y-10">
-        {/* Product description */}
-        <div className="space-y-4">
-          <div className="inline-flex items-center gap-2 rounded-full bg-amber-600/20 px-3 py-1 text-xs font-semibold text-amber-200">
-            <Bot className="w-4 h-4" />
-            MSJ-BOT · Librarian of the TV Assets
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-            The MSJ Anthology: TV Sync &amp; Beyond
-          </h1>
-          <p className="text-sm text-neutral-300 max-w-3xl">
-            Go beyond the genre. This collection features the definitive Michael Scherer catalog,
-            including 5 Thoroughbreds currently featured on national U.S. television. Curated by
-            the MSJ-BOT, this set delivers more than just Jazz—it provides a sophisticated,
-            high-fidelity atmosphere for professional environments, creative synchronization, and
-            deep focus. From broadcast-ready masters to situational &quot;Blasts,&quot; this is the sound of
-            verified success. Slick. Certain. Sovereign.
+      <section id="catalog" className="w-full bg-[#FFF0F5] px-4 py-12 text-[#2C2418]">
+        <div className="mx-auto max-w-3xl">
+          <h2 className="text-4xl font-black uppercase tracking-tight text-[#8B4513] md:text-5xl">Michael Scherer</h2>
+          <p className="mt-2 text-sm font-bold uppercase tracking-[0.2em] text-[#5D4037]">
+            {loading ? 'Loading…' : `${tracks.length} instrumentals · tap to play`}
           </p>
-        </div>
-
-        {/* Sync terms / SFW */}
-        <div className="grid gap-4 md:grid-cols-2">
-          <div className="rounded-xl border border-white/10 bg-neutral-900/60 p-4 text-sm space-y-2">
-            <h2 className="text-lg font-semibold flex items-center gap-2">
-              <Tv className="w-4 h-4" />
-              Professional Sync &amp; Utility
-            </h2>
-            <p>
-              One-time master purchase for professional use. Broadcast-ready WAV/AIFF, stems where
-              available, cue sheets on request.
-            </p>
-            <p>
-              Ideal for TV promos, trailers, on-air branding, executive decks, and production
-              environments that need instant credibility.
-            </p>
-          </div>
-
-          <div className="rounded-xl border border-white/10 bg-neutral-900/60 p-4 text-sm space-y-2">
-            <h2 className="text-lg font-semibold flex items-center gap-2">
-              <BadgeCheck className="w-4 h-4 text-emerald-400" />
-              GPMCC SFW Certified
-            </h2>
-            <p>
-              All tracks in this Anthology are cleared for executive-safe, workplace-safe
-              presentation. No explicit language, no surprise content swings.
-            </p>
-            <p>
-              Perfect for boardrooms, client pitches, and leadership-level communications.
-            </p>
-          </div>
-        </div>
-
-        {/* Track list */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between gap-4">
-            <h2 className="text-xl font-semibold">Featured TV Thoroughbreds</h2>
-            <span className="text-xs text-neutral-400">
-              Curated by MSJ-BOT · {tracks.length} active TV assets
-            </span>
-          </div>
-
-          {loading && (
-            <p className="text-sm text-neutral-400">
-              MSJ-BOT is fetching the current TV placements…
-            </p>
-          )}
-
-          {!loading && tracks.length === 0 && (
-            <p className="text-sm text-neutral-400">
-              No Scherer TV assets are registered yet. Once the 5 Thoroughbreds are tagged in
-              Supabase, they will appear here automatically.
-            </p>
-          )}
-
-          <div className="space-y-3">
-            {tracks.map((track) => (
-              <div
-                key={track.id}
-                className="flex flex-col md:flex-row md:items-center gap-3 rounded-lg border border-white/10 bg-neutral-900/60 px-4 py-3"
-              >
-                <div className="flex-1 space-y-1">
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => handlePlay(track)}
-                      className="text-sm font-semibold hover:underline"
-                    >
-                      {track.title || 'Untitled Track'}
-                    </button>
-                    {track.gpmcc_sfw && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold text-emerald-300">
-                        <BadgeCheck className="w-3 h-3" />
-                        SFW
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-xs text-neutral-400">
-                    {track.tv_network && track.tv_show
-                      ? `Currently featured on ${track.tv_network} · ${track.tv_show}${
-                          track.tv_region ? ` · ${track.tv_region}` : ''
-                        }`
-                      : 'TV sync-ready asset'}
-                  </p>
-                  {track.tv_spot_description && (
-                    <p className="text-[11px] text-neutral-400">
-                      {track.tv_spot_description}
-                    </p>
-                  )}
-                  {track.composition_story && (
-                    <p className="text-[11px] text-neutral-300 line-clamp-2">
-                      {track.composition_story}
-                    </p>
-                  )}
-                </div>
-
-                <div className="flex-shrink-0 flex flex-col items-start md:items-end gap-1">
-                  {track.sync_tier && (
-                    <span className="text-[11px] text-neutral-400">{track.sync_tier}</span>
-                  )}
-                  {track.lemon_squeezy_url && (
-                    <a
-                      href={track.lemon_squeezy_url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-2 rounded-full bg-amber-500 px-3 py-1 text-xs font-semibold text-black hover:bg-amber-400 transition"
-                    >
-                      <ShoppingCart className="w-3 h-3" />
-                      License this track
-                    </a>
-                  )}
-                </div>
-              </div>
-            ))}
+          <div className="mt-6">
+            {tracks.length ? (
+              <SongPlayer tracks={tracks} />
+            ) : !loading ? (
+              <p className="rounded-2xl border border-[#8B4513]/20 bg-white p-6">
+                The music is loading slowly. Please refresh in a moment.
+              </p>
+            ) : null}
           </div>
         </div>
       </section>
@@ -330,7 +169,6 @@ export default function SchererPage() {
         </div>
       </section>
 
-      <GlobalPlayer />
       <Footer />
     </main>
   );
