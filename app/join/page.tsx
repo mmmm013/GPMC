@@ -26,8 +26,8 @@ function useFounderCount() {
 const FLASH_SPECIALS = [
   {
     emoji: '⚡',
-    title: 'K-KUT Sovereign Pass',
-    desc: 'Explore K-KUTs, HUGs, and real song-section products at the dedicated K-KUT site.',
+    title: 'HUGs, TUGs & BUGs',
+    desc: 'Send real pieces of songs: HUGs, TUGs and BUGs, at our HUG store.',
     href: 'https://k-kut.com',
     cta: 'BUY NOW'
   },
@@ -101,7 +101,7 @@ export default function JoinPage() {
               rel="noopener noreferrer"
               className="bg-[#FFD54F] text-black px-8 py-3 font-black text-sm uppercase tracking-widest hover:bg-white transition-colors"
             >
-              Buy K-KUT Now
+              Send a HUG
             </a>
             <Link
               href="/gift"

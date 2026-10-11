@@ -53,7 +53,7 @@ export default function Footer() {
               href="/gift"
               className="inline-flex items-center rounded-full border border-[#D4A017]/40 bg-[#D4A017]/10 px-5 py-2 text-xs font-bold uppercase tracking-[0.18em] text-[#D4A017] hover:bg-[#D4A017]/20"
             >
-              K-KUTss
+              Send a HUG
             </Link>
           </div>
         )}

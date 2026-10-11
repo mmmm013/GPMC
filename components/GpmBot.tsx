@@ -54,8 +54,8 @@ const BOT_CONFIG: Record<BotName, {
     emoji: '🎛️',
     voice: 'Your guide · KLEIGH, AUS',
     greetingAudio: '/audio/mc_bot_intro.m4a',
-    greeting: "HAVE YOU EVER SENT A FEELING BEFORE? SEND A K-KUT; You can send a special feeling through beautiful vocals & brilliant music behind it. It's like a bitmoji-come-to-life.",
-    firstVisitCue: "HAVE YOU EVER SENT A FEELING BEFORE? SEND A K-KUT; You can send a special feeling through beautiful vocals & brilliant music behind it. It's like a bitmoji-come-to-life.",
+    greeting: "HAVE YOU EVER SENT A FEELING BEFORE? SEND A HUG; You can send a special feeling through beautiful vocals & brilliant music behind it. It's like a bitmoji-come-to-life.",
+    firstVisitCue: "HAVE YOU EVER SENT A FEELING BEFORE? SEND A HUG; You can send a special feeling through beautiful vocals & brilliant music behind it. It's like a bitmoji-come-to-life.",
   },
   'LF-BOT': {
     label: 'LF-BOT',
@@ -74,7 +74,7 @@ const BOT_CONFIG: Record<BotName, {
     emoji: '📊',
     voice: 'Founder · Normal, USA',
     greetingAudio: '/audio/gpm_intro.m4a',
-    greeting: "GD-BOT online. Direct. Energetic. ALIVE! I'm the Founder — Normal, USA. I find the next best move for you right now: pricing, campaigns, K-KUT focus. Customer is always right, and the right move is always forward. Let's GO.",
+    greeting: "GD-BOT online. Direct. Energetic. ALIVE! I'm the Founder — Normal, USA. I find the next best move for you right now: pricing, campaigns, HUG focus. Customer is always right, and the right move is always forward. Let's GO.",
     firstVisitCue: "GD-BOT online. ALIVE! I'm the Founder. Say \"NEXT\" or tap → and we level this up together. Direct, fast, and always rooting for you.",
   },
   'PIXIE-BOT': {
@@ -84,7 +84,7 @@ const BOT_CONFIG: Record<BotName, {
     emoji: '✨',
     voice: 'PIXIE · Creative Stylist',
     greetingAudio: '/audio/pixie_intro.m4a',
-    greeting: "Hi, I'm PIXIE-BOT ✨ Jane Burton, creative stylist and your guide to perfect music moments. I shape K-KUT experiences, curate PIXIE's PIX playlist, and help you find the exact note that speaks. Say \"NEXT\" or tap → and let's create something beautiful.",
+    greeting: "Hi, I'm PIXIE-BOT ✨ Jane Burton, creative stylist and your guide to perfect music moments. I shape HUG experiences, curate PIXIE's playlist, and help you find the exact note that speaks. Say \"NEXT\" or tap → and let's create something beautiful.",
     firstVisitCue: "I'm PIXIE-BOT ✨ Say \"NEXT\" or tap → and I'll shape your perfect music moment — personal, curated, exactly right.",
   },
   'OPS-BOT': {
@@ -111,27 +111,27 @@ const BOT_STEP_HINTS: Record<BotName, string[]> = {
   'MC-BOT': [
     "Who's special who's on your mind now? Love? Encouragement? Casual? Supportive? I'll find options, such as an intro and meaningful 1st verse or a bridge and a final chorus.",
     "You can send a special feeling through beautiful vocals & brilliant music behind it. It's like a bitmoji-come-to-life. Truly help moments stand out in ways NEVER done before.",
-    "Make noise the healthy way! Send a K-KUT, & also see mini-KUTs [words, phrases] and K-kUpIds, which are all about romance... at different levels to suit your love interest.",
+    "Make noise the healthy way! Send a HUG, & also see TUGs and BUGs [lines, words] and K-kUpIds, which are all about romance... at different levels to suit your love interest.",
     "Tap the link. No app, no account, no faff. Just the feeling, delivered instantly. A digital moment perfectly delivered.",
     "Mission accomplished. You've sent more than a link — you've sent a feeling. The rhythm stays with you. Drive on."
   ],
   'LF-BOT': [
     "Welcome! I'm so glad you're here. Let's take this one step at a time. You'll browse through the catalog, or simply tell us your mood or occasion, and we'll find that perfect music moment together. It's all very straightforward, I promise!",
-    "Now here's where it gets really neat — a K-KUT is a small, six-character link that opens to the exact Sweet Spot of a song. A mini-KUT streams just a specific verse or chorus. Both protect your rights fully, and your buyer's needs are completely respected throughout. I want you to know that.",
+    "Now here's where it gets really neat — a HUG is a private link that opens to a whole section of a song. A TUG streams just one line or phrase. Both protect your rights fully, and your buyer's needs are completely respected throughout. I want you to know that.",
     "K-kUpId is the gifting layer — and this is where things get exciting from a licensing standpoint! Every link is properly resolved. Your work is protected. Buyers get a clear, honest experience. And if you ever have questions about rights or deal terms, I'm right here for you.",
     "Just tap the link — no app required, no account to create. The experience opens directly, clean and clear. Fully above board. That's exactly how we do things here.",
     "And we've arrived! You've been wonderful to walk through this with. Music has always been the best gift, and now you can send exactly the right note with complete peace of mind. Thank you so much for being here — it truly means a lot.",
   ],
   'GD-BOT': [
     "Let's GO. The catalog is ALIVE with Sweet Spots — those exact moments in a track that land differently. Browse it, filter by mood, or tell me what you need right now. I'll find the move.",
-    "K-KUT is the performance vehicle. Six characters. One tap. Opens the exact moment you want the listener to hear. mini-KUT handles a specific section. Both designed for maximum impact — shareable, trackable, campaign-ready. That's leverage.",
+    "A HUG is the performance vehicle. One tap. Opens the exact moment you want the listener to hear. A TUG handles one line. Both designed for maximum impact — shareable, trackable, campaign-ready. That's leverage.",
     "K-kUpId is your pricing and gifting engine. This is where you set the experience level — romance skin, full capsule, pricing tier. Every link you generate here is a campaign asset. Think about what that means for your catalog.",
     "Tap the link. That's the whole product. Zero friction. No account required. The Sweet Spot plays instantly. Customer is always right — and the right experience is always immediate.",
-    "That's the destination. But the strategy doesn't stop here — this is where we plan the NEXT campaign, the next K-KUT drop, the next level. You've got the tools. The rhythm stays with you. Drive on.",
+    "That's the destination. But the strategy doesn't stop here — this is where we plan the NEXT campaign, the next HUG drop, the next level. You've got the tools. The rhythm stays with you. Drive on.",
   ],
   'PIXIE-BOT': [
     "Oh, let's find your perfect music moment ✨ Think of a feeling, a memory, a scene in your mind. The catalog holds it — we just have to find it together. What's the mood today, love?",
-    "A K-KUT is like a little gift box for a song moment 💎 Six characters that open to exactly the right note. A mini-KUT captures a verse or chorus — just the part that speaks. Both are shareable, giftable, and beautifully simple.",
+    "A HUG is like a little gift box for a song moment 💎 One link that opens to exactly the right part. A TUG captures one line — just the part that speaks. Both are shareable, giftable, and beautifully simple.",
     "K-kUpId is where we dress the experience ✨ Choose a track, find your moment, then decide — is this a gift, a romantic gesture, or a full digital moment? Every detail can be tailored to the feeling you want to send.",
     "Tap and listen. No friction, no forms — just the music, exactly as intended. That's the artistry of it. Pure and precise. A moment perfectly delivered.",
     "Last song, mate. You've reached the destination, but the rhythm stays with you. Drive on 🌿 Music is the most personal gift — and you've just learned how to send exactly the right note. Beautiful work.",
@@ -140,7 +140,7 @@ const BOT_STEP_HINTS: Record<BotName, string[]> = {
     "Platform check — everything starts here. I monitor cron job health, migration status, and admin alerts in real time. No guesswork, just clean signal.",
     "Cron jobs fire on schedule: rotate-promotions every 3 hours, free-gift every hour. Any deviation shows up in Vercel logs. I watch them all.",
     "Migration pipeline is versioned and sequential. Each migration in supabase/migrations/ runs exactly once. Rollbacks are manual — flag me if anything needs unwinding.",
-    "API health: all endpoints return 200 in normal operation. /api/health is your quick check. /api/admin/lt-pix-mkut-check verifies LT-PIX mini-KUT coverage. Both are CRON_SECRET-guarded.",
+    "API health: all endpoints return 200 in normal operation. /api/health is your quick check. /api/admin/lt-pix-mkut-check verifies coverage. Both are CRON_SECRET-guarded.",
     "Status nominal. All systems operational. Keep an eye on the Vercel dashboard for edge function timing. If you need a full audit, I'm right here.",
   ],
   'P-LEC-BOT': [
@@ -168,15 +168,15 @@ export const DEFAULT_STEPS: JourneyStep[] = [
     href: '/#t20',
   },
   {
-    title: 'Choose a K-KUT or mini-KUT path',
-    hint: 'K-KUT and mini-KUT options are pre-made and ready to launch in one tap. In GPME, customization is read-only.',
-    action: 'Explore K-KUTs',
+    title: 'Choose a HUG, TUG or BUG',
+    hint: 'HUGs, TUGs and BUGs are pre-made and ready to send in one tap.',
+    action: 'Send a HUG',
     href: '/kupid',
   },
   {
     title: 'Select or resolve your link',
     hint: 'K-kUpId is the gifting layer. Select a pre-made KK/mK/KPD, then share the full digital experience. MIP2 custom work is handled outside GPME by request.',
-    action: 'Open Pre-Made K-KUT',
+    action: 'Open a Pre-Made HUG',
     href: '/kkut/create',
   },
   {

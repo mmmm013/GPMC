@@ -24,7 +24,7 @@ export default function GlobalPlayer() {
   const [isMuted, setIsMuted] = useState(false);
   const [track, setTrack] = useState({
     title: "Pick an Activity",
-    vocalist: "Click any T20 box or GPM PIX to stream",
+    vocalist: "Tap Play to hear every song",
     url: "",
     moodColor: "#8B4513"
   });
@@ -240,8 +240,10 @@ export default function GlobalPlayer() {
   }, []);
 
   const togglePlay = () => {
+    /* Nothing chosen on this page: Play goes where every song plays
+       (GD, 2026-10-11, "do A" -- no dead Play buttons). */
     if (!track.url) {
-      setError('No track selected');
+      window.location.href = '/listen';
       return;
     }
     setError('');
