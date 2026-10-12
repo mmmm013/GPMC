@@ -2,6 +2,7 @@
 
 import "./globals.css";
 import type { Metadata } from "next";
+import SiteVisit from "@/components/SiteVisit";
 
 export const metadata: Metadata = {
   title: "G Putnam Music",
@@ -17,6 +18,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         {children}
+        <SiteVisit />
 
         {/* === GLOBAL TELEMETRY: PAGE VIEW === */}
         <script
