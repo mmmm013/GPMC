@@ -151,7 +151,7 @@ function securityHeaders(): Record<string, string> {
       "font-src 'self' https://fonts.gstatic.com",
       "img-src 'self' data: blob: https://*.supabase.co https://*.supabase.in",
       "media-src 'self' blob: https://*.supabase.co https://*.supabase.in https://www.k-kut.com https://k-kut.com", // songs on /listen stream from k-kut.com (GD, 2026-10-11)
-      "connect-src 'self' https://*.supabase.co https://*.supabase.in https://api.stripe.com https://api.twilio.com",
+      "connect-src 'self' https://www.k-kut.com https://*.supabase.co https://*.supabase.in https://api.stripe.com https://api.twilio.com", // the visit counter at k-kut.com/api/visit (GD, 2026-10-12)
       "frame-src https://js.stripe.com",
       "object-src 'none'",
       "base-uri 'self'",
