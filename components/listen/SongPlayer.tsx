@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import DownloadReturn from './DownloadReturn';
 
 type Track = { id: string; artist: string; title: string; src: string; buyDownloadUrl?: string };
 
@@ -37,6 +38,7 @@ export default function SongPlayer({ tracks }: { tracks: Track[] }) {
 
   return (
     <div>
+      <DownloadReturn />
       <div className="sticky top-0 z-20 rounded-2xl border border-[#C8A882]/50 bg-[#2A1506] p-4 text-[#F5E6D3] shadow-lg">
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#FFD54F]">Now playing</p>
         <p className="mt-1 text-lg font-black">
