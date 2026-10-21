@@ -7,7 +7,13 @@ import Footer from '@/components/Footer';
  * The previous home page (an internal explainer) is kept, unrouted, in
  * app/page.before-listen-home.tsx.
  */
+// GD, 2026-10-21, "Both": a Halloween banner pointing at the free games.
+// It drops itself after Halloween.
+const HALLOWEEN_ENDS = Date.parse('2026-11-01T12:00:00Z');
+export const revalidate = 3600;
+
 export default function HomePage() {
+  const showHalloween = Date.now() < HALLOWEEN_ENDS;
   return (
     <main className="min-h-screen bg-[#FFF0F5] text-[#2C2418]">
       <Header />
@@ -29,6 +35,28 @@ export default function HomePage() {
             Send a HUG
           </a>
         </div>
+        {showHalloween && (
+          <a
+            href="https://www.k-kut.com/halloween-classroom"
+            className="mt-12 block rounded-2xl bg-[#2A1B3D] px-6 py-5 text-left text-white shadow-lg hover:bg-[#3A2652]"
+          >
+            <span className="block text-sm font-bold uppercase tracking-widest text-[#F4A340]">
+              🎃 Halloween
+            </span>
+            <span className="mt-1 block text-2xl font-black">The Cemetery Stomp</span>
+            <span className="mt-1 block text-lg">Two free Halloween games for kids:</span>
+            <span className="mt-2 block text-base leading-relaxed text-white/90">
+              🎃 81 silly creature moves to act out
+              <br />
+              🎃 A word hunt where every word is sung
+              <br />
+              🎃 Ages 4 and up · No sign-in · Nothing to install
+            </span>
+            <span className="mt-4 inline-block rounded-full bg-[#F4A340] px-6 py-2 text-lg font-black text-[#2A1506]">
+              Play free →
+            </span>
+          </a>
+        )}
       </section>
       <Footer />
     </main>
