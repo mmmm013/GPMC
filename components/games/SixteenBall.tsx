@@ -2,7 +2,6 @@
 
 import { useRef, useState } from 'react';
 import { GAME_API, loadProgress, saveProgress, type GameElement } from '@/lib/games/meantsGame';
-import SpookyMusic from './SpookyMusic';
 
 /* 16-Ball: the old 8-ball, remade as a 16-ball kaleidoscope. Ask the person
    across from you anything, shake, and the ball answers with one real
@@ -95,8 +94,6 @@ export default function SixteenBall() {
         </div>
       )}
       {message && <p className="mt-4 text-[#D7CCC8]" role="status">{message}</p>}
-
-      <SpookyMusic />
     </div>
   );
 }
