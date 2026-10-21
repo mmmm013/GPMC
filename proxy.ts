@@ -155,7 +155,7 @@ function securityHeaders(): Record<string, string> {
       "frame-src https://js.stripe.com",
       "object-src 'none'",
       "base-uri 'self'",
-      "form-action 'self'",
+      "form-action 'self' https://checkout.stripe.com", // a Download tap posts here, then goes on to Stripe's checkout (2026-10-21)
     ].join('; '),
   };
 }
