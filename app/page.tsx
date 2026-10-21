@@ -44,8 +44,16 @@ export default function HomePage() {
               🎃 Halloween
             </span>
             <span className="mt-1 block text-2xl font-black">The Cemetery Stomp</span>
-            <span className="mt-1 block text-lg">
-              Two free Halloween games for kids, every word sung. Play free →
+            <span className="mt-1 block text-lg">Two free Halloween games for kids:</span>
+            <span className="mt-2 block text-base leading-relaxed text-white/90">
+              🎃 81 silly creature moves to act out
+              <br />
+              🎃 A word hunt where every word is sung
+              <br />
+              🎃 Ages 4 and up · No sign-in · Nothing to install
+            </span>
+            <span className="mt-4 inline-block rounded-full bg-[#F4A340] px-6 py-2 text-lg font-black text-[#2A1506]">
+              Play free →
             </span>
           </a>
         )}
