@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { GAME_API, loadProgress, saveProgress, sendAnswer, type GameElement } from '@/lib/games/meantsGame';
+import { MOODS_FOR, SERENADE, nextSuggestion, useNugPlayer, usePlayerSense } from '@/lib/games/adaptive';
 
 /* "Can I…?" — the song asks, the listener answers. Each challenge plays a
    TUG whose catalogue tags fit it, and every "Did it?" is filed so the tags can
@@ -25,6 +26,23 @@ export default function CanIGame() {
   const [element, setElement] = useState<GameElement | null>(null);
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
+  const [last, setLast] = useState<{ id: string; yes: boolean } | null>(null);
+  const sense = usePlayerSense();
+  const nugs = useNugPlayer();
+
+  /* Calm-down: rapid taps bring a soft serenade and a short pause. */
+  useEffect(() => {
+    if (!sense.frustrated) return;
+    audio.current?.pause();
+    void nugs.playAlone(SERENADE);
+    setMessage('Take a breath. Here is something calm.');
+    setBusy(true);
+    const t = setTimeout(() => {
+      setBusy(false);
+      sense.settle();
+    }, 5000);
+    return () => clearTimeout(t);
+  }, [sense.frustrated]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     fetch(`${GAME_API}&kind=challenges`, { cache: 'no-store' })
@@ -36,8 +54,11 @@ export default function CanIGame() {
   const done = progress.answered.length;
   const cleared = LEVELS.filter((l) => done >= l.need);
   const next = LEVELS.find((l) => done < l.need);
+  const suggested = nextSuggestion(last, challenges.map((c) => c.id), progress.answered);
 
   async function play(challenge: Challenge) {
+    sense.tap();
+    nugs.stop();
     setActive(challenge);
     setBusy(true);
     setMessage('');
@@ -53,6 +74,8 @@ export default function CanIGame() {
       const a = audio.current;
       if (a) {
         a.src = body.element.src;
+        /* Steady and calm players hear a mood bed under the TUG; quick players get it bare. */
+        if (sense.pace !== 'quick') void nugs.bedUnder(a, MOODS_FOR[challenge.id] ?? []);
         void a.play().catch(() => setMessage('Tap play to listen.'));
       }
     } catch {
@@ -64,6 +87,7 @@ export default function CanIGame() {
 
   function answer(yes: boolean) {
     if (!active || !element) return;
+    sense.tap();
     if (element.reference) {
       void sendAnswer({ type: 'did-it', reference: element.reference, challenge: active.id, ask: active.ask, answer: yes ? 'yes' : 'no' });
     }
@@ -74,9 +98,13 @@ export default function CanIGame() {
     setProgress(updated);
     saveProgress(KEY, updated);
     setMessage(yes ? 'The song wins this one!' : 'You win this one. Try another challenge.');
+    setLast({ id: active.id, yes });
     setElement(null);
     setActive(null);
     audio.current?.pause();
+    nugs.stop();
+    /* Quick players get a snip as the round's sting. */
+    if (sense.pace === 'quick') void nugs.playAlone(MOODS_FOR[active.id] ?? []);
   }
 
   return (
@@ -101,6 +129,7 @@ export default function CanIGame() {
             <button key={c.id} type="button" disabled={busy} onClick={() => play(c)}
               className={`min-h-14 rounded-2xl border px-4 py-3 text-left text-lg font-bold ${active?.id === c.id ? 'border-[#FFD54F] bg-[#FFD54F] text-black' : 'border-white/30 text-white'} disabled:opacity-60`}>
               {c.ask} {tried && <span className="text-sm font-normal opacity-70">· answered</span>}
+              {suggested === c.id && active?.id !== c.id && <span className="ml-2 rounded-full bg-[#FFD54F]/20 px-2 py-0.5 text-xs font-bold text-[#FFD54F]">try next</span>}
             </button>
           );
         })}

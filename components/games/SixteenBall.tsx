@@ -1,7 +1,8 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { GAME_API, loadProgress, saveProgress, type GameElement } from '@/lib/games/meantsGame';
+import { MOODS_FOR_PACE, SERENADE, useNugPlayer, usePlayerSense } from '@/lib/games/adaptive';
 
 /* 16-Ball: the old 8-ball, remade as a 16-ball kaleidoscope. Ask the person
    across from you anything, shake, and the ball answers with one real
@@ -19,10 +20,28 @@ export default function SixteenBall() {
   const [spin, setSpin] = useState(0);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
+  const sense = usePlayerSense();
+  const nugs = useNugPlayer();
+
+  /* Calm-down: rapid shaking brings a soft serenade and a short rest for the ball. */
+  useEffect(() => {
+    if (!sense.frustrated) return;
+    audio.current?.pause();
+    void nugs.playAlone(SERENADE);
+    setMessage('The ball is resting. Here is something calm.');
+    setBusy(true);
+    const t = setTimeout(() => {
+      setBusy(false);
+      sense.settle();
+    }, 5000);
+    return () => clearTimeout(t);
+  }, [sense.frustrated]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const turn = TURNS[games % TURNS.length];
 
   async function shake() {
+    sense.tap();
+    nugs.stop();
     setBusy(true);
     setMessage('');
     setAnswer(null);
@@ -38,6 +57,9 @@ export default function SixteenBall() {
       const a = audio.current;
       if (a) {
         a.src = body.element.src;
+        /* Steady and calm players hear a mood bed under the answer; quick players get a snip after it. */
+        if (sense.pace !== 'quick') void nugs.bedUnder(a, MOODS_FOR_PACE[sense.pace]);
+        else a.addEventListener('ended', () => void nugs.playAlone(MOODS_FOR_PACE.quick), { once: true });
         void a.play().catch(() => setMessage('Tap play to hear the answer.'));
       }
     } catch {
@@ -48,6 +70,8 @@ export default function SixteenBall() {
   }
 
   function nextGame() {
+    sense.tap();
+    nugs.stop();
     const n = games + 1;
     setGames(n);
     saveProgress(KEY, { games: n });

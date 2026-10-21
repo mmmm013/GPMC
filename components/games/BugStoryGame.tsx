@@ -1,7 +1,8 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { GAME_API, loadProgress, saveProgress, type GameElement } from '@/lib/games/meantsGame';
+import { MOODS_FOR_PACE, SERENADE, useNugPlayer, usePlayerSense } from '@/lib/games/adaptive';
 
 /* BUG-Story: free to play. Type three words; each word sung in a G Putnam Music song plays as
    its BUG, one after another, and the three tell a tiny story. A BUG shows only
@@ -18,6 +19,22 @@ export default function BugStoryGame() {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
   const [progress, setProgress] = useState<Progress>(() => loadProgress<Progress>(KEY, { stories: 0, mixed: false }));
+  const sense = usePlayerSense();
+  const nugs = useNugPlayer();
+
+  /* Calm-down: rapid taps bring a soft serenade and a short pause. */
+  useEffect(() => {
+    if (!sense.frustrated) return;
+    audio.current?.pause();
+    void nugs.playAlone(SERENADE);
+    setMessage('Take a breath. Here is something calm.');
+    setBusy(true);
+    const t = setTimeout(() => {
+      setBusy(false);
+      sense.settle();
+    }, 5000);
+    return () => clearTimeout(t);
+  }, [sense.frustrated]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const level = progress.stories >= 3 && progress.mixed ? 3 : progress.mixed ? 2 : progress.stories >= 1 ? 1 : 0;
   const goal = [
@@ -31,8 +48,13 @@ export default function BugStoryGame() {
     const a = audio.current;
     if (!a || i >= list.length) {
       setNow(-1);
+      nugs.stop();
+      /* Quick players get a snip to close the story. */
+      if (a && list.length && sense.pace === 'quick') void nugs.playAlone(MOODS_FOR_PACE.quick);
       return;
     }
+    /* Steady and calm players hear a quiet bed under the whole story. */
+    if (i === 0 && sense.pace !== 'quick') void nugs.ambient(MOODS_FOR_PACE[sense.pace]);
     setNow(i);
     a.src = list[i].src;
     a.onended = () => playFrom(list, i + 1);
@@ -41,6 +63,8 @@ export default function BugStoryGame() {
 
   async function tell(e: React.FormEvent) {
     e.preventDefault();
+    sense.tap();
+    nugs.stop();
     const asked = words.map((w) => w.trim()).filter(Boolean);
     if (asked.length !== 3 || asked.some((w) => w.includes(' '))) {
       setMessage('Type one word in each box.');
