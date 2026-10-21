@@ -10,6 +10,7 @@ import Footer from '@/components/Footer';
 // GD, 2026-10-21, "Both": a Halloween banner pointing at the free games.
 // It drops itself after Halloween.
 const HALLOWEEN_ENDS = Date.parse('2026-11-01T12:00:00Z');
+export const revalidate = 3600;
 
 export default function HomePage() {
   const showHalloween = Date.now() < HALLOWEEN_ENDS;
