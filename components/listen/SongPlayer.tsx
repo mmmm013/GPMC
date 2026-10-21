@@ -5,6 +5,20 @@ import DownloadReturn from './DownloadReturn';
 
 type Track = { id: string; artist: string; title: string; src: string; buyDownloadUrl?: string };
 
+/* The Download button is a form, not a link. Only a POST opens a $1.99 checkout
+   at k-kut.com; link scanners and prefetchers that follow every link were opening
+   unpaid checkouts (2026-10-21: 50 in 76 minutes), and none of them submit forms. */
+function buyForm(url?: string): { action: string; song: string; returnTo: string } | null {
+  if (!url) return null;
+  try {
+    const u = new URL(url);
+    const song = u.searchParams.get('song');
+    return song ? { action: `${u.origin}${u.pathname}`, song, returnTo: u.searchParams.get('return') ?? '' } : null;
+  } catch {
+    return null;
+  }
+}
+
 /* One player for every G Putnam Music song. Every row shows artist and title
    (GD, 2026-10-11: "STREAMS SHOW ... ARTIST & TITLE, MINIMUM"). Stream only. */
 export default function SongPlayer({ tracks }: { tracks: Track[] }) {
@@ -68,6 +82,7 @@ export default function SongPlayer({ tracks }: { tracks: Track[] }) {
       <ul className="mt-4 divide-y divide-[#8B4513]/15 rounded-2xl border border-[#8B4513]/20 bg-white">
         {shown.map((t) => {
           const on = current?.id === t.id;
+          const buy = buyForm(t.buyDownloadUrl);
           return (
             <li key={t.id} className="flex items-center gap-3 px-4 py-3">
               <button
@@ -82,14 +97,18 @@ export default function SongPlayer({ tracks }: { tracks: Track[] }) {
                 <p className="truncate text-base font-black text-[#2C2418]">{t.title}</p>
                 <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#8B4513]">{t.artist}</p>
               </div>
-              {t.buyDownloadUrl ? (
-                <a
-                  href={t.buyDownloadUrl}
-                  className="shrink-0 rounded-full border border-[#8B4513]/40 px-3 py-2 text-xs font-black text-[#8B4513] hover:bg-[#8B4513] hover:text-white"
-                  aria-label={`Download ${t.artist} – ${t.title} for $1.99`}
-                >
-                  Download · $1.99
-                </a>
+              {buy ? (
+                <form method="post" action={buy.action} className="shrink-0">
+                  <input type="hidden" name="song" value={buy.song} />
+                  <input type="hidden" name="return" value={buy.returnTo} />
+                  <button
+                    type="submit"
+                    className="rounded-full border border-[#8B4513]/40 px-3 py-2 text-xs font-black text-[#8B4513] hover:bg-[#8B4513] hover:text-white"
+                    aria-label={`Download ${t.artist} – ${t.title} for $1.99`}
+                  >
+                    Download · $1.99
+                  </button>
+                </form>
               ) : null}
             </li>
           );
