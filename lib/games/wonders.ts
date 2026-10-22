@@ -32,19 +32,19 @@ export async function fetchBug(): Promise<GameElement | null> {
   }
 }
 
-/** A riff from the Sunday riff runs, known only by its public number. */
-let riffNumbers: number[] | null = null;
-export async function fetchRiff(avoid: string[] = []): Promise<{ key: string; number: number; src: string } | null> {
+/** A riff from the Sunday riff runs, known only by its public number and name. */
+let riffNumbers: { riff: number; name: string }[] | null = null;
+export async function fetchRiff(avoid: string[] = []): Promise<{ key: string; name: string; src: string } | null> {
   try {
-    riffNumbers ??= ((await (await fetch(`/api/riff-runs/week?week=${weekOf(new Date())}`)).json()) as { order?: number[] }).order ?? [];
+    riffNumbers ??= ((await (await fetch(`/api/riff-runs/week?week=${weekOf(new Date())}`)).json()) as { order?: { riff: number; name: string }[] }).order ?? [];
   } catch {
     return null;
   }
   if (!riffNumbers.length) return null;
-  const pool = riffNumbers.filter((n) => !avoid.includes(`riff-${n}`));
+  const pool = riffNumbers.filter((n) => !avoid.includes(`riff-${n.riff}`));
   const from = pool.length ? pool : riffNumbers;
-  const number = from[Math.floor(Math.random() * from.length)];
-  return { key: `riff-${number}`, number, src: `/api/riff-runs/audio?riff=${number}` };
+  const { riff, name } = from[Math.floor(Math.random() * from.length)];
+  return { key: `riff-${riff}`, name, src: `/api/riff-runs/audio?riff=${riff}` };
 }
 
 /* One AudioContext for the page, opened on the player's first tap (browsers

@@ -4,10 +4,11 @@ import { useEffect, useRef, useState } from 'react';
 import Together from './Together';
 import { isRunOn, nextRun, weekOf } from '@/lib/riffRuns/schedule';
 
-/* A listener knows a riff only by its public number (GD, 2026-10-22). */
+/* A listener knows a riff only by its public number and name (GD, 2026-10-22). */
 type Riff = number;
-type Week = { order: Riff[]; pair: Riff[] };
-type Board = { week: string; riff: Riff; votes: number }[];
+type Named = { riff: Riff; name: string };
+type Week = { order: Named[]; pair: Named[] };
+type Board = { week: string; riff: Riff; name: string; votes: number }[];
 
 const VOTER_KEY = 'gpm-riff-voter';
 const voterId = () => {
@@ -46,7 +47,8 @@ export default function RiffRuns() {
     if (!week) return;
     fetch(`/api/riff-runs/week?week=${week}`).then((r) => (r.ok ? r.json() : null)).then((d) => d && setPlan(d)).catch(() => {});
   }, [week]);
-  const order = plan?.order ?? [];
+  const order = (plan?.order ?? []).map((r) => r.riff);
+  const nameOf = (r: Riff) => plan?.order.find((o) => o.riff === r)?.name ?? `Riff ${r}`;
   const live = now ? isRunOn(now) : false;
 
   async function play(riff: Riff, onEnd?: () => void) {
@@ -95,7 +97,7 @@ export default function RiffRuns() {
               <button onClick={() => runFrom(0)} className="mt-4 rounded-full bg-[#FFD54F] px-6 py-3 text-lg font-black text-[#1a1207]">▶ Start the run</button>
             ) : (
               <div className="mt-4 flex flex-wrap items-center gap-3">
-                <p className="text-lg">Now: <b>Riff {order[runIndex]}</b></p>
+                <p className="text-lg">Now: <b>{nameOf(order[runIndex])}</b></p>
                 <button onClick={() => runFrom(runIndex + 1)} className="rounded-full border border-white/30 px-4 py-2">Next riff</button>
                 <button onClick={stop} className="rounded-full border border-white/30 px-4 py-2">Stop</button>
               </div>
@@ -110,14 +112,14 @@ export default function RiffRuns() {
         )}
       </section>
 
-      {plan && <RiffOff week={week} pair={plan.pair} playing={playing} play={(r) => { setRunIndex(null); void play(r); }} stop={stop} />}
+      {plan && <RiffOff week={week} pair={plan.pair.map((r) => r.riff)} names={plan.pair} playing={playing} play={(r) => { setRunIndex(null); void play(r); }} stop={stop} />}
       <Nameboard />
       {problem && <p className="text-[#FFAB91]">{problem}</p>}
     </div>
   );
 }
 
-function RiffOff({ week, pair, playing, play, stop }: { week: string; pair: Riff[]; playing: Riff | null; play: (r: Riff) => void; stop: () => void }) {
+function RiffOff({ week, pair, names, playing, play, stop }: { week: string; pair: Riff[]; names: Named[]; playing: Riff | null; play: (r: Riff) => void; stop: () => void }) {
   const [pick, setPick] = useState<Riff | null>(null);
   const [email, setEmail] = useState('');
   const [counts, setCounts] = useState<Record<number, number> | null>(null);
@@ -162,7 +164,7 @@ function RiffOff({ week, pair, playing, play, stop }: { week: string; pair: Riff
         {pair.map((r, i) => (
           <div key={r} className={`rounded-xl border p-4 ${pick === r ? 'border-[#FFD54F]' : 'border-white/15'}`}>
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#FFD54F]">Riff {i ? 'B' : 'A'}</p>
-            <p className="mt-1 text-lg font-black">Riff {r}</p>
+            <p className="mt-1 text-lg font-black">{names.find((n) => n.riff === r)?.name}</p>
             <div className="mt-3 flex flex-wrap gap-2">
               <button onClick={() => (playing === r ? stop() : play(r))} className="rounded-full border border-white/30 px-4 py-2">{playing === r ? '■ Stop' : '▶ Listen'}</button>
               <button onClick={() => vote(r)} className="rounded-full bg-[#FFD54F] px-4 py-2 font-black text-[#1a1207]">{pick === r ? 'Your vote ✓' : 'Vote'}</button>
@@ -194,7 +196,7 @@ function Nameboard() {
         <ol className="mt-3 grid gap-2">
           {board.map((w) => (
             <li key={w.week} className="flex justify-between gap-3 border-t border-white/10 pt-2">
-              <span>Week of {new Date(`${w.week}T12:00:00`).toLocaleDateString(undefined, { month: 'long', day: 'numeric' })}: <b>Riff {w.riff}</b></span>
+              <span>Week of {new Date(`${w.week}T12:00:00`).toLocaleDateString(undefined, { month: 'long', day: 'numeric' })}: <b>{w.name}</b></span>
               <span className="text-[#D7CCC8]">{w.votes} votes</span>
             </li>
           ))}

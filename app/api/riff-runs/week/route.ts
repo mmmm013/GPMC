@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { riffOff, runOrder } from '@/lib/riffRuns/catalog';
+import { publicRiff, riffOff, runOrder } from '@/lib/riffRuns/catalog';
 
-/* A week's run order and its Riff-OFF pair, as public riff numbers only. */
+/* A week's run order and its Riff-OFF pair, as public riff numbers and names only. */
 export async function GET(req: Request) {
   const week = new URL(req.url).searchParams.get('week') ?? '';
   const t = Date.parse(`${week}T00:00:00Z`);
@@ -9,7 +9,7 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'Unknown week' }, { status: 400 });
   }
   return NextResponse.json(
-    { order: runOrder(week).map((r) => r.number), pair: riffOff(week).map((r) => r.number) },
+    { order: runOrder(week).map(publicRiff), pair: riffOff(week).map(publicRiff) },
     { headers: { 'Cache-Control': 's-maxage=3600' } },
   );
 }

@@ -1,14 +1,20 @@
 import riffs from './riffs.json';
 import numbers from './numbers.json';
+import names from './names.json';
 
 /* Server only. Which public riff number is which clip, and from which song.
    None of this reaches a page or a response: a listener sees "Riff 17" and
    nothing else (GD, 2026-10-22: "We do NOT share ANY proprietary info AT ALL.
-   Name or number these, however, but UI disconnects from all backend ties"). */
+   Name or number these, however, but UI disconnects from all backend ties").
+   Each riff also has a made-up musical name ("Lve Names!", GD 2026-10-22), checked
+   so that no word of it appears in a song title or in the ASCAP catalogue. */
 
-export type Riff = { key: string; song: string; loop: boolean; seconds: number; number: number };
+export type Riff = { key: string; song: string; loop: boolean; seconds: number; number: number; name: string };
 const NUMBER = numbers as Record<string, number>;
-export const RIFFS: Riff[] = (riffs as Omit<Riff, 'number'>[]).map((r) => ({ ...r, number: NUMBER[r.key] }));
+const NAME = names as Record<string, string>;
+export const RIFFS: Riff[] = (riffs as Omit<Riff, 'number' | 'name'>[]).map((r) => ({ ...r, number: NUMBER[r.key], name: NAME[r.key] }));
+/** What a page may know: a riff's number and its public name. */
+export const publicRiff = (r: Riff) => ({ riff: r.number, name: r.name });
 const BY_NUMBER = new Map(RIFFS.map((r) => [r.number, r]));
 export const riffByNumber = (n: unknown) => BY_NUMBER.get(Number(n));
 
