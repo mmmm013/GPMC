@@ -59,7 +59,7 @@ export default function SixteenBall() {
         a.src = body.element.src;
         /* Steady and calm players hear a mood bed under the answer; quick players get a snip after it. */
         if (sense.pace !== 'quick') void nugs.bedUnder(a, MOODS_FOR_PACE[sense.pace]);
-        else a.addEventListener('ended', () => void nugs.playAlone(MOODS_FOR_PACE.quick), { once: true });
+        a.onended = sense.pace === 'quick' ? () => void nugs.playAlone(MOODS_FOR_PACE.quick) : null;
         void a.play().catch(() => setMessage('Tap play to hear the answer.'));
       }
     } catch {

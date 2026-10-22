@@ -77,18 +77,22 @@ export function useNugPlayer() {
   const bed = useRef<HTMLAudioElement | null>(null);
   const heard = useRef<string[]>([]);
   const stopper = useRef<(() => void) | null>(null);
-
-  useEffect(() => () => stopper.current?.(), []);
+  /* Bumped on every stop, so a NUG that arrives after a stop or after leaving the game never plays. */
+  const turn = useRef(0);
 
   const stop = useCallback(() => {
+    turn.current += 1;
     stopper.current?.();
     stopper.current = null;
   }, []);
 
+  useEffect(() => stop, [stop]);
+
   const start = useCallback(async (moods: string[], volume: number) => {
     stop();
+    const mine = turn.current;
     const nug = await fetchNug(moods, heard.current.slice(-20));
-    if (!nug) return null;
+    if (!nug || mine !== turn.current) return null;
     heard.current.push(nug.id);
     const a = bed.current ?? new Audio();
     bed.current = a;
@@ -134,8 +138,11 @@ export function useNugPlayer() {
         a.playbackRate = 1;
       }
     };
+    let fading = false;
     const fade = () => {
+      fading = true;
       const step = () => {
+        if (!fading) return;
         a.volume = Math.max(0, a.volume - 0.04);
         if (a.volume > 0) requestAnimationFrame(step);
         else a.pause();
@@ -143,8 +150,11 @@ export function useNugPlayer() {
       step();
     };
     const begin = () => {
+      /* A resumed Element brings its bed back at full bed volume. */
+      fading = false;
+      a.volume = 0.28;
       fit();
-      a.currentTime = 0;
+      if (voice.currentTime < 0.25) a.currentTime = 0;
       void a.play().catch(() => {});
     };
     voice.addEventListener('play', begin);
