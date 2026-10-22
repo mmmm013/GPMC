@@ -1,5 +1,6 @@
 'use client';
 
+import { gameEvent } from '@/lib/games/gameEvent';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { clockWorld } from '@/lib/games/wonders';
@@ -49,7 +50,7 @@ export default function Wonders() {
       <div className="mt-4 grid gap-3">
         {PLAYS.map(({ id, title, feel, senses, Play }) => (
           <div key={id} className={`rounded-2xl border bg-black/40 p-5 ${open === id ? 'border-[#FFD54F]' : 'border-white/15'}`}>
-            <button type="button" onClick={() => setOpen(open === id ? null : id)} className="w-full text-left" aria-expanded={open === id}>
+            <button type="button" onClick={() => { if (open !== id) gameEvent('game_start', { game: 'extraordinary', round: id }); setOpen(open === id ? null : id); }} className="w-full text-left" aria-expanded={open === id}>
               <p className="text-2xl font-black">{title}</p>
               <p className="mt-1 text-xs font-bold uppercase tracking-[0.2em] text-[#FFD54F]">{senses}</p>
               <p className="mt-2 text-[#D7CCC8]">{feel}</p>

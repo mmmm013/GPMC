@@ -1,5 +1,6 @@
 'use client';
 
+import { gameEvent } from '@/lib/games/gameEvent';
 import { useEffect, useRef, useState } from 'react';
 import type { GameElement } from '@/lib/games/meantsGame';
 import { CLAIMED_KEY, PROMISE_KEY, alreadyClaimed, claimedLink, fetchHug, newPromiseCode, sendLove } from '@/lib/games/loveGame';
@@ -25,6 +26,7 @@ export default function PrizePicker({ lover, freebie, onDone }: { lover: string;
   const [email, setEmail] = useState('');
   const [to, setTo] = useState('');
   const [link, setLink] = useState('');
+  const [claiming, setClaiming] = useState(false);
   const [note, setNote] = useState('');
 
   async function deal(round: 1 | 2, skip: string[]) {
@@ -114,13 +116,16 @@ export default function PrizePicker({ lover, freebie, onDone }: { lover: string;
   async function claim(e: React.FormEvent) {
     e.preventDefault();
     const reference = kept?.reference ?? offered[offered.length - 1] ?? '';
-    if (!reference) return;
+    if (!reference || claiming) return;
+    setClaiming(true);
     const out =
       stage === 'sorry'
         ? await sendLove({ type: 'love-freebie', code, email, wish, reference })
         : await sendLove({ type: 'prize-claim', prize: freebie ? 'love-game-freebie-hug' : 'love-game-hug', game: 'love', email, reference, from: lover, to: to.trim() });
+    setClaiming(false);
     if (out.ok && out.link) {
       setLink(out.link);
+      gameEvent('prize_link', { game: 'love' });
       try {
         window.localStorage.setItem(CLAIMED_KEY, out.link);
       } catch {
@@ -189,11 +194,11 @@ export default function PrizePicker({ lover, freebie, onDone }: { lover: string;
           {!link && !note && (freebie || !claimedBefore) && (
             <form onSubmit={claim} className="mt-4 flex flex-col gap-3">
               <span className="text-sm text-[#D7CCC8]">It is free, one per player. Get its own link now and send it to {forLove}.</span>
-              <input value={to} onChange={(e) => setTo(e.target.value)} maxLength={40} placeholder="Who is it for? (optional)"
+              <input value={to} onChange={(e) => setTo(e.target.value)} maxLength={40} autoComplete="off" aria-label="Their name" placeholder="Their name (optional)"
                 className="min-h-12 rounded-2xl border border-white/20 bg-black/40 px-4 text-white placeholder:text-white/40" />
-              <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Your email (one free HUG each)"
+              <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" inputMode="email" aria-label="Your email" placeholder="Your email (one free HUG each)"
                 className="min-h-12 rounded-2xl border border-white/20 bg-black/40 px-4 text-white placeholder:text-white/40" />
-              <button type="submit" className="min-h-12 rounded-2xl bg-[#EC407A] font-bold text-white">Claim my prize</button>
+              <button type="submit" disabled={claiming} className="min-h-12 rounded-2xl bg-[#EC407A] font-bold text-white disabled:opacity-60">{claiming ? 'Making your link…' : 'Get my link'}</button>
             </form>
           )}
         </div>

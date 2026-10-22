@@ -1,5 +1,6 @@
 'use client';
 
+import { gameEvent } from '@/lib/games/gameEvent';
 import { useState } from 'react';
 
 /* The prize's own private link, on the spot (GD, 2026-10-22: "The prize is
@@ -13,6 +14,7 @@ export default function SendOn({ link, from, again }: { link: string; from: stri
   const text = `${message}\n${link}`;
 
   async function dm() {
+    gameEvent('prize_sent', { game: 'love', how: 'dm' });
     if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
       try {
         await navigator.share({ text: message, url: link });
@@ -34,9 +36,9 @@ export default function SendOn({ link, from, again }: { link: string; from: stri
     <div className="mt-4 flex flex-col gap-3">
       <p className="text-lg font-black text-[#FFD54F]">{again ? 'Your prize link' : 'It is yours, free. Here is its own link.'}</p>
       <p className="text-sm text-[#D7CCC8]">Send it to your sweetheart. It plays on their own private link.</p>
-      <a href={`sms:?&body=${encodeURIComponent(text)}`} className={`${big} bg-[#EC407A] text-white`}>Text it</a>
+      <a href={`sms:?&body=${encodeURIComponent(text)}`} onClick={() => gameEvent('prize_sent', { game: 'love', how: 'text' })} className={`${big} bg-[#EC407A] text-white`}>Text it</a>
       <button type="button" onClick={dm} className={`${big} bg-[#FFD54F] text-black`}>DM it</button>
-      <a href={link} target="_blank" rel="noopener" className={`${big} border border-white/30`}>Open it</a>
+      <a href={link} target="_blank" rel="noopener" onClick={() => gameEvent('prize_sent', { game: 'love', how: 'open' })} className={`${big} border border-white/30`}>Open it</a>
       {note && <p className="text-sm font-bold text-[#FFD54F]" role="status">{note}</p>}
       <p className="break-all rounded-xl border border-white/20 p-3 text-xs text-[#D7CCC8]">{link}</p>
     </div>

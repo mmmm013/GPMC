@@ -1,5 +1,6 @@
 'use client';
 
+import { gameEvent } from '@/lib/games/gameEvent';
 import { useEffect, useRef, useState } from 'react';
 import type { GameElement } from '@/lib/games/meantsGame';
 import {
@@ -109,6 +110,7 @@ export default function LoveGame() {
     setMessage('');
     setSung([]);
     setLoaded([]);
+    gameEvent('game_start', { game: 'love', round: r });
     setScreen(r);
   }
 
@@ -149,7 +151,9 @@ export default function LoveGame() {
   useEffect(() => {
     if ((screen === 'booth' || screen === 'flame') && shots >= SHOTS[round] && !inFlight) {
       const t = setTimeout(() => {
-        setRibbon(ribbonFor(hits, shots));
+        const won = ribbonFor(hits, shots);
+        setRibbon(won);
+        gameEvent('game_finish', { game: 'love', round, ribbon: won.name });
         setScreen('ribbon');
       }, round === 'flame' ? 1800 : 600);
       return () => clearTimeout(t);

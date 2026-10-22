@@ -1,5 +1,6 @@
 'use client';
 
+import { gameEvent } from '@/lib/games/gameEvent';
 import VoicePlayer from './VoicePlayer';
 import { playVoice } from '@/lib/games/clearVoice';
 import { useEffect, useRef, useState } from 'react';
@@ -48,6 +49,7 @@ export default function SixteenBall() {
     setMessage('');
     setAnswer(null);
     setSpin((s) => s + 720 + Math.floor(Math.random() * 360));
+    gameEvent('game_start', { game: '16-ball' });
     try {
       const body = (await (await fetch(`${GAME_API}&kind=ball`, { cache: 'no-store' })).json()) as { element: GameElement | null };
       await new Promise((r) => setTimeout(r, 1200));
@@ -56,6 +58,7 @@ export default function SixteenBall() {
         return;
       }
       setAnswer(body.element);
+      gameEvent('game_finish', { game: '16-ball' });
       const a = audio.current;
       if (a) {
         /* Steady and calm players hear a mood bed under the answer; quick players get a snip after it. */
