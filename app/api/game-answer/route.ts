@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { isPerson } from '@/lib/people';
 
 /* A "Did it?" answer or a Golden NUG prize claim from the MEANTs games, passed on to k-kut's VOC intake
    server-side. The answers are how the games test the catalogue's tags with
@@ -8,6 +9,7 @@ export const dynamic = 'force-dynamic';
 const VOC = 'https://www.k-kut.com/api/voc';
 
 export async function POST(request: Request) {
+  if (!(await isPerson(request))) return NextResponse.json({ error: 'Answers come from people only. Reload the page and try again.' }, { status: 403 });
   let body: Record<string, unknown>;
   try {
     body = (await request.json()) as Record<string, unknown>;

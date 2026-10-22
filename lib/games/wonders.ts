@@ -1,7 +1,7 @@
 'use client';
 
 import { GAME_API, type GameElement } from '@/lib/games/meantsGame';
-import { RIFFS } from '@/lib/riffRuns/schedule';
+import { weekOf } from '@/lib/riffRuns/schedule';
 
 /* Shared pieces of the Extraordinary experiences (GD, 2026-10-21: "seek fun,
    different, unpredictable, odd, unbelievable, fantastical, extraordinary,
@@ -32,16 +32,19 @@ export async function fetchBug(): Promise<GameElement | null> {
   }
 }
 
-/** A riff from the Sunday riff runs, on its own short signed link. */
-export async function fetchRiff(avoid: string[] = []): Promise<{ key: string; song: string; src: string } | null> {
-  const pool = RIFFS.filter((r) => !avoid.includes(r.key));
-  const riff = (pool.length ? pool : RIFFS)[Math.floor(Math.random() * (pool.length || RIFFS.length))];
+/** A riff from the Sunday riff runs, known only by its public number and name. */
+let riffNumbers: { riff: number; name: string }[] | null = null;
+export async function fetchRiff(avoid: string[] = []): Promise<{ key: string; name: string; src: string } | null> {
   try {
-    const body = (await (await fetch(`/api/riff-runs/audio?key=${encodeURIComponent(riff.key)}`, { cache: 'no-store' })).json()) as { url?: string };
-    return body.url ? { key: riff.key, song: riff.song, src: body.url } : null;
+    riffNumbers ??= ((await (await fetch(`/api/riff-runs/week?week=${weekOf(new Date())}`)).json()) as { order?: { riff: number; name: string }[] }).order ?? [];
   } catch {
     return null;
   }
+  if (!riffNumbers.length) return null;
+  const pool = riffNumbers.filter((n) => !avoid.includes(`riff-${n.riff}`));
+  const from = pool.length ? pool : riffNumbers;
+  const { riff, name } = from[Math.floor(Math.random() * from.length)];
+  return { key: `riff-${riff}`, name, src: `/api/riff-runs/audio?riff=${riff}` };
 }
 
 /* One AudioContext for the page, opened on the player's first tap (browsers

@@ -107,7 +107,17 @@ const BLOCKED_BOT_PATTERNS: RegExp[] = [
   /claudebot/i,        // Anthropic training crawler
   /cohere-training/i,
   /meta-externalagent/i,
-  /facebookexternalhit/i,
+  // SNPR's list from k-kut.com (GD, 2026-10-10 "BLOCK BOTs"; 2026-10-22 "can we
+  // stop all BOTs? take such steps on everchanging basis"): the same doors, all sites.
+  /chatgpt-user|oai-searchbot|claude-web|claude-user|claude-searchbot|anthropic-ai/i,
+  /perplexitybot|perplexity-user|amazonbot|applebot-extended|meta-externalfetcher|facebookbot/i,
+  /cohere-ai|diffbot|youbot|imagesiftbot|omgili|timpibot|kangaroo bot|pangubot|ai2bot/i,
+  /deepseekbot|mistralai-user|googleother|img2dataset/i,
+  /megaindex|seekportbot|barkrowler|zoominfobot|mail\.ru_bot|sogou/i,
+  /puppeteer|playwright|selenium|webdriver/i,
+  /python-urllib|aiohttp|httpx|okhttp|java\/|apache-httpclient|httrack|node-fetch|axios\/|undici|^node$/i,
+  // facebookexternalhit is NOT here: it draws the preview when a listener shares a
+  // link, and sharing is the product (SNPR's own rule on k-kut.com).
 ];
 
 /** Legitimate search / indexing bots — ALLOW, TAG as 'indexed-search'. */

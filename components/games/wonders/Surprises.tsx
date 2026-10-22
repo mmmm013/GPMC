@@ -129,7 +129,7 @@ export function DreamMode({ moods }: { moods: string[] }) {
       if (r) {
         heard.current.push(r.key);
         src = r.src;
-        label = `a riff from ${r.song}`;
+        label = r.name;
       }
     } else {
       const n = await fetchNug(moods, heard.current);
