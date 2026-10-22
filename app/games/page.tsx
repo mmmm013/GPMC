@@ -19,6 +19,12 @@ const GAMES = [
     blurb: 'Type three words and hear them sung, one word at a time, as a tiny story.',
   },
   {
+    href: '/games/bug-reels',
+    title: 'BUG Reels',
+    tag: 'BUGs · free · pull the lever',
+    blurb: 'Pull the lever and three reels stop on three words, each one sung from a real song. Hold, nudge, find a Sweet Line, and send your line to someone.',
+  },
+  {
     href: '/games/16-ball',
     title: '16-Ball',
     tag: 'BUGs · free · party game',
