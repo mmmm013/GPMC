@@ -1,12 +1,14 @@
 import { NextResponse } from 'next/server';
 import { isPerson } from '@/lib/people';
 
-/* A "Did it?" answer or a Golden NUG prize claim from the MEANTs games, passed on to k-kut's VOC intake
+/* A "Did it?" answer, a prize claim, a Fail, or a Love Game pick, wish or freebie promise from the MEANTs games, passed on to k-kut's VOC intake
    server-side. The answers are how the games test the catalogue's tags with
    real listeners. */
 export const dynamic = 'force-dynamic';
 
 const VOC = 'https://www.k-kut.com/api/voc';
+/* The VOC kinds a player can name when an Element sounds wrong. */
+const FAIL_KINDS = new Set(['cut_off', 'wrong_word', 'sound_quality', 'not_what_i_expected']);
 
 export async function POST(request: Request) {
   if (!(await isPerson(request))) return NextResponse.json({ error: 'Answers come from people only. Reload the page and try again.' }, { status: 403 });
@@ -25,6 +27,7 @@ export async function POST(request: Request) {
   let said = '';
   let surface = '';
   let contact: string | null = null;
+  let kind = 'other';
   if (body.type === 'did-it') {
     const challenge = str(body.challenge, 40);
     const answer = body.answer === 'yes' ? 'Yes' : body.answer === 'no' ? 'No' : '';
@@ -41,6 +44,36 @@ export async function POST(request: Request) {
     said = `Prize claim: ${prize} (${str(body.game, 40)})`;
     surface = `gpm-game:prize-claim:${prize}`;
     contact = email;
+  } else if (body.type === 'love-pick') {
+    /* The Love Game's prize HUGs: each keep or pass tests the romantic tags. */
+    const pick = body.pick === 'keep' ? 'Kept' : body.pick === 'pass' ? 'Passed' : '';
+    if (!pick) return NextResponse.json({ error: 'Missing answer.' }, { status: 400 });
+    said = `Love Game prize HUG: ${pick} (set ${str(body.set, 8) || '1'})`;
+    surface = `gpm-game:love:${pick.toLowerCase()}`;
+  } else if (body.type === 'fail') {
+    /* Approve ALL MEANTs until failed; a Fail goes to Triage (GD, 2026-10-21). */
+    const why = FAIL_KINDS.has(String(body.why)) ? String(body.why) : 'other';
+    kind = why;
+    said = `Fail from ${str(body.game, 40) || 'a game'}: ${str(body.note, 200) || why.replace(/_/g, ' ')}`;
+    surface = `gpm-game:fail:${str(body.game, 40) || 'game'}`;
+  } else if (body.type === 'love-wish') {
+    /* No HUG in two sets fit: what the player asked for instead. */
+    const wish = str(body.wish, 300);
+    if (!wish) return NextResponse.json({ error: 'Tell us what you would like.' }, { status: 400 });
+    said = `Love Game wish: ${wish}`;
+    surface = 'gpm-game:love:wish';
+  } else if (body.type === 'love-freebie') {
+    /* "Come back for a freebie anytime. We will not forget." The promise is filed
+       with its code, and with an email when the player gives one. */
+    const code = str(body.code, 20).toUpperCase();
+    const email = str(body.email, 320);
+    if (!/^LOVE-[0-9A-F]{8}$/.test(code)) return NextResponse.json({ error: 'Missing promise.' }, { status: 400 });
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return NextResponse.json({ error: 'Please enter a valid email, or leave it empty.' }, { status: 400 });
+    }
+    said = `Freebie owed (${code}): Love Game wish not found. ${str(body.wish, 300)}`.trim();
+    surface = 'gpm-game:love:freebie-owed';
+    contact = email || null;
   } else {
     return NextResponse.json({ error: 'Unknown answer.' }, { status: 400 });
   }
@@ -50,7 +83,7 @@ export async function POST(request: Request) {
       method: 'POST',
       /* k-kut lets GPM's own sites through its bot gate by this name. */
       headers: { 'Content-Type': 'application/json', 'User-Agent': 'GPM-gputnammusic/1' },
-      body: JSON.stringify({ reference, what_they_said: said, kind: 'other', contact, surface }),
+      body: JSON.stringify({ reference, what_they_said: said, kind, contact, surface }),
       cache: 'no-store',
       signal: AbortSignal.timeout(15000),
     });

@@ -25,6 +25,12 @@ const GAMES = [
     blurb: 'Ask the person across from you anything, shake the kaleidoscope ball, and the ball answers with one word from a real song.',
   },
   {
+    href: '/games/love',
+    title: 'Love Game',
+    tag: 'HUGs · free · county fair',
+    blurb: 'Be Romeo, Juliette or a lover from the future. Your HUG Bear shoots tickling arrows of love and Red Flame arrows that sing, to win a ribbon and a HUG for your love.',
+  },
+  {
     href: '/games/extraordinary',
     title: 'Extraordinary',
     tag: 'free · 12 experiences',
