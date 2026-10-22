@@ -31,6 +31,12 @@ const GAMES = [
     blurb: 'Be Romeo, Juliette or a lover from the future. Your HUG Bear shoots tickling arrows of love and Red Flame arrows that sing, to win a ribbon and a HUG for your love.',
   },
   {
+    href: '/games/hugs-kisses-wishes',
+    title: 'HUGs, Kisses & Fantastic Wishes',
+    tag: 'for two · free · one phone',
+    blurb: 'A game for couples. Guess which HUG your partner picked, send each other sung love words for kisses, make Fantastic Wishes, and win a free HUG together.',
+  },
+  {
     href: '/games/extraordinary',
     title: 'Extraordinary',
     tag: 'free · 12 experiences',

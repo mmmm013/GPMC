@@ -11,8 +11,17 @@ export async function GET(req: Request) {
   const src = unseal(new URL(req.url).searchParams.get('t') ?? '');
   if (!src) return new Response('This has expired. Play again.', { status: 404 });
   const range = req.headers.get('range');
+  /* Every play comes from this site's servers, so k-kut's HUNTR would count all
+     players as one visitor. The relay secret lets it count each player instead. */
+  const player = (req.headers.get('x-real-ip') ?? req.headers.get('x-forwarded-for')?.split(',')[0] ?? '').trim();
+  const relay = process.env.GPM_RELAY_SECRET?.trim();
+  const toKkut = /(^|\.)k-kut\.com$/.test(new URL(src).hostname);
   const upstream = await fetch(src, {
-    headers: { 'User-Agent': 'GPM-gputnammusic/1', ...(range ? { range } : {}) },
+    headers: {
+      'User-Agent': 'GPM-gputnammusic/1',
+      ...(range ? { range } : {}),
+      ...(relay && player && toKkut ? { 'x-gpm-relay': relay, 'x-gpm-player': player } : {}),
+    },
     cache: 'no-store',
   }).catch(() => null);
   if (!upstream || !upstream.ok || !upstream.body) return new Response('Unavailable', { status: 503 });

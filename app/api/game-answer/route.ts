@@ -41,7 +41,9 @@ export async function POST(request: Request) {
     if (!prize || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return NextResponse.json({ error: 'Please enter a valid email.' }, { status: 400 });
     }
-    said = `Prize claim: ${prize} (${str(body.game, 40)})`;
+    /* The Love Game's prize is a free HUG, one per player (GD, 2026-10-22: "free HUG only"). */
+    const game = str(body.game, 40);
+    said = `Prize claim: ${prize} (${game})${game === 'love' ? ', free, one per email' : ''}`;
     surface = `gpm-game:prize-claim:${prize}`;
     contact = email;
   } else if (body.type === 'love-pick') {

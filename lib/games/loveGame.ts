@@ -85,6 +85,16 @@ export async function fetchLoveBug(word: string): Promise<GameElement | null> {
 /* The freebie promise: shown to the player, kept in this browser, and filed with
    GPM so it is honoured ("we will not forget"). */
 export const PROMISE_KEY = 'meants-game:love:promise:v1';
+/* The prize is a free HUG, one per player (GD, 2026-10-22: "free HUG only").
+   This browser remembers a claim; GPM sends one per email. */
+export const CLAIMED_KEY = 'meants-game:love:claimed:v1';
+export function alreadyClaimed(): boolean {
+  try {
+    return Boolean(window.localStorage.getItem(CLAIMED_KEY));
+  } catch {
+    return false;
+  }
+}
 export function newPromiseCode(): string {
   const a = new Uint8Array(4);
   crypto.getRandomValues(a);

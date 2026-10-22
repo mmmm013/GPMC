@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import type { GameElement } from '@/lib/games/meantsGame';
-import { PROMISE_KEY, fetchHug, newPromiseCode, sendLove } from '@/lib/games/loveGame';
+import { CLAIMED_KEY, PROMISE_KEY, alreadyClaimed, fetchHug, newPromiseCode, sendLove } from '@/lib/games/loveGame';
 import { FailButton } from './FailButton';
 
 /* The prize for their love: a HUG. Three are offered and the player whittles
@@ -116,10 +116,18 @@ export default function PrizePicker({ lover, freebie, onDone }: { lover: string;
       stage === 'sorry'
         ? await sendLove({ type: 'love-freebie', code, email, wish, reference })
         : await sendLove({ type: 'prize-claim', prize: freebie ? 'love-game-freebie-hug' : 'love-game-hug', game: 'love', email, reference });
-    setNote(out.ok ? (stage === 'sorry' ? 'Saved. We will not forget.' : 'It is yours. Watch your email.') : out.error ?? 'Try again in a moment.');
+    if (out.ok && stage !== 'sorry') {
+      try {
+        window.localStorage.setItem(CLAIMED_KEY, new Date().toISOString());
+      } catch {
+        /* GPM still sends one per email */
+      }
+    }
+    setNote(out.ok ? (stage === 'sorry' ? 'Saved. We will not forget.' : 'It is yours, free. Watch your email.') : out.error ?? 'Try again in a moment.');
   }
 
   const forLove = lover ? `${lover}'s love` : 'your love';
+  const claimedBefore = alreadyClaimed();
   const card = 'rounded-2xl border border-[#FFD54F]/40 bg-black/40 p-4';
   return (
     <div className="mt-6">
@@ -162,12 +170,15 @@ export default function PrizePicker({ lover, freebie, onDone }: { lover: string;
 
       {stage === 'kept' && kept && (
         <div className={`mt-4 ${card}`}>
-          <p className="text-sm font-bold uppercase tracking-[0.2em] text-[#FFD54F]">Your prize HUG</p>
+          <p className="text-sm font-bold uppercase tracking-[0.2em] text-[#FFD54F]">Your free prize HUG</p>
           <p className="mt-2 text-2xl font-black">“{kept.words}”</p>
           <button type="button" onClick={() => play(kept)} className="mt-3 min-h-11 rounded-2xl bg-[#FFD54F] px-4 font-bold text-black">Play it again</button>
-          {!note && (
+          {!note && !freebie && claimedBefore && (
+            <p className="mt-4 text-sm text-[#D7CCC8]">You already claimed your free HUG. It is one per player, so this one is yours to hear here.</p>
+          )}
+          {!note && (freebie || !claimedBefore) && (
             <form onSubmit={claim} className="mt-4 flex flex-col gap-3">
-              <span className="text-sm text-[#D7CCC8]">Leave your email and we will send it to you for {forLove}.</span>
+              <span className="text-sm text-[#D7CCC8]">It is free, one per player. Leave your email and we will send it to you for {forLove}.</span>
               <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Your email"
                 className="min-h-12 rounded-2xl border border-white/20 bg-black/40 px-4 text-white placeholder:text-white/40" />
               <button type="submit" className="min-h-12 rounded-2xl bg-[#EC407A] font-bold text-white">Claim my prize</button>
