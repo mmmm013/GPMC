@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { GOLDEN_EVENT, fetchBug, fetchNug } from '@/lib/games/wonders';
+import { playVoice, replayVoice } from '@/lib/games/clearVoice';
 import type { GameElement } from '@/lib/games/meantsGame';
 
 /* Golden NUG (shown to players as "Strike gold": NUG is not a buyer word): about one play in fifty, anywhere in the Extraordinary
@@ -30,7 +31,7 @@ export default function GoldenNug() {
         const a = audio.current ?? new Audio();
         audio.current = a;
         a.src = nug.src;
-        if (word) a.onended = () => { a.onended = null; a.src = word.src; void a.play().catch(() => {}); };
+        if (word) a.onended = () => { a.onended = null; void playVoice(a, word.src).catch(() => {}); };
         void a.play().catch(() => {});
       }
     };
@@ -63,6 +64,10 @@ export default function GoldenNug() {
         <p className="mt-4 text-lg font-bold">Your prize: a free BUG to send.</p>
         {bug && <p className="mt-2 text-3xl font-black">“{bug.words}”</p>}
         {bug && <p className="text-sm">from {bug.song}</p>}
+        {bug && (
+          <button type="button" onClick={() => { const a = audio.current; if (a) void (a.src === bug.src ? replayVoice(a) : playVoice(a, bug.src)).catch(() => {}); }}
+            className="mt-3 min-h-12 rounded-2xl border-2 border-black px-5 font-bold">↻ Hear it again, slower</button>
+        )}
         {bug?.reference && !sent && (
           <form onSubmit={claim} className="mt-6 flex flex-col gap-3">
             <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Your email"

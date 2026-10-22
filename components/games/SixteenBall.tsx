@@ -1,5 +1,7 @@
 'use client';
 
+import VoicePlayer from './VoicePlayer';
+import { playVoice } from '@/lib/games/clearVoice';
 import { useEffect, useRef, useState } from 'react';
 import { GAME_API, loadProgress, saveProgress, type GameElement } from '@/lib/games/meantsGame';
 import { MOODS_FOR_PACE, SERENADE, useNugPlayer, usePlayerSense } from '@/lib/games/adaptive';
@@ -56,11 +58,10 @@ export default function SixteenBall() {
       setAnswer(body.element);
       const a = audio.current;
       if (a) {
-        a.src = body.element.src;
         /* Steady and calm players hear a mood bed under the answer; quick players get a snip after it. */
         if (sense.pace !== 'quick') void nugs.bedUnder(a, MOODS_FOR_PACE[sense.pace]);
         a.onended = sense.pace === 'quick' ? () => void nugs.playAlone(MOODS_FOR_PACE.quick) : null;
-        void a.play().catch(() => setMessage('Tap play to hear the answer.'));
+        void playVoice(a, body.element.src).catch(() => setMessage('Tap play to hear the answer.'));
       }
     } catch {
       setMessage('The ball is cloudy. Shake again.');
@@ -107,7 +108,7 @@ export default function SixteenBall() {
         </span>
       </button>
 
-      <audio ref={audio} controls controlsList="nodownload" className="mt-8 w-full max-w-md" />
+      <VoicePlayer ref={audio} className="mt-8 w-full max-w-md" />
 
       {answer && (
         <div className="mt-4">

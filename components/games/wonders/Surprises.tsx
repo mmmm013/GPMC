@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { playVoice } from '@/lib/games/clearVoice';
 import { WORLDS, fetchBug, fetchNug, fetchRiff, rollGolden, type World } from '@/lib/games/wonders';
 
 /** Mystery doors: three doors, each hiding a sound from a world the player never knows in advance. */
@@ -143,10 +144,17 @@ export function DreamMode({ moods }: { moods: string[] }) {
     if (!src) return void setTimeout(() => next(mine, step + 1), 300);
     const a = audio.current ?? new Audio();
     audio.current = a;
-    a.src = src;
     a.onended = () => setTimeout(() => next(mine, step + 1), 250 + Math.random() * 900);
     setNow(label);
-    void a.play().catch(() => setOn(false));
+    if (kind === 'bug') {
+      /* A word is always heard slow, loud and whole (lib/games/clearVoice). */
+      void playVoice(a, src).catch(() => setOn(false));
+    } else {
+      a.defaultPlaybackRate = 1;
+      a.src = src;
+      a.playbackRate = 1;
+      void a.play().catch(() => setOn(false));
+    }
     if (step % 8 === 7) rollGolden();
   }
 
