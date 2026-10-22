@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import Together from './Together';
 import { isRunOn, nextRun, riffOff, runOrder, weekOf, type Riff } from '@/lib/riffRuns/schedule';
 
 type Board = { week: string; song: string; key: string; votes: number }[];
@@ -80,9 +81,10 @@ export default function RiffRuns() {
     <div className="mt-8 grid gap-6">
       <audio ref={audio} preload="none" controlsList="nodownload noplaybackrate" onContextMenu={(e) => e.preventDefault()} />
 
-      <section className="rounded-2xl border border-white/15 bg-black/30 p-5">
+      <section className="relative isolate rounded-2xl border border-white/15 bg-black/30 p-5">
         {live ? (
           <>
+            <Together week={week} />
             <p className="text-2xl font-black">The riff run is on</p>
             <p className="mt-2 text-[#D7CCC8]">{order.length} riffs from G Putnam Music instrumentals, each at its own length, until noon your time.</p>
             {runIndex === null ? (
