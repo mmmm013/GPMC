@@ -86,7 +86,7 @@ export async function fetchLoveBug(word: string): Promise<GameElement | null> {
    GPM so it is honoured ("we will not forget"). */
 export const PROMISE_KEY = 'meants-game:love:promise:v1';
 /* The prize is a free HUG, one per player (GD, 2026-10-22: "free HUG only").
-   This browser remembers a claim; GPM sends one per email. */
+   This browser remembers a claim and its link; it is one per email. */
 export const CLAIMED_KEY = 'meants-game:love:claimed:v1';
 export function alreadyClaimed(): boolean {
   try {
@@ -101,15 +101,25 @@ export function newPromiseCode(): string {
   return `LOVE-${Array.from(a, (b) => b.toString(16).padStart(2, '0')).join('').toUpperCase()}`;
 }
 
-export async function sendLove(body: Record<string, string>): Promise<{ ok: boolean; error?: string }> {
+/** The private link of the prize this browser claimed, when it kept one. */
+export function claimedLink(): string {
+  try {
+    const v = window.localStorage.getItem(CLAIMED_KEY) ?? '';
+    return v.startsWith('https://') ? v : '';
+  } catch {
+    return '';
+  }
+}
+
+export async function sendLove(body: Record<string, string>): Promise<{ ok: boolean; error?: string; link?: string }> {
   try {
     const res = await fetch('/api/game-answer', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     });
-    const out = (await res.json().catch(() => ({}))) as { error?: string };
-    return { ok: res.ok, error: out.error };
+    const out = (await res.json().catch(() => ({}))) as { error?: string; link?: string };
+    return { ok: res.ok, error: out.error, link: out.link };
   } catch {
     return { ok: false, error: 'Try again in a moment.' };
   }
