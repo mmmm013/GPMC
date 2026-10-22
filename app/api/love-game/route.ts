@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { isPerson } from '@/lib/people';
 import { seal } from '@/lib/games/loveSeal';
 
-/* The Love Game asks here, never k-kut directly, for one prize HUG or one love
+/* The Love Game asks here, never k-kut directly, for one prize (a HUG, TUG or BUG) or one love
    BUG at a time. What reaches the page is the Element's own words, its content
    reference (for answers and Fails) and a sealed stream address: no song title,
    no catalogue id, no storage path. People only. */
@@ -18,8 +18,10 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const kind = url.searchParams.get('kind');
   const params = new URLSearchParams({ scope: 'all' });
-  if (kind === 'hug') {
-    params.set('kind', 'hug');
+  if (kind === 'hug' || kind === 'prize') {
+    const tier = url.searchParams.get('tier');
+    params.set('kind', 'prize');
+    params.set('tier', kind === 'prize' && (tier === 'TUG' || tier === 'BUG') ? tier : 'HUG');
     params.set('skip', (url.searchParams.get('skip') ?? '').slice(0, 1000));
     params.set('wish', (url.searchParams.get('wish') ?? '').slice(0, 80));
   } else if (kind === 'bug') {
@@ -27,7 +29,7 @@ export async function GET(request: Request) {
     params.set('bare', '1');
     params.set('word', (url.searchParams.get('word') ?? '').slice(0, 40));
   } else {
-    return NextResponse.json({ error: 'Ask for kind=hug or kind=bug.' }, { status: 400, headers });
+    return NextResponse.json({ error: 'Ask for kind=prize, kind=hug or kind=bug.' }, { status: 400, headers });
   }
   try {
     const res = await fetch(`${GAME}?${params}`, {

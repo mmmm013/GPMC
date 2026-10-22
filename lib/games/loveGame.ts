@@ -59,17 +59,32 @@ export function ribbonFor(hits: number, shots: number): Ribbon {
   return share >= 0.7 ? RIBBONS[0] : share >= 0.4 ? RIBBONS[1] : RIBBONS[2];
 }
 
-/** One prize HUG, never one already offered. `wish` searches every HUG. Asked of
-    this site's own /api/love-game, which keeps everything behind the HUG on the server. */
-export async function fetchHug(skip: string[], wish = ''): Promise<GameElement | null> {
+/* How long to play, picked in one place (GD, 2026-10-22: "the HUG game takes too
+   long for many. Let's use TUGs & BUGs? Doable? Keep all? Offer in one place click
+   for options?"). The prize follows the length: a BUG, a TUG or a HUG. */
+export type PrizeTier = 'HUG' | 'TUG' | 'BUG';
+export type Length = { id: 'quick' | 'short' | 'full'; name: string; time: string; tier: PrizeTier; prize: string };
+export const LENGTHS: Length[] = [
+  { id: 'quick', name: 'Quick', time: 'about 1 minute', tier: 'BUG', prize: 'Win a BUG: one love word, sung' },
+  { id: 'short', name: 'Short', time: 'about 3 minutes', tier: 'TUG', prize: 'Win a TUG: one love line, sung' },
+  { id: 'full', name: 'Full fair', time: 'about 10 minutes', tier: 'HUG', prize: 'Win a HUG: a whole verse or chorus' },
+];
+
+/** One prize of a tier, never one already offered. `wish` searches every Element of
+    that tier; for a BUG it is the one word asked for. Asked of this site's own
+    /api/love-game, which keeps everything behind the Element on the server. */
+export async function fetchPrize(tier: PrizeTier, skip: string[], wish = ''): Promise<GameElement | null> {
   try {
-    const params = new URLSearchParams({ kind: 'hug', skip: skip.join(','), wish });
+    const params = new URLSearchParams({ kind: 'prize', tier, skip: skip.join(','), wish });
     const body = (await (await fetch(`/api/love-game?${params}`, { cache: 'no-store' })).json()) as { element: GameElement | null };
     return body.element;
   } catch {
     return null;
   }
 }
+
+/** One prize HUG (the full fair, and the couple's game). */
+export const fetchHug = (skip: string[], wish = '') => fetchPrize('HUG', skip, wish);
 
 /** The BUG for one love word, with its song left unnamed. */
 export async function fetchLoveBug(word: string): Promise<GameElement | null> {
@@ -85,7 +100,8 @@ export async function fetchLoveBug(word: string): Promise<GameElement | null> {
 /* The freebie promise: shown to the player, kept in this browser, and filed with
    GPM so it is honoured ("we will not forget"). */
 export const PROMISE_KEY = 'meants-game:love:promise:v1';
-/* The prize is a free HUG, one per player (GD, 2026-10-22: "free HUG only").
+/* The prize is free, one per player (GD, 2026-10-22: "free HUG only"; a quick or
+   short game wins a BUG or a TUG instead).
    This browser remembers a claim and its link; it is one per email. */
 export const CLAIMED_KEY = 'meants-game:love:claimed:v1';
 export function alreadyClaimed(): boolean {

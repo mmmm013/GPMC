@@ -7,6 +7,7 @@ import {
   DEFAULT_BEAR,
   FUTURISTIC_NAMES,
   HISTORIC_NAMES,
+  LENGTHS,
   LOVE_WORDS,
   PROMISE_KEY,
   ROMANTIC_PHRASES,
@@ -14,6 +15,7 @@ import {
   lawfulName,
   ribbonFor,
   type BearLook,
+  type Length,
   type Ribbon,
 } from '@/lib/games/loveGame';
 import HugBear from './HugBear';
@@ -24,10 +26,18 @@ import { FailButton } from './FailButton';
 /* The Love Game. Pick a lover name and a HUG Bear, then play a round at the
    fair: the HUG Bear Booth (tickling arrows at romantic phrases) or Red Flame
    (arrows that sing 1, 2 or 3 love BUGs as they soar at True Blue hearts).
-   Every finish wins a ribbon (Blue Ribbon is 1st Place) and a prize HUG. */
+   Every finish wins a ribbon (Blue Ribbon is 1st Place) and a prize.
+
+   How long to play is picked first, in one place (GD, 2026-10-22: "the HUG game
+   takes too long for many"): Quick is 3 Red Flame arrows and wins a BUG, Short is
+   5 arrows at the Booth and wins a TUG, the Full fair is either round at full
+   length and wins a HUG. */
 type Round = 'booth' | 'flame';
 type Screen = 'setup' | Round | 'ribbon' | 'prize' | 'freebie';
-const SHOTS: Record<Round, number> = { booth: 10, flame: 6 };
+const FULL_SHOTS: Record<Round, number> = { booth: 10, flame: 6 };
+const shotsFor = (length: Length, round: Round) =>
+  length.id === 'quick' ? 3 : length.id === 'short' ? 5 : FULL_SHOTS[round];
+const roundFor = (length: Length): Round | null => (length.id === 'quick' ? 'flame' : length.id === 'short' ? 'booth' : null);
 
 function Choice<T extends string>({ value, options, onChange, label }: { value: T; options: { id: T; label: string }[]; onChange: (v: T) => void; label: string }) {
   return (
@@ -53,6 +63,7 @@ export default function LoveGame() {
   const [problem, setProblem] = useState('');
   const [bear, setBear] = useState<BearLook>(DEFAULT_BEAR);
   const [round, setRound] = useState<Round>('booth');
+  const [length, setLength] = useState<Length>(LENGTHS[0]);
   const [shots, setShots] = useState(0);
   const [hits, setHits] = useState(0);
   const [inFlight, setInFlight] = useState(false);
@@ -110,7 +121,7 @@ export default function LoveGame() {
     setMessage('');
     setSung([]);
     setLoaded([]);
-    gameEvent('game_start', { game: 'love', round: r });
+    gameEvent('game_start', { game: 'love', round: `${length.id} ${r}` });
     setScreen(r);
   }
 
@@ -149,18 +160,19 @@ export default function LoveGame() {
 
   /* The round ends after the last arrow lands. */
   useEffect(() => {
-    if ((screen === 'booth' || screen === 'flame') && shots >= SHOTS[round] && !inFlight) {
+    if ((screen === 'booth' || screen === 'flame') && shots >= shotsFor(length, round) && !inFlight) {
       const t = setTimeout(() => {
         const won = ribbonFor(hits, shots);
         setRibbon(won);
-        gameEvent('game_finish', { game: 'love', round, ribbon: won.name });
+        gameEvent('game_finish', { game: 'love', round: `${length.id} ${round}`, ribbon: won.name });
         setScreen('ribbon');
       }, round === 'flame' ? 1800 : 600);
       return () => clearTimeout(t);
     }
-  }, [screen, shots, inFlight, hits, round]);
+  }, [screen, shots, inFlight, hits, round, length]);
 
-  const left = SHOTS[round] - shots;
+  const left = shotsFor(length, round) - shots;
+  const fixedRound = roundFor(length);
   const names = (list: readonly string[]) => list.map((n) => (
     <button key={n} type="button" onClick={() => { setTyped(''); choose(n); }} aria-pressed={lover === n}
       className={`min-h-11 rounded-2xl border px-3 font-bold ${lover === n ? 'border-[#EC407A] bg-[#EC407A] text-white' : 'border-white/30 text-white'}`}>
@@ -181,6 +193,20 @@ export default function LoveGame() {
               <button type="button" onClick={() => setScreen('freebie')} className="mt-3 min-h-11 rounded-2xl bg-[#FFD54F] px-4 font-bold text-black">Pick my free HUG</button>
             </div>
           )}
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#FFD54F]">How long do you want to play?</p>
+            <div className="mt-2 grid gap-2 sm:grid-cols-3">
+              {LENGTHS.map((l) => (
+                <button key={l.id} type="button" onClick={() => setLength(l)} aria-pressed={length.id === l.id}
+                  className={`rounded-2xl border p-3 text-left ${length.id === l.id ? 'border-[#FFD54F] bg-[#FFD54F] text-black' : 'border-white/30 text-white'}`}>
+                  <p className="text-xl font-black">{l.name}</p>
+                  <p className="text-sm font-bold">{l.time}</p>
+                  <p className={`mt-1 text-sm ${length.id === l.id ? 'text-black/80' : 'text-[#D7CCC8]'}`}>{l.prize}</p>
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#FFD54F]">Who are you tonight?</p>
             <p className="mt-2 text-sm text-[#D7CCC8]">Lovers from old stories</p>
@@ -207,6 +233,12 @@ export default function LoveGame() {
             </div>
           </div>
 
+          {fixedRound ? (
+            <button type="button" onClick={() => start(fixedRound)} className="min-h-14 rounded-2xl bg-[#EC407A] p-4 text-left text-white">
+              <p className="text-2xl font-black">Play {length.name}: {fixedRound === 'flame' ? 'Red Flame' : 'HUG Bear Booth'}</p>
+              <p className="mt-1 text-sm">{fixedRound === 'flame' ? 'Flaming arrows sing love words at True Blue hearts.' : 'Shoot tickling arrows of love at romantic phrases.'} {shotsFor(length, fixedRound)} arrows. {length.prize}.</p>
+            </button>
+          ) : (
           <div className="grid gap-3 sm:grid-cols-2">
             <button type="button" onClick={() => start('booth')} className="rounded-2xl border border-[#FFD54F] bg-[#7B1F2B] p-4 text-left">
               <p className="text-2xl font-black">HUG Bear Booth</p>
@@ -217,6 +249,7 @@ export default function LoveGame() {
               <p className="mt-1 text-sm text-[#F5E6C8]">Flaming arrows sing love words as they soar at True Blue hearts. 6 arrows.</p>
             </button>
           </div>
+          )}
         </div>
       )}
 
@@ -274,13 +307,13 @@ export default function LoveGame() {
           </svg>
           <p className="mt-4 text-4xl font-black">{ribbon.name}!</p>
           <p className="mt-2 text-lg">{ribbon.place === 1 ? '1st Place' : ribbon.place === 2 ? '2nd Place' : '3rd Place'} · {hits} of {shots} hits</p>
-          <p className="mt-4 text-[#D7CCC8]">{lover}, every lover at this fair goes home with a prize. Yours is a HUG for your love.</p>
+          <p className="mt-4 text-[#D7CCC8]">{lover}, every lover at this fair goes home with a prize. Yours is a {length.tier} for your love.</p>
           <button type="button" onClick={() => setScreen('prize')} className="mt-6 min-h-12 rounded-2xl bg-[#EC407A] px-6 font-bold text-white">Claim my prize</button>
         </div>
       )}
 
       {(screen === 'prize' || screen === 'freebie') && (
-        <PrizePicker lover={lover} freebie={screen === 'freebie' ? promise : undefined}
+        <PrizePicker lover={lover} freebie={screen === 'freebie' ? promise : undefined} tier={screen === 'freebie' ? 'HUG' : length.tier}
           onDone={() => {
             /* A kept freebie clears the promise; a new one may have been made. */
             try {

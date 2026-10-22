@@ -10,7 +10,7 @@ export default function LoveGamePage() {
         <Link href="/games" className="text-sm font-bold text-[#FFD54F]">← Games</Link>
         <h1 className="mt-2 text-5xl font-black tracking-tight">Love Game</h1>
         <p className="mt-3 text-[#D7CCC8]">
-          Step up to the fair. Pick your lover name and your HUG Bear, aim your arrows of love, and win a ribbon and a HUG for your love.
+          Step up to the fair. Pick your lover name and your HUG Bear, aim your arrows of love, and win a ribbon and a prize for your love. Play quick, short or the full fair.
         </p>
         <div className="mt-6">
           <LoveGame />
