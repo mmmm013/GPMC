@@ -7,6 +7,7 @@ import { isPerson } from '@/lib/people';
 export const dynamic = 'force-dynamic';
 
 const VOC = 'https://www.k-kut.com/api/voc';
+const PRIZE = 'https://www.k-kut.com/api/game-prize';
 /* The VOC kinds a player can name when an Element sounds wrong. */
 const FAIL_KINDS = new Set(['cut_off', 'wrong_word', 'sound_quality', 'not_what_i_expected']);
 
@@ -28,6 +29,8 @@ export async function POST(request: Request) {
   let surface = '';
   let contact: string | null = null;
   let kind = 'other';
+  let link = '';
+  let claim = '';
   if (body.type === 'did-it') {
     const challenge = str(body.challenge, 40);
     const answer = body.answer === 'yes' ? 'Yes' : body.answer === 'no' ? 'No' : '';
@@ -41,9 +44,16 @@ export async function POST(request: Request) {
     if (!prize || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return NextResponse.json({ error: 'Please enter a valid email.' }, { status: 400 });
     }
-    /* The Love Game's prize is a free HUG, one per player (GD, 2026-10-22: "free HUG only"). */
+    /* The Love Game's prize is a free HUG, one per player (GD, 2026-10-22: "free HUG only"),
+       made the moment it is won so the player gets their own link on the spot. */
     const game = str(body.game, 40);
-    said = `Prize claim: ${prize} (${game})${game === 'love' ? ', free, one per email' : ''}`;
+    if (game === 'love') {
+      const made = await makeLovePrize(reference, email, str(body.from, 50), str(body.to, 50));
+      if (!made.link) return NextResponse.json({ error: made.error }, { status: made.status });
+      link = made.link;
+      claim = made.claim;
+    }
+    said = `Prize claim: ${prize} (${game})${game === 'love' ? `, free, one per email, link made (claim ${claim})` : ''}`;
     surface = `gpm-game:prize-claim:${prize}`;
     contact = email;
   } else if (body.type === 'love-pick') {
@@ -89,9 +99,33 @@ export async function POST(request: Request) {
       cache: 'no-store',
       signal: AbortSignal.timeout(15000),
     });
-    if (!res.ok) return NextResponse.json({ error: 'We could not record that just now.' }, { status: 503 });
-    return NextResponse.json({ ok: true });
+    /* The prize is already made; a missed note about it never takes the link away. */
+    if (!res.ok && !link) return NextResponse.json({ error: 'We could not record that just now.' }, { status: 503 });
+    return NextResponse.json(link ? { ok: true, link } : { ok: true });
   } catch {
+    if (link) return NextResponse.json({ ok: true, link });
     return NextResponse.json({ error: 'We could not record that just now.' }, { status: 503 });
+  }
+}
+
+/* k-kut writes the free claim and answers with the private, stream-only link.
+   Only this server may ask: it proves itself with the secret the two share. */
+async function makeLovePrize(reference: string, email: string, from: string, to: string) {
+  const relay = process.env.GPM_RELAY_SECRET?.trim();
+  if (!relay) return { link: '', claim: '', status: 503, error: 'We could not make your prize just now. Try again in a moment.' };
+  try {
+    const res = await fetch(PRIZE, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'User-Agent': 'GPM-gputnammusic/1', 'x-gpm-relay': relay },
+      body: JSON.stringify({ reference, email, from, to, scope: 'all' }),
+      cache: 'no-store',
+      signal: AbortSignal.timeout(15000),
+    });
+    const out = (await res.json().catch(() => ({}))) as { ok?: boolean; link?: string; claim?: string; reason?: string };
+    if (res.ok && out.link) return { link: out.link, claim: out.claim ?? '', status: 200, error: '' };
+    if (out.reason === 'already_claimed') return { link: '', claim: '', status: 409, error: 'That email already has its free HUG. It is one per player.' };
+    return { link: '', claim: '', status: 503, error: 'We could not make your prize just now. Try again in a moment.' };
+  } catch {
+    return { link: '', claim: '', status: 503, error: 'We could not make your prize just now. Try again in a moment.' };
   }
 }

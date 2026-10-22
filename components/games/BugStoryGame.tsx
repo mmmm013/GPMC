@@ -1,5 +1,6 @@
 'use client';
 
+import { gameEvent } from '@/lib/games/gameEvent';
 import VoicePlayer from './VoicePlayer';
 import { playVoice } from '@/lib/games/clearVoice';
 import { useEffect, useRef, useState } from 'react';
@@ -72,6 +73,7 @@ export default function BugStoryGame() {
       return;
     }
     setBusy(true);
+    gameEvent('game_start', { game: 'bug-story' });
     setMessage('');
     setStory([]);
     setMissing([]);
@@ -96,6 +98,7 @@ export default function BugStoryGame() {
       return;
     }
     setStory(found);
+    gameEvent('game_finish', { game: 'bug-story' });
     const updated: Progress = {
       stories: progress.stories + 1,
       mixed: progress.mixed || new Set(found.map((f) => f.song)).size === 3,

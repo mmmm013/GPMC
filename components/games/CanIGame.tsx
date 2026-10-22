@@ -1,5 +1,6 @@
 'use client';
 
+import { gameEvent } from '@/lib/games/gameEvent';
 import VoicePlayer from './VoicePlayer';
 import { playVoice } from '@/lib/games/clearVoice';
 import { useEffect, useRef, useState } from 'react';
@@ -62,6 +63,7 @@ export default function CanIGame() {
     sense.tap();
     nugs.stop();
     setActive(challenge);
+    gameEvent('game_start', { game: 'can-i', round: challenge.id });
     setBusy(true);
     setMessage('');
     setElement(null);
@@ -89,6 +91,7 @@ export default function CanIGame() {
   function answer(yes: boolean) {
     if (!active || !element) return;
     sense.tap();
+    gameEvent('game_finish', { game: 'can-i', round: active.id });
     if (element.reference) {
       void sendAnswer({ type: 'did-it', reference: element.reference, challenge: active.id, ask: active.ask, answer: yes ? 'yes' : 'no' });
     }

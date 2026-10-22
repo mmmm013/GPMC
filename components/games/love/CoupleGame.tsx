@@ -1,5 +1,6 @@
 'use client';
 
+import { gameEvent } from '@/lib/games/gameEvent';
 import { useRef, useState } from 'react';
 import type { GameElement } from '@/lib/games/meantsGame';
 import { FUTURISTIC_NAMES, HISTORIC_NAMES, LOVE_WORDS, fetchHug, fetchLoveBug, lawfulName, sendLove } from '@/lib/games/loveGame';
@@ -95,6 +96,7 @@ export default function CoupleGame() {
     setSecret('');
     setGuessed('');
     setNote('Setting out three HUGs…');
+    if (t === 0) gameEvent('game_start', { game: 'hugs-kisses-wishes' });
     setStep('hug-pick');
     const got: GameElement[] = [];
     const seen = [...offered];
@@ -313,6 +315,7 @@ export default function CoupleGame() {
           <button type="button" disabled={!wishes[0].trim() || !wishes[1].trim()}
             onClick={async () => {
               setStep('finale');
+              gameEvent('game_finish', { game: 'hugs-kisses-wishes' });
               const sealed = (await fetchLoveBug('forever')) ?? (await fetchLoveBug('together'));
               if (sealed) play(sealed.src);
             }}
