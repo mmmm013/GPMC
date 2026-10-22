@@ -6,3 +6,4 @@ import dynamic from 'next/dynamic';
 export const CanIGame = dynamic(() => import('./CanIGame'), { ssr: false });
 export const BugStoryGame = dynamic(() => import('./BugStoryGame'), { ssr: false });
 export const SixteenBall = dynamic(() => import('./SixteenBall'), { ssr: false });
+export const Wonders = dynamic(() => import('./wonders/Wonders'), { ssr: false });

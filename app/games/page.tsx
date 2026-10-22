@@ -24,6 +24,12 @@ const GAMES = [
     tag: 'BUGs · free · party game',
     blurb: 'Ask the person across from you anything, shake the kaleidoscope ball, and the ball answers with one word from a real song.',
   },
+  {
+    href: '/games/extraordinary',
+    title: 'Extraordinary',
+    tag: 'free · 12 experiences',
+    blurb: 'Feel the beat in your hand, watch music bloom, hear sounds circle your head, hum to summon one, and more.',
+  },
 ];
 
 export default function GamesPage() {
