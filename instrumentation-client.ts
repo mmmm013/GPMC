@@ -6,5 +6,6 @@ initBotId({
   protect: [
     { path: '/api/riff-runs/vote', method: 'POST' },
     { path: '/api/game-answer', method: 'POST' },
+    { path: '/api/love-game', method: 'GET' },
   ],
 });
