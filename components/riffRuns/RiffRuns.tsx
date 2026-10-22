@@ -1,10 +1,13 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Together from './Together';
-import { isRunOn, nextRun, riffOff, runOrder, weekOf, type Riff } from '@/lib/riffRuns/schedule';
+import { isRunOn, nextRun, weekOf } from '@/lib/riffRuns/schedule';
 
-type Board = { week: string; song: string; key: string; votes: number }[];
+/* A listener knows a riff only by its public number (GD, 2026-10-22). */
+type Riff = number;
+type Week = { order: Riff[]; pair: Riff[] };
+type Board = { week: string; riff: Riff; votes: number }[];
 
 const VOTER_KEY = 'gpm-riff-voter';
 const voterId = () => {
@@ -20,18 +23,14 @@ const voterId = () => {
   }
 };
 
-async function riffUrl(key: string) {
-  const res = await fetch(`/api/riff-runs/audio?key=${encodeURIComponent(key)}`);
-  if (!res.ok) throw new Error('unavailable');
-  return (await res.json()).url as string;
-}
+const riffUrl = (riff: Riff) => `/api/riff-runs/audio?riff=${riff}`;
 
 const fmtDay = (d: Date) => d.toLocaleString(undefined, { weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' });
 
 export default function RiffRuns() {
   const audio = useRef<HTMLAudioElement | null>(null);
   const [now, setNow] = useState<Date | null>(null);
-  const [playing, setPlaying] = useState<string | null>(null);
+  const [playing, setPlaying] = useState<Riff | null>(null);
   const [runIndex, setRunIndex] = useState<number | null>(null);
   const [problem, setProblem] = useState('');
 
@@ -42,7 +41,12 @@ export default function RiffRuns() {
   }, []);
 
   const week = now ? weekOf(now) : null;
-  const order = useMemo(() => (week ? runOrder(week) : []), [week]);
+  const [plan, setPlan] = useState<Week | null>(null);
+  useEffect(() => {
+    if (!week) return;
+    fetch(`/api/riff-runs/week?week=${week}`).then((r) => (r.ok ? r.json() : null)).then((d) => d && setPlan(d)).catch(() => {});
+  }, [week]);
+  const order = plan?.order ?? [];
   const live = now ? isRunOn(now) : false;
 
   async function play(riff: Riff, onEnd?: () => void) {
@@ -50,13 +54,13 @@ export default function RiffRuns() {
     const el = audio.current;
     if (!el) return;
     try {
-      el.src = await riffUrl(riff.key);
+      el.src = riffUrl(riff);
       el.onended = () => {
         setPlaying(null);
         onEnd?.();
       };
       await el.play();
-      setPlaying(riff.key);
+      setPlaying(riff);
     } catch {
       setPlaying(null);
       setProblem('That riff would not play. Try again in a moment.');
@@ -91,7 +95,7 @@ export default function RiffRuns() {
               <button onClick={() => runFrom(0)} className="mt-4 rounded-full bg-[#FFD54F] px-6 py-3 text-lg font-black text-[#1a1207]">▶ Start the run</button>
             ) : (
               <div className="mt-4 flex flex-wrap items-center gap-3">
-                <p className="text-lg">Now: riff from <b>{order[runIndex].song}</b></p>
+                <p className="text-lg">Now: <b>Riff {order[runIndex]}</b></p>
                 <button onClick={() => runFrom(runIndex + 1)} className="rounded-full border border-white/30 px-4 py-2">Next riff</button>
                 <button onClick={stop} className="rounded-full border border-white/30 px-4 py-2">Stop</button>
               </div>
@@ -106,49 +110,49 @@ export default function RiffRuns() {
         )}
       </section>
 
-      <RiffOff week={week} playing={playing} play={(r) => { setRunIndex(null); void play(r); }} stop={stop} />
+      {plan && <RiffOff week={week} pair={plan.pair} playing={playing} play={(r) => { setRunIndex(null); void play(r); }} stop={stop} />}
       <Nameboard />
       {problem && <p className="text-[#FFAB91]">{problem}</p>}
     </div>
   );
 }
 
-function RiffOff({ week, playing, play, stop }: { week: string; playing: string | null; play: (r: Riff) => void; stop: () => void }) {
-  const pair = useMemo(() => riffOff(week), [week]);
-  const [pick, setPick] = useState<string | null>(null);
+function RiffOff({ week, pair, playing, play, stop }: { week: string; pair: Riff[]; playing: Riff | null; play: (r: Riff) => void; stop: () => void }) {
+  const [pick, setPick] = useState<Riff | null>(null);
   const [email, setEmail] = useState('');
-  const [counts, setCounts] = useState<Record<string, number> | null>(null);
+  const [counts, setCounts] = useState<Record<number, number> | null>(null);
   const [status, setStatus] = useState('');
 
   useEffect(() => {
     try {
-      setPick(localStorage.getItem(`gpm-riff-off:${week}`));
+      const saved = Number(localStorage.getItem(`gpm-riff-off:${week}`));
+      setPick(pair.includes(saved) ? saved : null);
     } catch {}
-  }, [week]);
+  }, [week, pair]);
 
   useEffect(() => {
     if (!pick) return;
     fetch(`/api/riff-runs/vote?week=${week}`).then((r) => (r.ok ? r.json() : null)).then((d) => d && setCounts(d.counts)).catch(() => {});
   }, [pick, week]);
 
-  async function vote(key: string) {
+  async function vote(riff: Riff) {
     setStatus('Saving your vote…');
     const res = await fetch('/api/riff-runs/vote', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ week, riff: key, voter: voterId(), email: email.trim() || null }),
+      body: JSON.stringify({ week, riff, voter: voterId(), email: email.trim() || null }),
     }).catch(() => null);
     const data = res ? await res.json().catch(() => ({})) : {};
     if (!res?.ok) return setStatus(data.error ?? 'Your vote did not save. Try again.');
-    setPick(key);
+    setPick(riff);
     if (data.counts) setCounts(data.counts);
     try {
-      localStorage.setItem(`gpm-riff-off:${week}`, key);
+      localStorage.setItem(`gpm-riff-off:${week}`, String(riff));
     } catch {}
     setStatus(email.trim() ? "Vote saved, and you're in this week's draw for a free BUG to send." : 'Vote saved.');
   }
 
-  const total = counts ? pair.reduce((n, r) => n + (counts[r.key] ?? 0), 0) : 0;
+  const total = counts ? pair.reduce((n, r) => n + (counts[r] ?? 0), 0) : 0;
 
   return (
     <section className="rounded-2xl border border-[#FFD54F]/40 bg-black/30 p-5">
@@ -156,14 +160,14 @@ function RiffOff({ week, playing, play, stop }: { week: string; playing: string 
       <p className="mt-2 text-[#D7CCC8]">Two riffs, one winner. Listen to both, then vote. The winner becomes Riff of the Week, and every voter who leaves an email is in the draw for a free BUG to send.</p>
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
         {pair.map((r, i) => (
-          <div key={r.key} className={`rounded-xl border p-4 ${pick === r.key ? 'border-[#FFD54F]' : 'border-white/15'}`}>
+          <div key={r} className={`rounded-xl border p-4 ${pick === r ? 'border-[#FFD54F]' : 'border-white/15'}`}>
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#FFD54F]">Riff {i ? 'B' : 'A'}</p>
-            <p className="mt-1 text-lg font-black">from {r.song}</p>
+            <p className="mt-1 text-lg font-black">Riff {r}</p>
             <div className="mt-3 flex flex-wrap gap-2">
-              <button onClick={() => (playing === r.key ? stop() : play(r))} className="rounded-full border border-white/30 px-4 py-2">{playing === r.key ? '■ Stop' : '▶ Listen'}</button>
-              <button onClick={() => vote(r.key)} className="rounded-full bg-[#FFD54F] px-4 py-2 font-black text-[#1a1207]">{pick === r.key ? 'Your vote ✓' : 'Vote'}</button>
+              <button onClick={() => (playing === r ? stop() : play(r))} className="rounded-full border border-white/30 px-4 py-2">{playing === r ? '■ Stop' : '▶ Listen'}</button>
+              <button onClick={() => vote(r)} className="rounded-full bg-[#FFD54F] px-4 py-2 font-black text-[#1a1207]">{pick === r ? 'Your vote ✓' : 'Vote'}</button>
             </div>
-            {counts && total > 0 && <p className="mt-2 text-sm text-[#D7CCC8]">{Math.round(((counts[r.key] ?? 0) / total) * 100)}% of {total} votes</p>}
+            {counts && total > 0 && <p className="mt-2 text-sm text-[#D7CCC8]">{Math.round(((counts[r] ?? 0) / total) * 100)}% of {total} votes</p>}
           </div>
         ))}
       </div>
@@ -190,7 +194,7 @@ function Nameboard() {
         <ol className="mt-3 grid gap-2">
           {board.map((w) => (
             <li key={w.week} className="flex justify-between gap-3 border-t border-white/10 pt-2">
-              <span>Week of {new Date(`${w.week}T12:00:00`).toLocaleDateString(undefined, { month: 'long', day: 'numeric' })}: riff from <b>{w.song}</b></span>
+              <span>Week of {new Date(`${w.week}T12:00:00`).toLocaleDateString(undefined, { month: 'long', day: 'numeric' })}: <b>Riff {w.riff}</b></span>
               <span className="text-[#D7CCC8]">{w.votes} votes</span>
             </li>
           ))}

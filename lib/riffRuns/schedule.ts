@@ -1,15 +1,12 @@
-import riffs from './riffs.json';
-
 /* Riff runs: Sunday mornings before football, from 9:00 AM wherever the listener
    is (GD, 2026-10-21). Each riff plays at its own length; the music decided its
    edges ("Riffs run own length. content drives CCs."). Riff-OFF: two riffs
    compete, listeners vote, the winning riff goes on the nameboard as Riff of the
-   Week, and every voter who leaves an email is in the draw for a free BUG to send. */
+   Week, and every voter who leaves an email is in the draw for a free BUG to send.
 
-export type Riff = { key: string; song: string; loop: boolean; seconds: number };
-export const RIFFS = riffs as Riff[];
-const BY_KEY = new Map(RIFFS.map((r) => [r.key, r]));
-export const riffByKey = (key: string) => BY_KEY.get(key);
+   This file is the clock only, and is safe in the browser. Which riff is which
+   lives in lib/riffRuns/catalog.ts on the server: a listener only ever sees a
+   riff's public number (GD, 2026-10-22: "UI disconnects from all backend ties"). */
 
 export const RUN_STARTS_HOUR = 9;
 export const RUN_ENDS_HOUR = 12;
@@ -31,34 +28,6 @@ export function nextRun(local: Date): Date {
   d.setDate(d.getDate() + ahead);
   if (d.getTime() + (RUN_ENDS_HOUR - RUN_STARTS_HOUR) * 3600e3 <= local.getTime()) d.setDate(d.getDate() + 7);
   return d;
-}
-
-function seeded(week: string) {
-  let h = 2166136261;
-  for (const c of week) h = Math.imul(h ^ c.charCodeAt(0), 16777619);
-  return () => {
-    h = Math.imul(h ^ (h >>> 15), 2246822507);
-    h = Math.imul(h ^ (h >>> 13), 3266489909);
-    return ((h ^= h >>> 16) >>> 0) / 4294967296;
-  };
-}
-
-/** The same order for every listener that week, so a run is shared. */
-export function runOrder(week: string): Riff[] {
-  const rnd = seeded(week);
-  const a = [...RIFFS];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(rnd() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-/** This week's Riff-OFF: two riffs from two different songs. */
-export function riffOff(week: string): [Riff, Riff] {
-  const order = runOrder(`riff-off:${week}`);
-  const first = order[0];
-  return [first, order.find((r) => r.song !== first.song)!];
 }
 
 /** A Riff-OFF takes votes from its Sunday through the following Saturday, wherever the voter is. */

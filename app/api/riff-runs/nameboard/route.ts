@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
-import { riffByKey, riffOff } from '@/lib/riffRuns/schedule';
+import { riffOff } from '@/lib/riffRuns/catalog';
 
 /* Riffs of the Week: each finished Riff-OFF's winner, newest first. */
 export async function GET() {
@@ -10,8 +10,10 @@ export async function GET() {
     .order('week', { ascending: false })
     .limit(52);
   if (error) return NextResponse.json({ error: 'Nameboard unavailable' }, { status: 503 });
-  const board = (data ?? [])
-    .filter((w) => riffOff(w.week).some((r) => r.key === w.riff_key))
-    .map((w) => ({ week: w.week, song: riffByKey(w.riff_key)?.song ?? '', key: w.riff_key, votes: w.votes }));
+  /* Public riff numbers only: no song, no clip name. */
+  const board = (data ?? []).flatMap((w) => {
+    const riff = riffOff(w.week).find((r) => r.key === w.riff_key);
+    return riff ? [{ week: w.week, riff: riff.number, votes: w.votes }] : [];
+  });
   return NextResponse.json({ board }, { headers: { 'Cache-Control': 's-maxage=300' } });
 }

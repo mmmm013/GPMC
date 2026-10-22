@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { withBotId } from "botid/next/config";
 
 const nextConfig: NextConfig = {
   typescript: {
@@ -18,4 +19,5 @@ const nextConfig: NextConfig = {
   },
 
 };
-export default nextConfig;
+/* Vercel BotID: an invisible people-only check on votes and prize entries (GD, 2026-10-22: "ensure humans"). */
+export default withBotId(nextConfig);

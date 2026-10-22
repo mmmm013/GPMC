@@ -22,7 +22,7 @@ function useStage() {
     const w = wired(src);
     w.el.onended = () => setPlaying(false);
     live.current = w;
-    setLabel(riff ? `a riff from ${riff.song}` : 'a special sound');
+    setLabel(riff ? `Riff ${riff.number}` : 'a special sound');
     setPlaying(true);
     await w.el.play().catch(() => setPlaying(false));
     rollGolden();

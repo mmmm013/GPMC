@@ -7,7 +7,10 @@
     {
       "path": "/api/cron/free-gift",
       "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/cron/riff-off-draw",
+      "schedule": "15 13 * * *"
     }
   ]
 }
-
