@@ -127,7 +127,8 @@ export function useNugPlayer() {
     if (!got) return;
     const { a, nug } = got;
     const fit = () => {
-      const length = Number.isFinite(voice.duration) ? voice.duration : 0;
+      /* A slowed voice (lib/games/clearVoice) lasts longer than its file. */
+      const length = Number.isFinite(voice.duration) ? voice.duration / (voice.playbackRate || 1) : 0;
       const slower = length > 0 ? nug.seconds / length : 1;
       (a as HTMLAudioElement & { preservesPitch?: boolean }).preservesPitch = true;
       if (slower >= 0.5) {

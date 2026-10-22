@@ -1,5 +1,7 @@
 'use client';
 
+import VoicePlayer from './VoicePlayer';
+import { playVoice } from '@/lib/games/clearVoice';
 import { useEffect, useRef, useState } from 'react';
 import { GAME_API, loadProgress, saveProgress, sendAnswer, type GameElement } from '@/lib/games/meantsGame';
 import { MOODS_FOR, SERENADE, nextSuggestion, useNugPlayer, usePlayerSense } from '@/lib/games/adaptive';
@@ -73,10 +75,9 @@ export default function CanIGame() {
       setElement(body.element);
       const a = audio.current;
       if (a) {
-        a.src = body.element.src;
         /* Steady and calm players hear a mood bed under the TUG; quick players get it bare. */
         if (sense.pace !== 'quick') void nugs.bedUnder(a, MOODS_FOR[challenge.id] ?? []);
-        void a.play().catch(() => setMessage('Tap play to listen.'));
+        void playVoice(a, body.element.src).catch(() => setMessage('Tap play to listen.'));
       }
     } catch {
       setMessage('That did not load. Please try again.');
@@ -135,7 +136,7 @@ export default function CanIGame() {
         })}
       </div>
 
-      <audio ref={audio} controls controlsList="nodownload" className="mt-6 w-full" />
+      <VoicePlayer ref={audio} className="mt-6 w-full" />
 
       {element && active && (
         <div className="mt-4 rounded-2xl border border-[#FFD54F]/40 bg-black/40 p-4">

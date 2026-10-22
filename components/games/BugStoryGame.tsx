@@ -1,5 +1,7 @@
 'use client';
 
+import VoicePlayer from './VoicePlayer';
+import { playVoice } from '@/lib/games/clearVoice';
 import { useEffect, useRef, useState } from 'react';
 import { GAME_API, loadProgress, saveProgress, type GameElement } from '@/lib/games/meantsGame';
 import { MOODS_FOR_PACE, SERENADE, useNugPlayer, usePlayerSense } from '@/lib/games/adaptive';
@@ -56,9 +58,8 @@ export default function BugStoryGame() {
     /* Steady and calm players hear a quiet bed under the whole story. */
     if (i === 0 && sense.pace !== 'quick') void nugs.ambient(MOODS_FOR_PACE[sense.pace]);
     setNow(i);
-    a.src = list[i].src;
     a.onended = () => playFrom(list, i + 1);
-    void a.play().catch(() => setMessage('Tap play to listen.'));
+    void playVoice(a, list[i].src).catch(() => setMessage('Tap play to listen.'));
   }
 
   async function tell(e: React.FormEvent) {
@@ -126,7 +127,7 @@ export default function BugStoryGame() {
         </button>
       </form>
 
-      <audio ref={audio} controls controlsList="nodownload" className="mt-6 w-full" />
+      <VoicePlayer ref={audio} className="mt-6 w-full" />
 
       {story.length > 0 && (
         <div className="mt-4 rounded-2xl border border-[#FFD54F]/40 bg-black/40 p-4">
