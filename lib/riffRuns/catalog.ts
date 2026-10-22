@@ -43,12 +43,15 @@ export function runOrder(week: string): Riff[] {
     closer in length"). Pairs are chosen to fit, so no riff has to be cut. */
 export const PAIR_MAX_GAP_SECONDS = 1;
 
+/* Two names that end alike ("Paper Mambo" against "Yarrow Mambo") are hard to tell apart. */
+const lastWord = (name: string) => name.split(' ').pop();
+
 /** This week's Riff-OFF: two riffs from two different songs, as close in length as the catalogue allows. */
 export function riffOff(week: string): [Riff, Riff] {
   const order = runOrder(`riff-off:${week}`);
   for (const first of order) {
     const rival = order
-      .filter((r) => r.song !== first.song && Math.abs(r.seconds - first.seconds) <= PAIR_MAX_GAP_SECONDS)
+      .filter((r) => r.song !== first.song && lastWord(r.name) !== lastWord(first.name) && Math.abs(r.seconds - first.seconds) <= PAIR_MAX_GAP_SECONDS)
       .sort((a, b) => Math.abs(a.seconds - first.seconds) - Math.abs(b.seconds - first.seconds))[0];
     if (rival) return [first, rival];
   }
