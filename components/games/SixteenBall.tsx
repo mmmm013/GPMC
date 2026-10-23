@@ -388,7 +388,7 @@ export default function SixteenBall() {
       const heavy = found.line.startsWith(GUIDES[k].name + ' looks back');
       const slot: Slot | null =
         k === 'sorceress'
-          ? found.tone === 'no' ? 'not_yet' : heavy ? 'heavy' : null
+          ? heavy ? 'heavy' : found.tone === 'no' ? 'not_yet' : found.tone
           : found.tone === 'maybe' || found.tone === 'no' || heavy ? null : found.grand ? 'yes' : 'kindness';
       a.addEventListener('ended', () => say(k, slot, follow), { once: true });
       /* The voice arrives from far away. */
@@ -646,7 +646,8 @@ export default function SixteenBall() {
   }
   function choose(fw: number) {
     setForWhom(fw);
-    say(circle.guide, askTime, ritualFor(fw));
+    /* Lisa's Sorceress has her own asking lines; the Warlock speaks to the time. */
+    say(circle.guide, circle.guide === 'sorceress' ? 'asking' : askTime, ritualFor(fw));
   }
   const byYes = players.map((_, i) => i).filter((i) => (circle.scores[i]?.yes ?? 0) > 0).sort((a, b) => (circle.scores[b]?.yes ?? 0) - (circle.scores[a]?.yes ?? 0));
   const favored = players.length > 1 ? byYes[0] : undefined;

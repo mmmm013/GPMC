@@ -15,7 +15,7 @@
    Slots with no Warlock clip (maybe, not yet, a heavy question, danger and
    988, goodbye, passing the phone) stay as words on screen. */
 export type Slot = 'welcome' | 'choose' | 'after_pick' | 'ask_again' | 'yes' | 'past' | 'present' | 'future' | 'kindness'
-  | 'not_yet' | 'heavy' | 'danger' | 'pass' | 'goodbye';
+  | 'asking' | 'maybe' | 'not_yet' | 'heavy' | 'danger' | 'pass' | 'goodbye';
 export type Clip = { id: string; slot: Slot; text: string; src: string; start: number; end: number };
 
 const INTERVIEW = 'https://www.k-kut.com/voices/mc-bot/welcome.m4a';
@@ -98,11 +98,26 @@ export function playClip(a: HTMLAudioElement, clip: Clip): Promise<void> {
 }
 
 /* The Sorceress in Lisa's own voice. GD, 2026-10-23: "Lisa's Voice for Sorceress."
-   She recorded 12 of the 27 script lines (two takes of line 17); each file is the
-   whole line, cut clean. Lines she has not recorded stay in the phone's voice. */
+   She recorded all 27 script lines (two takes of line 17); each file is the
+   whole line, cut clean. A line not approved stays in the phone's voice. */
 const LISA = 'https://www.k-kut.com/voices/sorceress';
 export const SORCERESS_CLIPS: Clip[] = [
   { id: 's01', slot: 'welcome', text: 'Come in. The candle is lit, and you are welcome here.', src: `${LISA}/s01.mp3`, start: 0, end: 4.86 },
+  { id: 's02', slot: 'welcome', text: 'The night outside is long. In here there is a little light, and it is yours.', src: `${LISA}/s02.mp3`, start: 0, end: 6.27 },
+  { id: 's03', slot: 'welcome', text: 'Sit with me. Ask what your heart is holding.', src: `${LISA}/s03.mp3`, start: 0, end: 3.68 },
+  { id: 's04', slot: 'past', text: 'Shall I look back, into what has been? That is where I see most clearly.', src: `${LISA}/s04.mp3`, start: 0, end: 6.09 },
+  { id: 's05', slot: 'present', text: 'Or shall I look at now, at this very hour?', src: `${LISA}/s05.mp3`, start: 0, end: 3.5 },
+  { id: 's06', slot: 'future', text: 'Or shall we lift the curtain on what may come?', src: `${LISA}/s06.mp3`, start: 0, end: 3.19 },
+  { id: 's07', slot: 'asking', text: 'Say your question out loud, or hold it quietly. I will hear it either way.', src: `${LISA}/s07.mp3`, start: 0, end: 6.14 },
+  { id: 's08', slot: 'asking', text: 'Breathe once. Now let the answer find its way to you.', src: `${LISA}/s08.mp3`, start: 0, end: 4.99 },
+  { id: 's09', slot: 'yes', text: 'The stars remember this. Yes.', src: `${LISA}/s09.mp3`, start: 0, end: 3.21 },
+  { id: 's10', slot: 'yes', text: 'What was planted then has grown. Yes, and kindly so.', src: `${LISA}/s10.mp3`, start: 0, end: 6.71 },
+  { id: 's11', slot: 'yes', text: 'The old roads all lead here. Yes.', src: `${LISA}/s11.mp3`, start: 0, end: 3.76 },
+  { id: 's12', slot: 'yes', text: 'Your candle burns steady. Yes.', src: `${LISA}/s12.mp3`, start: 0, end: 3.66 },
+  { id: 's13', slot: 'maybe', text: 'The mist has not lifted yet. Ask me again when the moon turns.', src: `${LISA}/s13.mp3`, start: 0, end: 5.56 },
+  { id: 's14', slot: 'maybe', text: 'Some answers are still being woven. Be patient with this one.', src: `${LISA}/s14.mp3`, start: 0, end: 5.41 },
+  { id: 's15', slot: 'maybe', text: 'I see two paths, and both are lit. The choice is still yours.', src: `${LISA}/s15.mp3`, start: 0, end: 6.32 },
+  { id: 's16', slot: 'not_yet', text: 'Not this time. But nothing kind is ever wasted.', src: `${LISA}/s16.mp3`, start: 0, end: 4.26 },
   { id: 's17a', slot: 'not_yet', text: 'The door is closed for now. Doors open again.', src: `${LISA}/s17a.mp3`, start: 0, end: 4.26 },
   { id: 's17b', slot: 'not_yet', text: 'The door is closed for now. Doors open again.', src: `${LISA}/s17b.mp3`, start: 0, end: 3.94 },
   { id: 's18', slot: 'not_yet', text: 'Not yet. Hold on to what is good while you wait.', src: `${LISA}/s18.mp3`, start: 0, end: 4.31 },
