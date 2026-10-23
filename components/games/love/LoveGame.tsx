@@ -313,7 +313,7 @@ export default function LoveGame() {
       )}
 
       {(screen === 'prize' || screen === 'freebie') && (
-        <PrizePicker lover={lover} freebie={screen === 'freebie' ? promise : undefined} tier={screen === 'freebie' ? 'HUG' : length.tier}
+        <PrizePicker lover={lover} freebie={screen === 'freebie' ? promise : undefined} tier={screen === 'freebie' ? 'HUG' : length.tier} heard={sung.find((b) => b.reference)?.reference ?? undefined}
           onDone={() => {
             /* A kept freebie clears the promise; a new one may have been made. */
             try {

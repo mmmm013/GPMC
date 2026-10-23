@@ -20,7 +20,9 @@ import { FailButton } from './FailButton';
 type Stage = 'loading' | 'whittle' | 'kept' | 'ask' | 'wish' | 'searching' | 'found' | 'sorry';
 const WORD_TRIES = 3;
 
-export default function PrizePicker({ lover, freebie, tier = 'HUG', onDone }: { lover: string; freebie?: string; tier?: PrizeTier; onDone: () => void }) {
+/* `heard` is a love BUG the player's arrows sang: a quick game that finds no word
+   still has an Element to file its freebie promise against, so it is not lost. */
+export default function PrizePicker({ lover, freebie, tier = 'HUG', heard, onDone }: { lover: string; freebie?: string; tier?: PrizeTier; heard?: string; onDone: () => void }) {
   const audio = useRef<HTMLAudioElement>(null);
   const [set, setSet] = useState<1 | 2>(1);
   const [cards, setCards] = useState<GameElement[]>([]);
@@ -94,7 +96,7 @@ export default function PrizePicker({ lover, freebie, tier = 'HUG', onDone }: { 
     e.preventDefault();
     const w = wish.trim();
     if (!w) return;
-    const reference = offered[offered.length - 1] ?? '';
+    const reference = offered[offered.length - 1] ?? heard ?? '';
     if (reference) void sendLove({ type: 'love-wish', wish: w, reference });
     setStage('searching');
     const hug = await fetchPrize(tier, offered, w);
@@ -133,14 +135,18 @@ export default function PrizePicker({ lover, freebie, tier = 'HUG', onDone }: { 
     } catch {
       /* the filed promise below still holds */
     }
-    const reference = offered[offered.length - 1] ?? '';
+    const reference = offered[offered.length - 1] ?? heard ?? '';
     if (reference) void sendLove({ type: 'love-freebie', code: c, wish: w, reference });
   }
 
   async function claim(e: React.FormEvent) {
     e.preventDefault();
-    const reference = kept?.reference ?? offered[offered.length - 1] ?? '';
-    if (!reference || claiming) return;
+    const reference = kept?.reference ?? offered[offered.length - 1] ?? heard ?? '';
+    if (claiming) return;
+    if (!reference) {
+      setNote('We could not save that just now. Your promise code is kept in this browser.');
+      return;
+    }
     setClaiming(true);
     const out =
       stage === 'sorry'
