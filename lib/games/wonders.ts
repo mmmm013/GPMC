@@ -22,7 +22,7 @@ export async function fetchNug(moods: string[] = [], avoid: string[] = []): Prom
   }
 }
 
-/** One word sung in a real song, the same draw 16-Ball uses. */
+/** One word sung in a real song, the same draw The Sorceress or Warlock uses. */
 export async function fetchBug(): Promise<GameElement | null> {
   try {
     const body = (await (await fetch(`${GAME_API}&kind=ball`, { cache: 'no-store' })).json()) as { element: GameElement | null };
