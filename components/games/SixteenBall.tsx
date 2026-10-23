@@ -9,6 +9,7 @@ import {
   CHEEKY, COMFORT, EASY, GAME_API, LISTEN_HREF, ROUNDS, STORE_KEY, TONE_WEIGHTS,
   loadProgress, readQuestion, saveProgress, type GameElement, type Round, type Tone,
 } from '@/lib/games/seer';
+import { WARLOCK_APPROVED, hushGuide, playClip, speakSorceress, warlockClip, type Slot } from '@/lib/games/guideVoice';
 
 /* The Sorceress or Warlock (it began as 16-Ball, the old fortune toy remade).
    GD, 2026-10-23: "Let's make it The Sorceress or Warlock. with air of kindness
@@ -28,8 +29,10 @@ import {
    answers & arrays of answers? Want it DYNAMIC and "sensitive"": answers are
    drawn live, never repeat in a sitting, and fit the question (see readQuestion
    in lib/games/seer.ts).
-   The guide's lines are words on screen only; every sung answer is a real
-   Element. A circle plays: a couple, friends, ideally up to 8, but anyone can
+   The Kind Warlock speaks in Michael Clay's recorded voice (only clips GD has
+   approved) and the Kind Sorceress in the phone's computer voice, per GD's
+   ruling in lib/games/guideVoice.ts; the other guides' lines stay on screen.
+   Every sung answer is a real Element. A circle plays: a couple, friends, ideally up to 8, but anyone can
    join. The question stays on this phone unless the player chooses to send it.
    Internal ids (16-ball, the store key) are unchanged. */
 type Guide = 'sorceress' | 'warlock' | 'lantern' | 'seer';
@@ -157,6 +160,8 @@ function chime() {
 
 export default function SixteenBall() {
   const audio = useRef<HTMLAudioElement>(null);
+  const guideAudio = useRef<HTMLAudioElement>(null);
+  const [voiceOn, setVoiceOn] = useState(true);
   const [circle, setCircle] = useState<Circle>(() =>
     loadProgress<Circle>(STORE_KEY, { players: [], turn: 0, guide: 'sorceress', way: 'stars', round: 'everyday', scores: [], lit: 0, day: '' }),
   );
@@ -292,15 +297,32 @@ export default function SixteenBall() {
     saveProgress(STORE_KEY, next);
   }
 
+  /* The guide speaks, when it has a voice: the Sorceress says the words on
+     screen; the Warlock plays one approved clip for the moment, or stays quiet. */
+  const hasVoice = (k: Guide) => k === 'sorceress' ? typeof window !== 'undefined' && 'speechSynthesis' in window : k === 'warlock' && WARLOCK_APPROVED.length > 0;
+  function say(k: Guide, slot: Slot | null, text: string) {
+    if (!voiceOn || !hasVoice(k)) return;
+    if (k === 'sorceress') {
+      if (text) void speakSorceress(text);
+      return;
+    }
+    const clip = slot && warlockClip(slot);
+    const a = guideAudio.current;
+    if (clip && a) void playClip(a, clip);
+  }
+
   function begin() {
     sense.tap();
     const names = draft.map((d) => d.trim().slice(0, 24));
     keep({ ...circle, players: names, turn: 0, guide, way, round, scores: names.map(() => NO_SCORE), lit: 0 });
     setGathering(false);
     resetTurn();
+    /* After the turn screen (and its guide player) is on screen. */
+    setTimeout(() => say(guide, 'welcome', `${GUIDES[guide].name}. ${GUIDES[guide].line}`), 300);
   }
 
   function resetTurn() {
+    hushGuide(guideAudio.current);
     setForWhom(null);
     setTime('past');
     setCandle(0);
@@ -325,6 +347,7 @@ export default function SixteenBall() {
     sense.tap();
     nugs.stop();
     audio.current?.pause();
+    hushGuide(guideAudio.current);
     setBusy(true);
     setMessage('');
     setShown(null);
@@ -349,6 +372,11 @@ export default function SixteenBall() {
       else if (sense.pace !== 'quick') void nugs.bedUnder(a, MOODS_FOR_PACE[sense.pace]);
       a.onended = sense.pace === 'quick' && !found.grand ? () => void nugs.playAlone(MOODS_FOR_PACE.quick) : null;
       void playVoice(a, el.src).catch(() => setMessage('Tap play to hear the answer.'));
+      /* When the sung answer ends, the guide speaks its line. */
+      const k = arrival?.guide ?? circle.guide;
+      const follow = [found.line, 'Offered with kindness. Carry it gently.'].filter(Boolean).join(' ');
+      const slot: Slot | null = found.tone === 'maybe' || found.tone === 'no' || found.line.startsWith(GUIDES[k].name + ' looks back') ? null : found.grand ? 'yes' : 'kindness';
+      a.addEventListener('ended', () => say(k, slot, follow), { once: true });
       /* The voice arrives from far away. */
       a.volume = 0;
       const t0 = Date.now();
@@ -408,6 +436,7 @@ export default function SixteenBall() {
   }
 
   function askAgain() {
+    say(circle.guide, 'ask_again', '');
     setAsks((n) => n + 1);
     setShown(null);
     setClear(false);
@@ -418,6 +447,7 @@ export default function SixteenBall() {
     sense.tap();
     audio.current?.pause();
     setCandle((c) => c + 1);
+    say(circle.guide, CANDLE_TIMES[candle + 1], TIMES[CANDLE_TIMES[candle + 1]].look(g.name));
     setAsks(0);
     setShown(null);
     setClear(false);
@@ -588,7 +618,20 @@ export default function SixteenBall() {
   const party = circle.way === 'thirteen';
   const done = circle.way !== 'candles' && circle.lit >= w.count;
   const look = TIMES[askTime].look(g.name);
-  const target = forWhom === null ? '' : forWhom === asker ? 'self' : forWhom === SOMEONE_ELSE ? 'someone not here' : forWhom === ALL_OF_US ? 'all' : nameOf(players, forWhom);
+  function ritualFor(fw: number) {
+    const target = fw === asker ? 'self' : fw === SOMEONE_ELSE ? 'someone not here' : fw === ALL_OF_US ? 'all' : nameOf(players, fw);
+    return target === 'self'
+      ? `${askerName}, ask your question out loud, or close your eyes and ask it silently. ${look} Breathe in, breathe out, then touch the light.`
+      : target === 'someone not here'
+        ? `${askerName}, picture them and ask for them, out loud or in your mind. ${look} Breathe in, breathe out, then touch the light.`
+        : target === 'all'
+          ? `Everyone, lean in close. ${askerName}, ask out loud for the whole circle. ${look} Together, touch the light.`
+          : `${askerName}, look at ${target} and ask your question out loud. ${target}, take the phone. ${look} Breathe in, breathe out, then touch the light.`;
+  }
+  function choose(fw: number) {
+    setForWhom(fw);
+    say(circle.guide, askTime, ritualFor(fw));
+  }
   const byYes = players.map((_, i) => i).filter((i) => (circle.scores[i]?.yes ?? 0) > 0).sort((a, b) => (circle.scores[b]?.yes ?? 0) - (circle.scores[a]?.yes ?? 0));
   const favored = players.length > 1 ? byYes[0] : undefined;
   const count =
@@ -603,6 +646,13 @@ export default function SixteenBall() {
     <div className="flex flex-col items-center text-center">
       <p className="text-3xl font-black"><span className="text-[#FFD54F]" aria-hidden>{g.sign}</span> {g.name}</p>
       <p className="mt-1 text-sm font-bold text-[#D7CCC8]">{w.name} · {count}</p>
+      {hasVoice(circle.guide) && (
+        <button type="button" aria-pressed={voiceOn} onClick={() => { if (voiceOn) hushGuide(guideAudio.current); setVoiceOn(!voiceOn); }}
+          className="mt-2 text-sm font-bold text-[#FFD54F] underline-offset-4 hover:underline">
+          {voiceOn ? `${g.name.replace(/^The /, '')} speaks · turn off` : `${g.name.replace(/^The /, '')} is quiet · let them speak`}
+        </button>
+      )}
+      <audio ref={guideAudio} preload="none" className="hidden" />
 
       <div className="mt-4 flex flex-wrap justify-center gap-2" aria-label="The circle">
         {players.map((_, i) => {
@@ -660,20 +710,20 @@ export default function SixteenBall() {
           {circle.way === 'candles' && <p className="text-lg text-[#EDE7F6]">Three candles: one answer from the past, one from the present, one from the future.</p>}
           <p className="mt-6 text-xl font-bold">Who is your question for?</p>
           <div className="mt-3 grid gap-3">
-            <button type="button" onClick={() => setForWhom(asker)} className="min-h-12 rounded-2xl bg-[#7E57C2] px-4 text-lg font-black text-white">
+            <button type="button" onClick={() => choose(asker)} className="min-h-12 rounded-2xl bg-[#7E57C2] px-4 text-lg font-black text-white">
               For me
             </button>
             {others.map((i) => (
-              <button key={i} type="button" onClick={() => setForWhom(i)} className="min-h-12 rounded-2xl border-2 border-[#7E57C2] px-4 text-lg font-black text-white">
+              <button key={i} type="button" onClick={() => choose(i)} className="min-h-12 rounded-2xl border-2 border-[#7E57C2] px-4 text-lg font-black text-white">
                 For {nameOf(players, i)}
               </button>
             ))}
             {others.length > 0 && party && (
-              <button type="button" onClick={() => setForWhom(ALL_OF_US)} className="min-h-12 rounded-2xl border-2 border-dashed border-[#7E57C2] px-4 text-lg font-black text-white">
+              <button type="button" onClick={() => choose(ALL_OF_US)} className="min-h-12 rounded-2xl border-2 border-dashed border-[#7E57C2] px-4 text-lg font-black text-white">
                 For all of us
               </button>
             )}
-            <button type="button" onClick={() => setForWhom(SOMEONE_ELSE)} className="min-h-12 rounded-2xl border-2 border-[#7E57C2]/60 px-4 text-lg font-black text-white">
+            <button type="button" onClick={() => choose(SOMEONE_ELSE)} className="min-h-12 rounded-2xl border-2 border-[#7E57C2]/60 px-4 text-lg font-black text-white">
               For someone who is not here
             </button>
           </div>
@@ -685,13 +735,7 @@ export default function SixteenBall() {
               ? `${TIMES[shown.time].says(g.name)}:`
               : candle > 0 || asks > 0
                 ? `${look} Touch the light.`
-                : target === 'self'
-                  ? `${askerName}, ask your question out loud, or close your eyes and ask it silently. ${look} Breathe in, breathe out, then touch the light.`
-                  : target === 'someone not here'
-                    ? `${askerName}, picture them and ask for them, out loud or in your mind. ${look} Breathe in, breathe out, then touch the light.`
-                    : target === 'all'
-                      ? `Everyone, lean in close. ${askerName}, ask out loud for the whole circle. ${look} Together, touch the light.`
-                      : `${askerName}, look at ${target} and ask your question out loud. ${target}, take the phone. ${look} Breathe in, breathe out, then touch the light.`}
+                : ritualFor(forWhom)}
           </p>
           {!shown && !busy && asks === 0 && candle === 0 && (
             <input value={question} onChange={(e) => setQuestion(e.target.value)} maxLength={120}
