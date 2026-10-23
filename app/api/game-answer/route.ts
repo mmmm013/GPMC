@@ -44,8 +44,9 @@ export async function POST(request: Request) {
     if (!prize || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return NextResponse.json({ error: 'Please enter a valid email.' }, { status: 400 });
     }
-    /* The Love Game's prize is a free HUG, one per player (GD, 2026-10-22: "free HUG only"),
-       made the moment it is won so the player gets their own link on the spot. */
+    /* The Love Game's prize is free, one per player (GD, 2026-10-22: "free HUG only"),
+       made the moment it is won so the player gets their own link on the spot. It is a
+       HUG for the full fair, a TUG for a short game, a BUG for a quick one. */
     const game = str(body.game, 40);
     if (game === 'love') {
       const made = await makeLovePrize(reference, email, str(body.from, 50), str(body.to, 50));
@@ -60,7 +61,8 @@ export async function POST(request: Request) {
     /* The Love Game's prize HUGs: each keep or pass tests the romantic tags. */
     const pick = body.pick === 'keep' ? 'Kept' : body.pick === 'pass' ? 'Passed' : '';
     if (!pick) return NextResponse.json({ error: 'Missing answer.' }, { status: 400 });
-    said = `Love Game prize HUG: ${pick} (set ${str(body.set, 8) || '1'})`;
+    const tier = body.tier === 'TUG' || body.tier === 'BUG' ? body.tier : 'HUG';
+    said = `Love Game prize ${tier}: ${pick} (set ${str(body.set, 8) || '1'})`;
     surface = `gpm-game:love:${pick.toLowerCase()}`;
   } else if (body.type === 'fail') {
     /* Approve ALL MEANTs until failed; a Fail goes to Triage (GD, 2026-10-21). */
@@ -69,7 +71,7 @@ export async function POST(request: Request) {
     said = `Fail from ${str(body.game, 40) || 'a game'}: ${str(body.note, 200) || why.replace(/_/g, ' ')}`;
     surface = `gpm-game:fail:${str(body.game, 40) || 'game'}`;
   } else if (body.type === 'love-wish') {
-    /* No HUG in two sets fit: what the player asked for instead. */
+    /* No prize in two sets fit (or no BUG sang the word asked for): what the player asked for instead. */
     const wish = str(body.wish, 300);
     if (!wish) return NextResponse.json({ error: 'Tell us what you would like.' }, { status: 400 });
     said = `Love Game wish: ${wish}`;
@@ -123,7 +125,8 @@ async function makeLovePrize(reference: string, email: string, from: string, to:
     });
     const out = (await res.json().catch(() => ({}))) as { ok?: boolean; link?: string; claim?: string; reason?: string };
     if (res.ok && out.link) return { link: out.link, claim: out.claim ?? '', status: 200, error: '' };
-    if (out.reason === 'already_claimed') return { link: '', claim: '', status: 409, error: 'That email already has its free HUG. It is one per player.' };
+    if (out.reason === 'already_claimed') return { link: '', claim: '', status: 409, error: 'That email already has its free prize. It is one per player.' };
+    if (out.reason === 'not_offered') return { link: '', claim: '', status: 409, error: 'That one cannot be sent right now. Play again and pick another.' };
     return { link: '', claim: '', status: 503, error: 'We could not make your prize just now. Try again in a moment.' };
   } catch {
     return { link: '', claim: '', status: 503, error: 'We could not make your prize just now. Try again in a moment.' };
