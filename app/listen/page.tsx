@@ -13,7 +13,7 @@ export const metadata: Metadata = {
    handed over as a file. GD, 2026-10-11: "Flagship uses all!" */
 export const dynamic = 'force-dynamic';
 
-type Track = { id: string; artist: string; title: string; src: string; buyDownloadUrl?: string };
+type Track = { id: string; artist: string; title: string; src: string; video?: string; buyDownloadUrl?: string };
 
 async function tracks(): Promise<Track[]> {
   try {
