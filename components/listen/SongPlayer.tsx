@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react';
 import DownloadReturn from './DownloadReturn';
 
-type Track = { id: string; artist: string; title: string; src: string; buyDownloadUrl?: string };
+type Track = { id: string; artist: string; title: string; src: string; video?: string; buyDownloadUrl?: string };
 
 /* The Download button is a form, not a link. Only a POST opens a $1.99 checkout
    at k-kut.com; link scanners and prefetchers that follow every link were opening
@@ -20,9 +20,14 @@ function buyForm(url?: string): { action: string; song: string; returnTo: string
 }
 
 /* One player for every G Putnam Music song. Every row shows artist and title
-   (GD, 2026-10-11: "STREAMS SHOW ... ARTIST & TITLE, MINIMUM"). Stream only. */
+   (GD, 2026-10-11: "STREAMS SHOW ... ARTIST & TITLE, MINIMUM"). Stream only.
+   A song that has its own visual plays it, like any music video (GD, 2026-10-23:
+   "play videos as typical, when each respective song plays"); a song without one
+   plays as before. ONE media element for both, so the next song can start on its
+   own on a phone, which only lets an element the listener already tapped keep
+   playing. */
 export default function SongPlayer({ tracks }: { tracks: Track[] }) {
-  const audio = useRef<HTMLAudioElement>(null);
+  const audio = useRef<HTMLVideoElement>(null);
   const [current, setCurrent] = useState<Track | null>(null);
   const [playing, setPlaying] = useState(false);
   const [q, setQ] = useState('');
@@ -40,7 +45,7 @@ export default function SongPlayer({ tracks }: { tracks: Track[] }) {
       return;
     }
     setCurrent(t);
-    a.src = t.src;
+    a.src = t.video ?? t.src;
     void a.play();
   }
 
@@ -58,12 +63,14 @@ export default function SongPlayer({ tracks }: { tracks: Track[] }) {
         <p className="mt-1 text-lg font-black">
           {current ? `${current.artist} · ${current.title}` : 'Tap any song to play'}
         </p>
-        <audio
+        <video
           ref={audio}
           controls
           controlsList="nodownload"
+          disablePictureInPicture
+          playsInline
           preload="none"
-          className="mt-3 w-full"
+          className={current?.video ? 'mt-3 aspect-video w-full rounded-xl bg-black' : 'mt-3 h-14 w-full'}
           onPlay={() => setPlaying(true)}
           onPause={() => setPlaying(false)}
           onEnded={next}
