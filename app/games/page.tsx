@@ -26,8 +26,8 @@ const GAMES = [
     blurb: 'Type three words and hear them sung, one word at a time, as a tiny story.',
   },
   {
-    href: '/games/sorceress-or-warlock',
-    title: 'The Sorceress or Warlock',
+    href: '/games/sorceress-or-wizard',
+    title: 'The Sorceress or Wizard',
     tag: 'BUGs · free · for a circle',
     blurb: 'A kind guide in a dark world. Ask of the past, the present or the future, for yourself or someone in your circle, and the answer is one sung word.',
   },
