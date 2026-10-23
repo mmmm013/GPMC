@@ -35,17 +35,7 @@ export default function HomePage() {
             Send a HUG
           </a>
         </div>
-        {/* GD, 2026-10-22, "DO ALL Opportunities!": the games were hard to find from home. */}
-        <Link
-          href="/games/love"
-          className="mt-12 block rounded-2xl bg-[#7B1F2B] px-6 py-5 text-left text-white shadow-lg hover:bg-[#8E2A37]"
-        >
-          <span className="block text-sm font-bold uppercase tracking-widest text-[#FFD54F]">💘 Free game</span>
-          <span className="mt-1 block text-2xl font-black">The Love Game</span>
-          <span className="mt-1 block text-lg">Shoot love arrows at a county-fair booth. Win a free HUG for your sweetheart.</span>
-          <span className="mt-4 inline-block rounded-full bg-[#FFD54F] px-6 py-2 text-lg font-black text-[#2A1506]">Play free →</span>
-        </Link>
-        <Link href="/games" className="mt-4 inline-block text-lg font-black text-[#8B4513] underline">All free games</Link>
+        {/* GD, 2026-10-23: "Games must be SUB-level." The games are reached from the footer, not from home. */}
         {showHalloween && (
           <a
             href="https://www.k-kut.com/halloween-classroom"
