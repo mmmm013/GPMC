@@ -6,6 +6,13 @@ import Link from 'next/link';
 export const metadata = { title: 'Games | G Putnam Music' };
 
 const GAMES = [
+  /* New on 2026-10-23 and no visits yet, so it leads the list (GD, 2026-10-23: "do 1"). */
+  {
+    href: '/games/bug-reels',
+    title: 'BUG Reels',
+    tag: 'New · BUGs · free · pull the lever',
+    blurb: 'Pull the lever and three reels stop on three words, each one sung from a real song. Hold, nudge, find a Sweet Line, and send your line to someone.',
+  },
   {
     href: '/games/can-i',
     title: 'Can I…?',
@@ -17,12 +24,6 @@ const GAMES = [
     title: 'BUG-Story',
     tag: 'BUGs · free · 3 levels',
     blurb: 'Type three words and hear them sung, one word at a time, as a tiny story.',
-  },
-  {
-    href: '/games/bug-reels',
-    title: 'BUG Reels',
-    tag: 'BUGs · free · pull the lever',
-    blurb: 'Pull the lever and three reels stop on three words, each one sung from a real song. Hold, nudge, find a Sweet Line, and send your line to someone.',
   },
   {
     href: '/games/sorceress-or-warlock',
