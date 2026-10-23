@@ -11,7 +11,9 @@ import {
 } from '@/lib/games/seer';
 import { MC_VOICE_IN_GAMES, WARLOCK_APPROVED, hushGuide, playClip, speakSorceress, warlockClip, type Slot } from '@/lib/games/guideVoice';
 
-/* The Sorceress or Warlock (it began as 16-Ball, the old fortune toy remade).
+/* The Sorceress or Wizard (it began as 16-Ball, the old fortune toy remade;
+   GD renamed the Warlock the Wizard for children's sake: "Wizard, then? Yes.").
+   The guide's internal id stays 'warlock' so saved games and sent links keep working.
    GD, 2026-10-23: "Let's make it The Sorceress or Warlock. with air of kindness
    & goodness amidst darkness in the world. Avoid MAGIC AND BALL & "16". Instead,
    refer in magical terms, past, present, OR future. Default to past. ... Offer
@@ -29,7 +31,7 @@ import { MC_VOICE_IN_GAMES, WARLOCK_APPROVED, hushGuide, playClip, speakSorceres
    answers & arrays of answers? Want it DYNAMIC and "sensitive"": answers are
    drawn live, never repeat in a sitting, and fit the question (see readQuestion
    in lib/games/seer.ts).
-   The Kind Warlock speaks in Michael Clay's recorded voice (only clips GD has
+   The Kind Wizard speaks in Michael Clay's recorded voice (only clips GD has
    approved) and the Kind Sorceress in the phone's computer voice, per GD's
    ruling in lib/games/guideVoice.ts; the other guides' lines stay on screen.
    Every sung answer is a real Element. A circle plays: a couple, friends, ideally up to 8, but anyone can
@@ -54,7 +56,7 @@ const NO_SCORE: Score = { yes: 0, maybe: 0, no: 0 };
 
 const GUIDES: Record<Guide, { name: string; sign: string; line: string }> = {
   sorceress: { name: 'The Kind Sorceress', sign: '☾', line: 'Wise and warm, a light in a dark world.' },
-  warlock: { name: 'The Kind Warlock', sign: '✶', line: 'Gentle and good, a keeper of the light.' },
+  warlock: { name: 'The Kind Wizard', sign: '✶', line: 'Gentle and good, a keeper of the light.' },
   lantern: { name: 'The Lantern Keeper', sign: '✺', line: 'Holds a small flame up against the night.' },
   seer: { name: 'The Seer of Yesterday', sign: '☉', line: 'Remembers what the years have kept for you.' },
 };
@@ -298,7 +300,7 @@ export default function SixteenBall() {
   }
 
   /* The guide speaks, when it has a voice: the Sorceress says the words on
-     screen; the Warlock plays one approved clip for the moment, or stays quiet. */
+     screen; the Wizard plays one approved clip for the moment, or stays quiet. */
   const hasVoice = (k: Guide) => k === 'sorceress' ? typeof window !== 'undefined' && 'speechSynthesis' in window : k === 'warlock' && MC_VOICE_IN_GAMES && WARLOCK_APPROVED.length > 0;
   function say(k: Guide, slot: Slot | null, text: string) {
     if (!voiceOn || !hasVoice(k)) return;

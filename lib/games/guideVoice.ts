@@ -1,7 +1,7 @@
 /* The guides' voices. GD, 2026-10-23: "Pull from MC interview & scripts, so
    all choices for male. Female, use computer until can find female."
 
-   - The Kind Warlock speaks in Michael Clay's own recorded voice: short clips
+   - The Kind Wizard (once the Warlock) speaks in Michael Clay's own recorded voice: short clips
      cut by time from his interview and his guide-script recording on k-kut.com
      (word times: /mnt/project-files/games/warlock-mc-clips.json). The interview
      is not approved for public use, so a clip plays ONLY while its id is in

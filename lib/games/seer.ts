@@ -1,4 +1,4 @@
-/* The Sorceress or Warlock: the answer words and the choices around them.
+/* The Sorceress or Wizard: the answer words and the choices around them.
    GD, 2026-10-23: "use all suggestions you made" (the fortune-game research,
    /mnt/project-files/games/fortune-ball-research.md), under his rules of the
    same day: no "magic", "ball" or "16"; past, present or future, past by
