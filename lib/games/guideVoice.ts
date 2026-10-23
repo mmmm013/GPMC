@@ -4,11 +4,12 @@
    - The Kind Warlock speaks in Michael Clay's own recorded voice: short clips
      cut by time from his interview and his guide-script recording on k-kut.com
      (word times: /mnt/project-files/games/warlock-mc-clips.json). The interview
-     is not approved for public use, so a clip plays ONLY once its id is in
-     WARLOCK_APPROVED, which is filled only from GD's own yes after he listens.
+     is not approved for public use, so a clip plays ONLY while its id is in
+     WARLOCK_APPROVED, which holds only what GD has approved.
      No clip ever says the retired store name.
    - The Kind Sorceress speaks with the phone's own computer voice (a female
-     voice where the phone has one) until a female voice is found.
+     voice where the phone has one). GD: TEMPORARY, replaced once a female
+     voice is recorded from a script.
    - The Lantern Keeper and the Seer of Yesterday have no voice yet: their
      words stay on screen.
    Slots with no Warlock clip (maybe, not yet, a heavy question, danger and
@@ -53,8 +54,10 @@ export const WARLOCK_CLIPS: Clip[] = [
   { id: 'w31', slot: 'kindness', text: "uplifting people", src: INTERVIEW, start: 359.46, end: 360.76 },
 ];
 
-/* GD's yes, clip by clip, after listening. Empty until he says so. */
-export const WARLOCK_APPROVED: string[] = [];
+/* GD, 2026-10-23: "Auto-approve all. Issues will come from VOC." Every clip
+   plays; a clip someone flags through VOC comes off this list. A clip that
+   says the retired store name is never added (none of these 31 does). */
+export const WARLOCK_APPROVED: string[] = WARLOCK_CLIPS.map((c) => c.id);
 
 export function warlockClip(slot: Slot): Clip | null {
   const ok = WARLOCK_CLIPS.filter((c) => c.slot === slot && WARLOCK_APPROVED.includes(c.id));
