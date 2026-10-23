@@ -59,7 +59,14 @@ export const WARLOCK_CLIPS: Clip[] = [
    says the retired store name is never added (none of these 31 does). */
 export const WARLOCK_APPROVED: string[] = WARLOCK_CLIPS.map((c) => c.id);
 
+/* Michael's Voice Agreement (accepted 2026-10-16) covers his recorded voice in
+   MC-BOT and the Get So Down closing signature only; games are not covered.
+   Until GD has Michael's written yes on an add-on, this stays false and the
+   Warlock's words stay on screen. Turning it on is the only change needed. */
+export const MC_VOICE_IN_GAMES = false;
+
 export function warlockClip(slot: Slot): Clip | null {
+  if (!MC_VOICE_IN_GAMES) return null;
   const ok = WARLOCK_CLIPS.filter((c) => c.slot === slot && WARLOCK_APPROVED.includes(c.id));
   return ok.length ? ok[Math.floor(Math.random() * ok.length)] : null;
 }

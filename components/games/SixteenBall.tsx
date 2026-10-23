@@ -9,7 +9,7 @@ import {
   CHEEKY, COMFORT, EASY, GAME_API, LISTEN_HREF, ROUNDS, STORE_KEY, TONE_WEIGHTS,
   loadProgress, readQuestion, saveProgress, type GameElement, type Round, type Tone,
 } from '@/lib/games/seer';
-import { WARLOCK_APPROVED, hushGuide, playClip, speakSorceress, warlockClip, type Slot } from '@/lib/games/guideVoice';
+import { MC_VOICE_IN_GAMES, WARLOCK_APPROVED, hushGuide, playClip, speakSorceress, warlockClip, type Slot } from '@/lib/games/guideVoice';
 
 /* The Sorceress or Warlock (it began as 16-Ball, the old fortune toy remade).
    GD, 2026-10-23: "Let's make it The Sorceress or Warlock. with air of kindness
@@ -299,7 +299,7 @@ export default function SixteenBall() {
 
   /* The guide speaks, when it has a voice: the Sorceress says the words on
      screen; the Warlock plays one approved clip for the moment, or stays quiet. */
-  const hasVoice = (k: Guide) => k === 'sorceress' ? typeof window !== 'undefined' && 'speechSynthesis' in window : k === 'warlock' && WARLOCK_APPROVED.length > 0;
+  const hasVoice = (k: Guide) => k === 'sorceress' ? typeof window !== 'undefined' && 'speechSynthesis' in window : k === 'warlock' && MC_VOICE_IN_GAMES && WARLOCK_APPROVED.length > 0;
   function say(k: Guide, slot: Slot | null, text: string) {
     if (!voiceOn || !hasVoice(k)) return;
     if (k === 'sorceress') {
