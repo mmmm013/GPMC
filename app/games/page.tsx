@@ -27,8 +27,8 @@ const GAMES = [
   {
     href: '/games/16-ball',
     title: '16-Ball',
-    tag: 'BUGs · free · party game',
-    blurb: 'Ask the person across from you anything, shake the kaleidoscope ball, and the ball answers with one word from a real song.',
+    tag: 'BUGs · free · for a circle',
+    blurb: 'Gather a circle of 1 to 8 or more. Ask for yourself or for someone in the circle, touch the kaleidoscope ball, and it answers with one sung word.',
   },
   {
     href: '/games/love',
