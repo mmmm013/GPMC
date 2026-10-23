@@ -59,9 +59,9 @@ export const WARLOCK_CLIPS: Clip[] = [
    plays; a clip someone flags through VOC comes off this list. A clip that
    says the retired store name is never added (none of these 31 does). */
 // GD, 2026-10-23, after listening: "Warlock clips YES: 1, 2, 3, 5, 6, 7, 8, 9, 10. NO: 4".
-// w11 to w31 stay approved under his earlier "Auto-approve all". He then said "redo 4":
-// the re-cut w04 above stays out until he hears it and says yes.
-const WARLOCK_REFUSED = ['w04'];
+// w11 to w31 stay approved under his earlier "Auto-approve all". He then said "redo 4",
+// heard the re-cut w04 above, and said "YES!" (2026-10-23).
+const WARLOCK_REFUSED: string[] = [];
 export const WARLOCK_APPROVED: string[] = WARLOCK_CLIPS.map((c) => c.id).filter((id) => !WARLOCK_REFUSED.includes(id));
 
 /* Whether Michael's recorded voice plays in games. GD, 2026-10-23: "for now,
