@@ -24,7 +24,8 @@ export const WARLOCK_CLIPS: Clip[] = [
   { id: 'w01', slot: 'welcome', text: "Welcome.", src: GUIDE_SCRIPT, start: 2.82, end: 3.3 },
   { id: 'w02', slot: 'welcome', text: "You're in the right place.", src: GUIDE_SCRIPT, start: 97.02, end: 98.52 },
   { id: 'w03', slot: 'welcome', text: "We'll keep this simple.", src: GUIDE_SCRIPT, start: 98.88, end: 99.86 },
-  { id: 'w04', slot: 'choose', text: "Choose the feeling you want", src: GUIDE_SCRIPT, start: 28.22, end: 29.98 },
+  // Re-cut 2026-10-23: the first w04 (28.22-29.98) actually said "Start here. This is the".
+  { id: 'w04', slot: 'choose', text: "Choose the feeling you want to send.", src: GUIDE_SCRIPT, start: 20.9, end: 22.85 },
   { id: 'w05', slot: 'choose', text: "Start by listening first.", src: GUIDE_SCRIPT, start: 6.6, end: 8.12 },
   { id: 'w06', slot: 'choose', text: "Press play first.", src: GUIDE_SCRIPT, start: 11.78, end: 12.88 },
   { id: 'w07', slot: 'choose', text: "Hear the song moment.", src: GUIDE_SCRIPT, start: 13.58, end: 14.52 },
@@ -57,7 +58,11 @@ export const WARLOCK_CLIPS: Clip[] = [
 /* GD, 2026-10-23: "Auto-approve all. Issues will come from VOC." Every clip
    plays; a clip someone flags through VOC comes off this list. A clip that
    says the retired store name is never added (none of these 31 does). */
-export const WARLOCK_APPROVED: string[] = WARLOCK_CLIPS.map((c) => c.id);
+// GD, 2026-10-23, after listening: "Warlock clips YES: 1, 2, 3, 5, 6, 7, 8, 9, 10. NO: 4".
+// w11 to w31 stay approved under his earlier "Auto-approve all". He then said "redo 4":
+// the re-cut w04 above stays out until he hears it and says yes.
+const WARLOCK_REFUSED = ['w04'];
+export const WARLOCK_APPROVED: string[] = WARLOCK_CLIPS.map((c) => c.id).filter((id) => !WARLOCK_REFUSED.includes(id));
 
 /* Whether Michael's recorded voice plays in games. GD, 2026-10-23: "for now,
    using already agreed-upon voice for CMG. So, use now." Set false to keep
