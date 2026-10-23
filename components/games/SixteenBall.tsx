@@ -9,7 +9,7 @@ import {
   CHEEKY, COMFORT, EASY, GAME_API, LISTEN_HREF, ROUNDS, STORE_KEY, TONE_WEIGHTS,
   loadProgress, readQuestion, saveProgress, type GameElement, type Round, type Tone,
 } from '@/lib/games/seer';
-import { MC_VOICE_IN_GAMES, WARLOCK_APPROVED, hushGuide, playClip, speakSorceress, warlockClip, type Slot } from '@/lib/games/guideVoice';
+import { MC_VOICE_IN_GAMES, WARLOCK_APPROVED, hushGuide, playClip, sorceressClip, speakSorceress, warlockClip, type Slot } from '@/lib/games/guideVoice';
 
 /* The Sorceress or Warlock (it began as 16-Ball, the old fortune toy remade).
    GD, 2026-10-23: "Let's make it The Sorceress or Warlock. with air of kindness
@@ -192,6 +192,13 @@ export default function SixteenBall() {
   /* Words already sung this sitting: none comes back until its pool runs dry. */
   const used = useRef(new Set<string>());
 
+  /* The circle is complete: the guide says goodbye (Lisa's line, for the Sorceress). */
+  const finished = circle.way !== 'candles' && circle.lit >= WAYS[circle.way].count;
+  useEffect(() => {
+    if (finished) say(circle.guide, 'goodbye', '');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [finished]);
+
   /* An answer someone sent: ?w=word&t=past&g=sorceress&q=… */
   useEffect(() => {
     const p = new URLSearchParams(window.location.search);
@@ -302,12 +309,15 @@ export default function SixteenBall() {
   const hasVoice = (k: Guide) => k === 'sorceress' ? typeof window !== 'undefined' && 'speechSynthesis' in window : k === 'warlock' && MC_VOICE_IN_GAMES && WARLOCK_APPROVED.length > 0;
   function say(k: Guide, slot: Slot | null, text: string) {
     if (!voiceOn || !hasVoice(k)) return;
+    const a = guideAudio.current;
     if (k === 'sorceress') {
-      if (text) void speakSorceress(text);
+      /* Lisa's recorded line where she has one; the phone's voice for the rest. */
+      const lisa = slot && sorceressClip(slot);
+      if (lisa && a) void playClip(a, lisa);
+      else if (text) void speakSorceress(text);
       return;
     }
     const clip = slot && warlockClip(slot);
-    const a = guideAudio.current;
     if (clip && a) void playClip(a, clip);
   }
 
@@ -375,7 +385,11 @@ export default function SixteenBall() {
       /* When the sung answer ends, the guide speaks its line. */
       const k = arrival?.guide ?? circle.guide;
       const follow = [found.line, 'Offered with kindness. Carry it gently.'].filter(Boolean).join(' ');
-      const slot: Slot | null = found.tone === 'maybe' || found.tone === 'no' || found.line.startsWith(GUIDES[k].name + ' looks back') ? null : found.grand ? 'yes' : 'kindness';
+      const heavy = found.line.startsWith(GUIDES[k].name + ' looks back');
+      const slot: Slot | null =
+        k === 'sorceress'
+          ? found.tone === 'no' ? 'not_yet' : heavy ? 'heavy' : null
+          : found.tone === 'maybe' || found.tone === 'no' || heavy ? null : found.grand ? 'yes' : 'kindness';
       a.addEventListener('ended', () => say(k, slot, follow), { once: true });
       /* The voice arrives from far away. */
       a.volume = 0;
@@ -396,6 +410,7 @@ export default function SixteenBall() {
     if (reading === 'harm') {
       gameEvent('game_start', { game: '16-ball', round: 'care' });
       setCare(true);
+      say(circle.guide, 'danger', '');
       return;
     }
     const pool = ROUNDS[reading === 'love' ? 'love' : circle.round];
@@ -460,6 +475,7 @@ export default function SixteenBall() {
     audio.current?.pause();
     keep({ ...circle, turn: circle.turn + 1 });
     resetTurn();
+    say(circle.guide, 'pass', '');
   }
 
   function beginAgain() {

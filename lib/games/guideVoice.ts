@@ -14,7 +14,8 @@
      words stay on screen.
    Slots with no Warlock clip (maybe, not yet, a heavy question, danger and
    988, goodbye, passing the phone) stay as words on screen. */
-export type Slot = 'welcome' | 'choose' | 'after_pick' | 'ask_again' | 'yes' | 'past' | 'present' | 'future' | 'kindness';
+export type Slot = 'welcome' | 'choose' | 'after_pick' | 'ask_again' | 'yes' | 'past' | 'present' | 'future' | 'kindness'
+  | 'not_yet' | 'heavy' | 'danger' | 'pass' | 'goodbye';
 export type Clip = { id: string; slot: Slot; text: string; src: string; start: number; end: number };
 
 const INTERVIEW = 'https://www.k-kut.com/voices/mc-bot/welcome.m4a';
@@ -96,7 +97,34 @@ export function playClip(a: HTMLAudioElement, clip: Clip): Promise<void> {
   });
 }
 
-/* The Sorceress: the phone's own voice, a female one where it has one. */
+/* The Sorceress in Lisa's own voice. GD, 2026-10-23: "Lisa's Voice for Sorceress."
+   She recorded 12 of the 27 script lines (two takes of line 17); each file is the
+   whole line, cut clean. Lines she has not recorded stay in the phone's voice. */
+const LISA = 'https://www.k-kut.com/voices/sorceress';
+export const SORCERESS_CLIPS: Clip[] = [
+  { id: 's01', slot: 'welcome', text: 'Come in. The candle is lit, and you are welcome here.', src: `${LISA}/s01.mp3`, start: 0, end: 4.86 },
+  { id: 's17a', slot: 'not_yet', text: 'The door is closed for now. Doors open again.', src: `${LISA}/s17a.mp3`, start: 0, end: 4.26 },
+  { id: 's17b', slot: 'not_yet', text: 'The door is closed for now. Doors open again.', src: `${LISA}/s17b.mp3`, start: 0, end: 3.94 },
+  { id: 's18', slot: 'not_yet', text: 'Not yet. Hold on to what is good while you wait.', src: `${LISA}/s18.mp3`, start: 0, end: 4.31 },
+  { id: 's19', slot: 'heavy', text: 'What you loved is kept. The past holds it safely, and so do you.', src: `${LISA}/s19.mp3`, start: 0, end: 6.87 },
+  { id: 's20', slot: 'heavy', text: 'This is a hard road. You do not walk it alone.', src: `${LISA}/s20.mp3`, start: 0, end: 4.52 },
+  { id: 's21', slot: 'heavy', text: 'I cannot read this one in the stars. I can only tell you that you matter.', src: `${LISA}/s21.mp3`, start: 0, end: 6.48 },
+  { id: 's22', slot: 'danger', text: 'Please stay. You matter more than any answer. Call or text 988 now. Someone kind is there, right now.', src: `${LISA}/s22.mp3`, start: 0, end: 13.3 },
+  { id: 's23', slot: 'ask_again', text: 'Another question? The candle is still lit.', src: `${LISA}/s23.mp3`, start: 0, end: 4.0 },
+  { id: 's24', slot: 'ask_again', text: 'Ask again, or ask for someone you love.', src: `${LISA}/s24.mp3`, start: 0, end: 3.94 },
+  { id: 's25', slot: 'pass', text: 'Pass the candle to the next one in the circle.', src: `${LISA}/s25.mp3`, start: 0, end: 3.63 },
+  { id: 's26', slot: 'goodbye', text: 'Go gently. Carry a little light with you.', src: `${LISA}/s26.mp3`, start: 0, end: 3.66 },
+  { id: 's27', slot: 'goodbye', text: 'Come back whenever the night is long.', src: `${LISA}/s27.mp3`, start: 0, end: 3.03 },
+];
+/* Only what GD has heard and said yes to plays. */
+export const SORCERESS_APPROVED: string[] = [];
+
+export function sorceressClip(slot: Slot): Clip | null {
+  const ok = SORCERESS_CLIPS.filter((c) => c.slot === slot && SORCERESS_APPROVED.includes(c.id));
+  return ok.length ? ok[Math.floor(Math.random() * ok.length)] : null;
+}
+
+/* The Sorceress's other lines: the phone's own voice, a female one where it has one. */
 const FEMALE = /female|samantha|victoria|karen|moira|tessa|fiona|serena|zira|susan|allison|ava|joanna|salli|kendra|kimberly|emma|amy|jenny|aria|google uk english female|google us english/i;
 export function speakSorceress(text: string): Promise<void> {
   return new Promise((done) => {
