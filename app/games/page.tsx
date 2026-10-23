@@ -25,10 +25,10 @@ const GAMES = [
     blurb: 'Pull the lever and three reels stop on three words, each one sung from a real song. Hold, nudge, find a Sweet Line, and send your line to someone.',
   },
   {
-    href: '/games/16-ball',
-    title: '16-Ball',
+    href: '/games/sorceress-or-warlock',
+    title: 'The Sorceress or Warlock',
     tag: 'BUGs · free · for a circle',
-    blurb: 'Gather a circle of 1 to 8 or more. Ask for yourself or for someone in the circle, touch the kaleidoscope ball, and it answers with one sung word.',
+    blurb: 'A kind guide in a dark world. Ask of the past, the present or the future, for yourself or someone in your circle, and the answer is one sung word.',
   },
   {
     href: '/games/love',
