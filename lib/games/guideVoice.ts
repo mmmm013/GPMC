@@ -98,7 +98,7 @@ export function playClip(a: HTMLAudioElement, clip: Clip): Promise<void> {
 }
 
 /* The Sorceress in Lisa's own voice. GD, 2026-10-23: "Lisa's Voice for Sorceress."
-   She recorded all 27 script lines (two takes of line 17); each file is the
+   She recorded all 27 script lines (two takes each of lines 16 and 17); each file is the
    whole line, cut clean. A line not approved stays in the phone's voice. */
 const LISA = 'https://www.k-kut.com/voices/sorceress';
 export const SORCERESS_CLIPS: Clip[] = [
@@ -118,6 +118,7 @@ export const SORCERESS_CLIPS: Clip[] = [
   { id: 's14', slot: 'maybe', text: 'Some answers are still being woven. Be patient with this one.', src: `${LISA}/s14.mp3`, start: 0, end: 5.41 },
   { id: 's15', slot: 'maybe', text: 'I see two paths, and both are lit. The choice is still yours.', src: `${LISA}/s15.mp3`, start: 0, end: 6.32 },
   { id: 's16', slot: 'not_yet', text: 'Not this time. But nothing kind is ever wasted.', src: `${LISA}/s16.mp3`, start: 0, end: 4.26 },
+  { id: 's16b', slot: 'not_yet', text: 'Not this time. But nothing kind is ever wasted.', src: `${LISA}/s16b.mp3`, start: 0, end: 4.18 },
   { id: 's17a', slot: 'not_yet', text: 'The door is closed for now. Doors open again.', src: `${LISA}/s17a.mp3`, start: 0, end: 4.26 },
   { id: 's17b', slot: 'not_yet', text: 'The door is closed for now. Doors open again.', src: `${LISA}/s17b.mp3`, start: 0, end: 3.94 },
   { id: 's18', slot: 'not_yet', text: 'Not yet. Hold on to what is good while you wait.', src: `${LISA}/s18.mp3`, start: 0, end: 4.31 },
