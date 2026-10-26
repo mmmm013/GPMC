@@ -34,6 +34,8 @@ export default function WhatIfGame() {
   const [active, setActive] = useState<WhatIf | null>(null);
   const [mood, setMood] = useState<Mood | null>(null);
   const [choices, setChoices] = useState<GameElement[]>([]);
+  /* Every TUG already offered this round, so "None of these" never offers one again. */
+  const [roundSeen, setRoundSeen] = useState<string[]>([]);
   const [playing, setPlaying] = useState('');
   const [word, setWord] = useState('');
   const [message, setMessage] = useState('');
@@ -67,7 +69,8 @@ export default function WhatIfGame() {
     audio.current?.pause();
     if (!sameMood) gameEvent('game_start', { game: 'what-if', round: whatIf.id });
     try {
-      const shown = sameMood ? choices.map((c) => c.reference).filter((r): r is string => Boolean(r)) : [];
+      const shown = sameMood ? [...roundSeen, ...choices.map((c) => c.reference).filter((r): r is string => Boolean(r))] : [];
+      setRoundSeen(shown);
       const params = new URLSearchParams({ kind: 'what-if', scenario: whatIf.id, mood: m?.id ?? '', skip: [...progress.heard, ...shown].join(',') });
       const body = (await (await fetch(`${GAME_API}&${params}`, { cache: 'no-store' })).json()) as { elements?: GameElement[] };
       const found = body.elements ?? [];
