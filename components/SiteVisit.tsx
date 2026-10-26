@@ -30,10 +30,14 @@ export default function SiteVisit() {
   const last = useRef('');
 
   useEffect(() => {
-    const path = pathname || '/';
-    if (path === last.current) return;
-    last.current = path;
+    const page = pathname || '/';
+    if (page === last.current) return;
+    last.current = page;
     try {
+      /* A ?src= tag on a shared link is kept, and nothing else from the query,
+         so the report can say which post or page sent the visit. */
+      const src = new URLSearchParams(window.location.search).get('src');
+      const path = src ? `${page}?src=${encodeURIComponent(src.slice(0, 40))}` : page;
       const body = JSON.stringify({ path, referrer: document.referrer || '', session_id: sessionId() });
       navigator.sendBeacon?.('https://www.k-kut.com/api/visit', body);
     } catch {
