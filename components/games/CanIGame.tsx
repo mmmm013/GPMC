@@ -4,7 +4,8 @@ import { gameEvent } from '@/lib/games/gameEvent';
 import VoicePlayer from './VoicePlayer';
 import { playVoice } from '@/lib/games/clearVoice';
 import { useEffect, useRef, useState } from 'react';
-import { GAME_API, loadProgress, saveProgress, sendAnswer, type GameElement } from '@/lib/games/meantsGame';
+import { GAME_API, PRIZES, loadProgress, saveProgress, sendAnswer, type GameElement } from '@/lib/games/meantsGame';
+import PrizeClaim from './PrizeClaim';
 import { MOODS_FOR, SERENADE, nextSuggestion, useNugPlayer, usePlayerSense } from '@/lib/games/adaptive';
 
 /* "Can I…?" — the song asks, the listener answers. Each challenge plays a
@@ -15,9 +16,9 @@ type Progress = { answered: string[]; heard: string[] };
 
 const KEY = 'meants-game:can-i:v1';
 const LEVELS = [
-  { level: 1, need: 3 },
-  { level: 2, need: 5 },
-  { level: 3, need: 7 },
+  { level: 1, need: 3, prize: 'holiday-christmas-trio' },
+  { level: 2, need: 5, prize: 'ten-free-downloads' },
+  { level: 3, need: 7, prize: 'free-hug' },
 ] as const;
 
 export default function CanIGame() {
@@ -156,9 +157,7 @@ export default function CanIGame() {
       {message && <p className="mt-4 text-[#D7CCC8]" role="status">{message}</p>}
 
       {cleared.map((l) => (
-          <p key={l.level} className="mt-4 rounded-2xl border border-white/10 bg-black/30 p-4 text-[#D7CCC8]">
-            Level {l.level} cleared!
-          </p>
+        <PrizeClaim key={l.level} game="can-i" level={l.level} prize={PRIZES[l.prize]} reference={progress.heard.at(-1) ?? null} />
       ))}
     </div>
   );
