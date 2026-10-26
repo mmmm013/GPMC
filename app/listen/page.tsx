@@ -15,22 +15,22 @@ export const dynamic = 'force-dynamic';
 
 type Track = { id: string; artist: string; title: string; src: string; buyDownloadUrl?: string };
 
-async function tracks(): Promise<Track[]> {
+async function tracks(): Promise<{ tracks: Track[]; onRequest: Track[] }> {
   try {
     const res = await fetch('https://www.k-kut.com/api/fm', {
       cache: 'no-store',
       headers: { 'User-Agent': 'GPM-flagship/1' },
     });
-    if (!res.ok) return [];
-    const body = (await res.json()) as { tracks?: Track[] };
-    return body.tracks ?? [];
+    if (!res.ok) return { tracks: [], onRequest: [] };
+    const body = (await res.json()) as { tracks?: Track[]; onRequest?: Track[] };
+    return { tracks: body.tracks ?? [], onRequest: body.onRequest ?? [] };
   } catch {
-    return [];
+    return { tracks: [], onRequest: [] };
   }
 }
 
 export default async function ListenPage() {
-  const list = await tracks();
+  const { tracks: list, onRequest } = await tracks();
   return (
     <main className="min-h-screen bg-[#FFF0F5] text-[#2C2418]">
       <Header />
@@ -41,7 +41,7 @@ export default async function ListenPage() {
         </p>
         <div className="mt-6">
           {list.length ? (
-            <SongPlayer tracks={list} />
+            <SongPlayer tracks={list} onRequest={onRequest} />
           ) : (
             <p className="rounded-2xl border border-[#8B4513]/20 bg-white p-6">
               The songs are loading slowly. Please refresh in a moment.
