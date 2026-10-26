@@ -20,7 +20,7 @@ export default function SootheSingerPage() {
         <details className="mt-4 rounded-2xl border border-white/10 bg-black/30 p-4 text-[#D7CCC8]" open>
           <summary className="cursor-pointer font-bold text-white">How to play</summary>
           <ol className="mt-3 list-decimal space-y-2 pl-5">
-            <li>Choose your guide: the Kind Sorceress, the Kind Wizard, the Lantern Keeper or the Seer of Yesterday.</li>
+            <li>Choose your voice: the Kind Sorceress, the Kind Wizard or The Singster.</li>
             <li>Choose how to ask: Three Candles (one answer each from the past, the present and the future), Seven Stars (seven questions around the circle) or Thirteen (the party circle, with a light score).</li>
             <li>Gather your circle. Two of you, friends or family. Best with up to 8, but anyone can join at any time.</li>
             <li>On your turn, choose a time (the past, unless you pick the present or the future) and who your question is for.</li>

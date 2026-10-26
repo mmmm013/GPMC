@@ -10,7 +10,7 @@
    - The Kind Sorceress speaks with the phone's own computer voice (a female
      voice where the phone has one). GD: TEMPORARY, replaced once a female
      voice is recorded from a script.
-   - The Lantern Keeper and the Seer of Yesterday have no voice yet: their
+   - The Singster (GD, 2026-10-26: the neutral voice) has no voice yet: its
      words stay on screen.
    Slots with no Warlock clip (maybe, not yet, a heavy question, danger and
    988, goodbye, passing the phone) stay as words on screen. */
