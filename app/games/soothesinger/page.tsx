@@ -12,7 +12,7 @@ export default function SootheSingerPage() {
       <section className="mx-auto max-w-3xl">
         <Link href="/games" className="text-sm font-bold text-[#FFD54F]">← Games</Link>
         <h1 className="mt-2 text-5xl font-black tracking-tight">SootheSinger</h1>
-        <p className="mt-1 text-lg font-bold text-[#FFD54F]">Ask the Sorceress or the Wizard.</p>
+        <p className="mt-1 text-lg font-bold text-[#FFD54F]">Ask the Sorceress, the Wizard or The Singster.</p>
         <p className="mt-3 text-[#D7CCC8]">
           Four kind guides, each a light in a dark world. Ask of the past, the present or the future, for yourself or for someone
           in your circle, and the answer comes as one word or sound sung from a real song. Read into it what you will.
