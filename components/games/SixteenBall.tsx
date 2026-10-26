@@ -11,7 +11,7 @@ import {
 } from '@/lib/games/seer';
 import { MC_VOICE_IN_GAMES, WARLOCK_APPROVED, hushGuide, playClip, speakSorceress, warlockClip, type Slot } from '@/lib/games/guideVoice';
 
-/* The Sorceress or Wizard (it began as 16-Ball, the old fortune toy remade;
+/* SootheSinger -- GD named it 2026-10-24 (was The Sorceress or Wizard; it began as 16-Ball, the old fortune toy remade;
    GD renamed the Warlock the Wizard for children's sake: "Wizard, then? Yes.").
    The guide's internal id stays 'warlock' so saved games and sent links keep working.
    GD, 2026-10-23: "Let's make it The Sorceress or Warlock. with air of kindness
