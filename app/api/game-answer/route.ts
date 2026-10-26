@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { isPerson } from '@/lib/people';
 
-/* A "Did it?" answer, a prize claim, a Fail, or a Love Game pick, wish or freebie promise from the MEANTs games, passed on to k-kut's VOC intake
+/* A "Did it?" answer, a "What if...?" pick, a prize claim, a Fail, or a Love Game pick, wish or freebie promise from the MEANTs games, passed on to k-kut's VOC intake
    server-side. The answers are how the games test the catalogue's tags with
    real listeners. */
 export const dynamic = 'force-dynamic';
@@ -37,6 +37,13 @@ export async function POST(request: Request) {
     if (!challenge || !answer) return NextResponse.json({ error: 'Missing answer.' }, { status: 400 });
     said = `${str(body.ask, 80)} Did it? ${answer}`;
     surface = `gpm-game:can-i:${challenge}`;
+  } else if (body.type === 'would-send') {
+    /* "What if...?": the Element a player would send for a scenario, in the round's mood. */
+    const scenario = str(body.scenario, 40);
+    if (!scenario) return NextResponse.json({ error: 'Missing answer.' }, { status: 400 });
+    const tier = body.tier === 'BUG' ? 'BUG' : 'TUG';
+    said = `${str(body.ask, 120)} Would send this ${tier} (mood: ${str(body.mood, 20) || 'none'})`;
+    surface = `gpm-game:what-if:${scenario}`;
   } else if (body.type === 'prize-claim') {
     /* A Golden NUG win: the free BUG to send goes to this email. */
     const prize = str(body.prize, 60);

@@ -6,6 +6,13 @@ import Link from 'next/link';
 export const metadata = { title: 'Games | G Putnam Music' };
 
 const GAMES = [
+  /* New on 2026-10-26: GD's Scenarios game ("Scenarios is my key"). */
+  {
+    href: '/games/what-if',
+    title: 'What if…?',
+    tag: 'New · TUGs and BUGs · free · 3 levels',
+    blurb: 'What if a hurricane is coming and you have one final text? Pick a What if, listen to the songs that fit, and choose the one you would send.',
+  },
   /* New on 2026-10-23 and no visits yet, so it leads the list (GD, 2026-10-23: "do 1"). */
   {
     href: '/games/bug-reels',
