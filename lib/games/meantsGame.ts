@@ -16,6 +16,29 @@ export type GameElement = {
   reference: string | null;
 };
 
+export type Prize = { id: string; title: string; what: string };
+
+/* The "Can I...?" level prizes, the same three as on 2kleigh.com, here for every
+   G Putnam Music song (GD, 2026-10-26: "MUST have Prizes"). A claim is filed in
+   VOC and G Putnam Music sends the prize by email. */
+export const PRIZES: Record<string, Prize> = {
+  'holiday-christmas-trio': {
+    id: 'holiday-christmas-trio',
+    title: 'Holiday Christmas Trio',
+    what: 'Three Christmas songs: Ode to the Elves, Christmas Star and Claus for Celebration, as downloads from G Putnam Music.',
+  },
+  'ten-free-downloads': {
+    id: 'ten-free-downloads',
+    title: '10 free song downloads',
+    what: 'Ten full G Putnam Music songs of your choice, as downloads from G Putnam Music.',
+  },
+  'free-hug': {
+    id: 'free-hug',
+    title: 'A free HUG to send',
+    what: 'Send one HUG, a whole song section, free to someone you choose. They hear it on their own private link.',
+  },
+};
+
 /* Progress lives in this browser only: a convenience, never a record. */
 export function loadProgress<T>(key: string, fallback: T): T {
   try {
