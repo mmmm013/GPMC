@@ -11,7 +11,7 @@ import {
 } from '@/lib/games/seer';
 import { MC_VOICE_IN_GAMES, WARLOCK_APPROVED, hushGuide, playClip, speakSorceress, warlockClip, type Slot } from '@/lib/games/guideVoice';
 
-/* The Sorceress or Wizard (it began as 16-Ball, the old fortune toy remade;
+/* SootheSinger -- GD named it 2026-10-24 (was The Sorceress or Wizard; it began as 16-Ball, the old fortune toy remade;
    GD renamed the Warlock the Wizard for children's sake: "Wizard, then? Yes.").
    The guide's internal id stays 'warlock' so saved games and sent links keep working.
    GD, 2026-10-23: "Let's make it The Sorceress or Warlock. with air of kindness
@@ -37,7 +37,11 @@ import { MC_VOICE_IN_GAMES, WARLOCK_APPROVED, hushGuide, playClip, speakSorceres
    Every sung answer is a real Element. A circle plays: a couple, friends, ideally up to 8, but anyone can
    join. The question stays on this phone unless the player chooses to send it.
    Internal ids (16-ball, the store key) are unchanged. */
-type Guide = 'sorceress' | 'warlock' | 'lantern' | 'seer';
+/* Three voices (GD, 2026-10-26: "Use 'The Singster' as neutral. 3 Voices, NOT 4"):
+   the Sorceress, the Wizard and The Singster. The Lantern Keeper and the Seer of
+   Yesterday are gone; a saved circle or a sent answer that names one now gets The Singster. */
+type Guide = 'sorceress' | 'warlock' | 'singster';
+const asGuide = (g: string): Guide => (g === 'lantern' || g === 'seer' ? 'singster' : g in GUIDES ? (g as Guide) : 'sorceress');
 type Way = 'candles' | 'stars' | 'thirteen';
 type Time = 'past' | 'present' | 'future';
 type Score = { yes: number; maybe: number; no: number };
@@ -57,8 +61,7 @@ const NO_SCORE: Score = { yes: 0, maybe: 0, no: 0 };
 const GUIDES: Record<Guide, { name: string; sign: string; line: string }> = {
   sorceress: { name: 'The Kind Sorceress', sign: '☾', line: 'Wise and warm, a light in a dark world.' },
   warlock: { name: 'The Kind Wizard', sign: '✶', line: 'Gentle and good, a keeper of the light.' },
-  lantern: { name: 'The Lantern Keeper', sign: '✺', line: 'Holds a small flame up against the night.' },
-  seer: { name: 'The Seer of Yesterday', sign: '☉', line: 'Remembers what the years have kept for you.' },
+  singster: { name: 'The Singster', sign: '♪', line: 'Neither he nor she: a kind voice that sings for everyone.' },
 };
 
 const WAYS: Record<Way, { name: string; count: number; line: string }> = {
@@ -73,7 +76,7 @@ const TIMES: Record<Time, { label: string; look: (g: string) => string; says: (g
   future: { label: 'The future', look: (g) => `${g} gazes down the road ahead.`, says: (g) => `Ahead, ${inLine(g)} sees` },
 };
 const CANDLE_TIMES: Time[] = ['past', 'present', 'future'];
-/* A guide's name inside a sentence: "Ask the Lantern Keeper", not "Ask The Lantern Keeper". */
+/* A guide's name inside a sentence: "Ask the Singster", not "Ask The Singster". */
 const inLine = (name: string) => name.replace(/^The /, 'the ');
 
 function pickTone(): Tone {
@@ -164,9 +167,10 @@ export default function SixteenBall() {
   const audio = useRef<HTMLAudioElement>(null);
   const guideAudio = useRef<HTMLAudioElement>(null);
   const [voiceOn, setVoiceOn] = useState(true);
-  const [circle, setCircle] = useState<Circle>(() =>
-    loadProgress<Circle>(STORE_KEY, { players: [], turn: 0, guide: 'sorceress', way: 'stars', round: 'everyday', scores: [], lit: 0, day: '' }),
-  );
+  const [circle, setCircle] = useState<Circle>(() => {
+    const saved = loadProgress<Circle>(STORE_KEY, { players: [], turn: 0, guide: 'sorceress', way: 'stars', round: 'everyday', scores: [], lit: 0, day: '' });
+    return { ...saved, guide: asGuide(saved.guide) };
+  });
   const [draft, setDraft] = useState<string[]>(() => (circle.players.length ? circle.players : ['', '']));
   const [guide, setGuide] = useState<Guide>(circle.guide);
   const [way, setWay] = useState<Way>(circle.way);
@@ -204,7 +208,7 @@ export default function SixteenBall() {
     setArrival({
       word,
       time: t === 'present' || t === 'future' ? t : 'past',
-      guide: gd in GUIDES ? (gd as Guide) : 'sorceress',
+      guide: asGuide(gd),
       q: (p.get('q') ?? '').slice(0, 120),
     });
   }, []);
