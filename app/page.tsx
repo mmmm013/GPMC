@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import RiffRunsBanner from '@/components/RiffRunsBanner';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
@@ -35,6 +36,7 @@ export default function HomePage() {
             Send a HUG
           </a>
         </div>
+        <RiffRunsBanner />
         {/* GD, 2026-10-23: "Games must be SUB-level." The games are reached from the footer, not from home. */}
         {showHalloween && (
           <a
