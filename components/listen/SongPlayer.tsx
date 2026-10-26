@@ -21,14 +21,17 @@ function buyForm(url?: string): { action: string; song: string; returnTo: string
 
 /* One player for every G Putnam Music song. Every row shows artist and title
    (GD, 2026-10-11: "STREAMS SHOW ... ARTIST & TITLE, MINIMUM"). Stream only. */
-export default function SongPlayer({ tracks }: { tracks: Track[] }) {
+/* `onRequest`: holiday songs outside their holiday. They play in no list, and a
+   listener who searches for one by name finds it (GD, 2026-10-26: "can be found
+   UPON REQUEST"). */
+export default function SongPlayer({ tracks, onRequest = [] }: { tracks: Track[]; onRequest?: Track[] }) {
   const audio = useRef<HTMLAudioElement>(null);
   const [current, setCurrent] = useState<Track | null>(null);
   const [playing, setPlaying] = useState(false);
   const [q, setQ] = useState('');
 
   const shown = q.trim()
-    ? tracks.filter((t) => `${t.artist} ${t.title}`.toLowerCase().includes(q.trim().toLowerCase()))
+    ? [...tracks, ...onRequest].filter((t) => `${t.artist} ${t.title}`.toLowerCase().includes(q.trim().toLowerCase()))
     : tracks;
 
   function play(t: Track) {
