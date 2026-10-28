@@ -39,7 +39,7 @@ export const SAD_PLAYLISTS: SadPlaylist[] = [
     name: "Heartbreak",
     tracks: [
       { discoId: "125624840", title: "WORLD OF WORDS LILLI-MICHAEL", artist: "Lilli O'Dowd & KLEIGH", stream: null },
-      { discoId: "148168984", title: "Back to the Water", artist: "KLEIGH", stream: null },
+      { discoId: "148168984", title: "Back to the Water", artist: "KLEIGH", stream: "a36c0ff6c383" },
       { discoId: "141693667", title: "HEART FOR MY SOUL", artist: "KLEIGH", stream: "758bb18b669b" },
       { discoId: "148168733", title: "SUBSONIC BLUES", artist: "KLEIGH", stream: "385630b4f370" },
       { discoId: "145591582", title: "WHEN THE HEART GETS IT WRONG", artist: "KLEIGH", stream: "36cf136ef062" },
@@ -56,7 +56,7 @@ export const SAD_PLAYLISTS: SadPlaylist[] = [
       { discoId: "118995307", title: "DREAM OF YOU", artist: "Linda Putnam", stream: "b9a647364030" },
       { discoId: "123174367", title: "WITHOUT A SOUL", artist: "KLEIGH", stream: "35821e124119" },
       { discoId: "92181388", title: "BEIN' WITHOUT YOU", artist: "G Putnam Music", stream: "b391a5b488aa" },
-      { discoId: "106875238", title: "THE ONLY FOREVER", artist: "Lloyd G Miller", stream: null },
+      { discoId: "106875238", title: "THE ONLY FOREVER", artist: "Lloyd G Miller", stream: "f0bed75175f6" },
       { discoId: "148171321", title: "EMPTY SPACE", artist: "KLEIGH", stream: "f854968e9507" },
       { discoId: "162491798", title: "The Meltdown", artist: "KLEIGH", stream: null },
       { discoId: "167047493", title: "LOOKIN' FOR AN ANGEL", artist: "Zach Jackson", stream: null },
@@ -81,7 +81,7 @@ export const SAD_PLAYLISTS: SadPlaylist[] = [
     name: "Regret",
     tracks: [
       { discoId: "64057123", title: "CROSSIN' WIRES - 1988", artist: "Scott Monti", stream: "7d3e00897eab" },
-      { discoId: "167191228", title: "Thinkin' about You", artist: "Lilli O'Dowd", stream: null },
+      { discoId: "167191228", title: "Thinkin' about You", artist: "Lilli O'Dowd", stream: "c7b42ee2d22a" },
       { discoId: "64059751", title: "SAYING GOODBYE - Rec'd 1988 - East Houston", artist: "Amanda Johnson", stream: "561ce81d955c" },
       { discoId: "103578063", title: "BABY WE'RE THROUGH", artist: "Mick Fury", stream: "5e1eb3f6ece4" },
       { discoId: "163578890", title: "Didn't Mean To Fall", artist: "Rhonda Lester", stream: "6fa96500b7a9" },
