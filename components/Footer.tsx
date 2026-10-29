@@ -63,6 +63,13 @@ export default function Footer() {
           <Link href="/heroes" className="text-sm text-[#C4A882]/70 hover:text-[#D4A017] transition-colors min-h-[44px] flex items-center px-3">{menuHeroes}</Link>
           <Link href="/gift" className="text-sm text-[#C4A882]/70 hover:text-[#D4A017] transition-colors min-h-[44px] flex items-center px-3">{menuGift}</Link>
           <Link href="/games" className="text-sm text-[#C4A882]/70 hover:text-[#D4A017] transition-colors min-h-[44px] flex items-center px-3">Games</Link>
+          {/* Flagship only: GD, 2026-10-28, "KLEIGH on KLEIGH". */}
+          {!isKleighDomain && (
+            <>
+              <Link href="/videos" className="text-sm text-[#C4A882]/70 hover:text-[#D4A017] transition-colors min-h-[44px] flex items-center px-3">Videos</Link>
+              <Link href="/sad" className="text-sm text-[#C4A882]/70 hover:text-[#D4A017] transition-colors min-h-[44px] flex items-center px-3">Sad Playlists</Link>
+            </>
+          )}
         </div>
         {/* Copyright */}
         <p className="text-center text-xs text-[#C4A882]/40">
