@@ -59,6 +59,8 @@ export default function CanIGame() {
   const cleared = LEVELS.filter((l) => done >= l.need);
   const next = LEVELS.find((l) => done < l.need);
   const suggested = nextSuggestion(last, challenges.map((c) => c.id), progress.answered);
+  /* After a round, one tap starts the next: the suggested challenge, or the same one again with a new TUG (GD, 2026-10-29: "go"). */
+  const again = challenges.find((c) => c.id === suggested) ?? challenges.find((c) => c.id === last?.id);
 
   async function play(challenge: Challenge) {
     sense.tap();
@@ -155,6 +157,13 @@ export default function CanIGame() {
       )}
 
       {message && <p className="mt-4 text-[#D7CCC8]" role="status">{message}</p>}
+
+      {last && !active && again && (
+        <button type="button" disabled={busy} onClick={() => play(again)}
+          className="mt-3 min-h-12 w-full rounded-2xl bg-[#FFD54F] px-4 py-3 text-lg font-bold text-black disabled:opacity-60">
+          Play again: {again.ask}
+        </button>
+      )}
 
       {cleared.map((l) => (
         <PrizeClaim key={l.level} game="can-i" level={l.level} prize={PRIZES[l.prize]} reference={progress.heard.at(-1) ?? null} />
