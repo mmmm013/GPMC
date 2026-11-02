@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import stiLogo from '@/images/gpm_logo copy 2.png';
+import VeteransDayStrip from '@/components/VeteransDayStrip';
 
 type StiTemplateResponse = {
   slots?: Record<string, unknown>;
@@ -57,6 +58,7 @@ export default function Header() {
   const checkoutHref = '/api/checkout-attribution?utm_source=header&utm_medium=site&utm_campaign=cash_sprint_apr2026&utm_content=explore_kkuts';
 
   return (
+    <>
     <nav className="w-full bg-[#2A1506] shadow-lg border-b border-[#5C3A1E]/40 relative z-50">
       {/* MOBILE FIX: safe-area-inset-top for notch devices */}
       <div className="w-full max-w-7xl mx-auto flex items-center justify-between px-4 py-2 pt-[env(safe-area-inset-top)]">
@@ -129,5 +131,7 @@ export default function Header() {
         </div>
       )}
     </nav>
+    <VeteransDayStrip />
+    </>
   );
 }
