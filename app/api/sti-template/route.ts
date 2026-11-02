@@ -76,21 +76,12 @@ async function resolveSlots(client: SupabaseAdminClient, domainCode: DomainCode)
   return slots;
 }
 
-async function resolveBtis(client: SupabaseAdminClient, domainCode: DomainCode): Promise<Array<{ bti_key: string; payload: unknown }>> {
-  const { data, error } = await client
-    .schema('app_private')
-    .from('btis')
-    .select('bti_key, payload')
-    .eq('domain_code', domainCode)
-    .eq('is_active', true)
-    .order('bti_key', { ascending: true });
-
-  if (error) {
-    console.error('sti-template btis error', error);
-    return [];
-  }
-
-  return (data ?? []) as Array<{ bti_key: string; payload: unknown }>;
+// The app_private schema is not exposed to the API (PGRST106), so this read
+// failed on every visit and always came back empty. Header and Footer only use
+// `slots`, so btis stays an empty list -- the same result visitors already got,
+// without the failing database call. (GD 2026-11-01: "Fix")
+async function resolveBtis(_client: SupabaseAdminClient, _domainCode: DomainCode): Promise<Array<{ bti_key: string; payload: unknown }>> {
+  return [];
 }
 
 export async function GET(req: Request) {
