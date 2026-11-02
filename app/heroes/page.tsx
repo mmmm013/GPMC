@@ -76,6 +76,19 @@ export default function HeroesPage() {
       />
       <div className="max-w-5xl mx-auto px-6 py-16">
 
+        {/* VETERANS DAY — GD, 2026-11-02: "Mention Veterans Day. Give a free hug to veterans." */}
+        <section className="mb-12 rounded-2xl border-2 border-sky-300/40 bg-[#0a1e35] p-8 text-center shadow-2xl">
+          <p className="text-xs font-black uppercase tracking-[0.3em] text-sky-200">Veterans Day · November 11</p>
+          <h2 className="mt-3 text-3xl font-black">To everyone who served: thank you.</h2>
+          <p className="mt-3 text-lg opacity-85">If you served, every HUG you send is free. No limit.</p>
+          <a
+            href="https://www.k-kut.com/heroes"
+            className="mt-6 inline-block rounded-full bg-[#FFD54F] px-8 py-3 font-black uppercase tracking-widest text-[#2A1506] hover:bg-[#FFE082]"
+          >
+            Send a free HUG
+          </a>
+        </section>
+
         {/* PAGE HEADER */}
         <p className="mb-2 text-sm tracking-[0.25em] text-amber-400 uppercase">
           One-Stop Original Sync & Streaming OS — MIP1 Priority Stream
