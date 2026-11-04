@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import BraveEaglePromo from '@/components/BraveEaglePromo';
+import { HEROES_GAMES } from '@/components/games/HeroesNote';
 
 // BRANDING CONSTANTS
 const COLORS = {
@@ -87,6 +88,19 @@ export default function HeroesPage() {
           >
             Send a free HUG
           </a>
+        </section>
+
+        {/* HEROES GAMES — GD, 2026-11-04: "create 3 Heroes\" games". Free for everyone. */}
+        <section className="mb-12 rounded-2xl border border-amber-400/40 bg-zinc-900 p-6">
+          <h2 className="text-2xl font-black">Heroes games</h2>
+          <p className="mt-2 opacity-85">Free song games for thanking the people who serve.</p>
+          <div className="mt-4 flex flex-wrap gap-3">
+            {HEROES_GAMES.map((g) => (
+              <Link key={g.href} href={g.href} className="rounded-full border border-amber-400 px-5 py-2 font-bold text-amber-300">
+                {g.title}
+              </Link>
+            ))}
+          </div>
         </section>
 
         {/* PAGE HEADER */}

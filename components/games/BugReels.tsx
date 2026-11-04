@@ -7,7 +7,7 @@ import { playVoice } from '@/lib/games/clearVoice';
 import { useEffect, useRef, useState } from 'react';
 import { GAME_API, loadProgress, saveProgress, type GameElement } from '@/lib/games/meantsGame';
 import { MOODS_FOR_PACE, SERENADE, useNugPlayer, usePlayerSense } from '@/lib/games/adaptive';
-import { STARS_FOR_GOLDEN, isSweet, lineFromParam, reelFor } from '@/lib/games/bugReels';
+import { BUG_REELS, STARS_FOR_GOLDEN, isSweet as isSweetIn, lineFromParam, reelFor as reelIn, type ReelSet } from '@/lib/games/bugReels';
 
 /* BUG Reels: pull the lever, the reels stop one by one on a word each, and the
    line is sung word by word. Every pull sings; there is nothing to lose. Hold
@@ -15,8 +15,6 @@ import { STARS_FOR_GOLDEN, isSweet, lineFromParam, reelFor } from '@/lib/games/b
    earns a star, and three stars open a Golden Pull with a fourth reel. The
    song is never named (bare=1). See lib/games/bugReels.ts for the history. */
 type Progress = { pulls: number; stars: number; golden: boolean };
-const KEY = 'meants-game:bug-reels:v1';
-const GAME = 'bug-reels';
 const STOP_MS = [900, 1400, 1900, 2400];
 
 const pick = (list: string[]) => list[Math.floor(Math.random() * list.length)];
@@ -36,10 +34,15 @@ async function bugFor(word: string): Promise<GameElement | null> {
   }
 }
 
-export default function BugReels() {
+/* `set` picks the machine's words: BUG Reels by default, or Heroes Reels. */
+export default function BugReels({ set = BUG_REELS }: { set?: ReelSet }) {
+  const KEY = set.key;
+  const GAME = set.game;
+  const reelFor = (i: number) => reelIn(i, set);
+  const isSweet = (line: string[]) => isSweetIn(line, set);
   const audio = useRef<HTMLAudioElement>(null);
   const [progress, setProgress] = useState<Progress>(() => loadProgress<Progress>(KEY, { pulls: 0, stars: 0, golden: false }));
-  const [words, setWords] = useState<string[]>(['i', 'love', 'you']);
+  const [words, setWords] = useState<string[]>(set.first);
   const [sung, setSung] = useState<(GameElement | null)[]>([]);
   const [held, setHeld] = useState<boolean[]>([false, false, false, false]);
   const [spinning, setSpinning] = useState<boolean[]>([false, false, false, false]);
@@ -56,7 +59,7 @@ export default function BugReels() {
 
   /* A line someone sent: shown on the reels, sung when the player taps. */
   useEffect(() => {
-    const line = lineFromParam(new URLSearchParams(window.location.search).get('line'));
+    const line = lineFromParam(new URLSearchParams(window.location.search).get('line'), set);
     if (line) {
       setWords(line);
       setSent(line);
@@ -81,7 +84,7 @@ export default function BugReels() {
   /* While a reel spins its words blur past. */
   useEffect(() => {
     if (!spinning.some(Boolean)) return;
-    const t = setInterval(() => setFlicker((f) => f + 1), 70);
+    const t = setInterval(() => setFlicker((f) => f + 1), set.spinMs);
     return () => clearInterval(t);
   }, [spinning]);
 
@@ -107,7 +110,7 @@ export default function BugReels() {
     setStarred(true);
     const stars = base.stars + 1;
     const golden = base.golden || stars % STARS_FOR_GOLDEN === 0;
-    setMessage(golden && !base.golden ? 'A Sweet Line! That is a star, and a Golden Pull is ready.' : 'A Sweet Line! That is a star.');
+    setMessage(golden && !base.golden ? `A ${set.sweetName}! That is a star, and a Golden Pull is ready.` : `A ${set.sweetName}! That is a star.`);
     return { ...base, stars, golden };
   }
 
@@ -268,7 +271,7 @@ export default function BugReels() {
 
       {message && <p className="mt-4 text-center text-lg font-bold text-[#FFD54F]" role="status">{message}</p>}
 
-      {done && <SendLine words={words} game={GAME} />}
+      {done && <SendLine words={words} game={GAME} tag={set.sendNote} />}
     </div>
   );
 }

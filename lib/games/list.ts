@@ -3,6 +3,25 @@
 export type GameCard = { href: string; title: string; tag: string; blurb: string };
 
 export const GAMES: GameCard[] = [
+  /* New on 2026-11-04: GD's three Heroes games ("create 3 Heroes\" games. One like Slots."). */
+  {
+    href: '/games/heroes-reels',
+    title: 'Heroes Reels',
+    tag: 'New · Heroes · BUGs · free · pull the lever',
+    blurb: 'Pull the lever and three reels stop on three words, each one sung. Find a Hero Line like "we thank you" and send it to a hero.',
+  },
+  {
+    href: '/games/thank-a-hero',
+    title: 'Can I Thank a Hero?',
+    tag: 'New · Heroes · TUGs · free · 3 levels',
+    blurb: 'Pick a hero: a veteran, a nurse, a firefighter and more. Listen to a song and tell us if it would thank them.',
+  },
+  {
+    href: '/games/what-if-heroes',
+    title: 'What if…? Heroes',
+    tag: 'New · Heroes · TUGs and BUGs · free · 3 levels',
+    blurb: 'What if your hero is coming home today? Listen to the songs that fit and choose the one you would send.',
+  },
   /* New on 2026-10-26: GD's Scenarios game ("Scenarios is my key"). */
   {
     href: '/games/what-if',
