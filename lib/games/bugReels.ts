@@ -46,19 +46,89 @@ export const SWEET_LINES = [
 
 export const STARS_FOR_GOLDEN = 3;
 
-export function reelFor(i: number): string[] {
-  return REELS[i] ?? BONUS_REEL;
+/* One machine's words. BUG Reels and Heroes Reels play the same machine with different reels. */
+export type ReelSet = {
+  game: string;
+  key: string;
+  reels: string[][];
+  bonus: string[];
+  sweet: string[];
+  /* What a star line is called on this machine. */
+  sweetName: string;
+  first: string[];
+  /* How often a spinning reel shows its next word, in ms. Heroes Reels spins slower and calmer. */
+  spinMs: number;
+  /* What the sent link says. */
+  sendNote: string;
+};
+
+export const BUG_REELS: ReelSet = {
+  game: 'bug-reels',
+  key: 'meants-game:bug-reels:v1',
+  reels: REELS,
+  bonus: BONUS_REEL,
+  sweet: SWEET_LINES,
+  sweetName: 'Sweet Line',
+  first: ['i', 'love', 'you'],
+  spinMs: 70,
+  sendNote: 'a line sung just for you',
+};
+
+/* Heroes Reels (GD, 2026-11-04: "create 3 Heroes\" games. One like Slots."): the
+   same machine, with words for thanking a hero. Every word below was checked to
+   have a sung BUG on k-kut.com/api/kleigh-game (scope=all) on 2026-11-04. Words
+   with no BUG yet (hero, courage, honor, serve, salute) are left out. */
+export const HERO_REELS: ReelSet = {
+  game: 'heroes-reels',
+  key: 'meants-game:heroes-reels:v1',
+  reels: [
+    ['i', 'we', 'you', 'they'],
+    ['thank', 'love', 'remember', 'need', 'believe', 'carry', 'lift', 'stand', 'keep', 'hold', 'walk', 'come', 'rise', 'shine', 'miss', 'help'],
+    ['you', 'home', 'safe', 'strong', 'brave', 'proud', 'tall', 'free', 'together', 'today', 'again', 'forever', 'light', 'back', 'me', 'us', 'bright'],
+  ],
+  bonus: ['again', 'forever', 'together', 'today'],
+  sweet: [
+    'i thank you',
+    'we thank you',
+    'we remember you',
+    'we love you',
+    'i miss you',
+    'we need you',
+    'i believe you',
+    'you stand tall',
+    'they stand tall',
+    'we stand together',
+    'we stand strong',
+    'you carry us',
+    'you carry me',
+    'you lift me',
+    'you lift us',
+    'you keep us',
+    'you come home',
+    'they come home',
+    'you walk free',
+    'you rise again',
+    'you shine bright',
+  ],
+  sweetName: 'Hero Line',
+  first: ['we', 'thank', 'you'],
+  spinMs: 220,
+  sendNote: 'a thank-you sung for a hero',
+};
+
+export function reelFor(i: number, set: ReelSet = BUG_REELS): string[] {
+  return set.reels[i] ?? set.bonus;
 }
 
-export function isSweet(words: string[]): boolean {
+export function isSweet(words: string[], set: ReelSet = BUG_REELS): boolean {
   const three = words.slice(0, 3);
-  return SWEET_LINES.includes(three.join(' ')) || (three.length === 3 && new Set(three).size === 1);
+  return set.sweet.includes(three.join(' ')) || (three.length === 3 && new Set(three).size === 1);
 }
 
 /** A line someone sent (?line=i,love,you): kept only when every word is on its reel. */
-export function lineFromParam(raw: string | null): string[] | null {
+export function lineFromParam(raw: string | null, set: ReelSet = BUG_REELS): string[] | null {
   if (!raw) return null;
   const words = raw.toLowerCase().split(',').map((w) => w.trim());
   if (words.length < 3 || words.length > 4) return null;
-  return words.every((w, i) => reelFor(i).includes(w)) ? words : null;
+  return words.every((w, i) => reelFor(i, set).includes(w)) ? words : null;
 }

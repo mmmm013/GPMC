@@ -7,10 +7,10 @@ import { useState } from 'react';
    Same three buttons as the Love Game's SendOn: "Text it" opens the player's own
    Messages with it typed, "DM it" opens the phone's share sheet, "Open it" shows
    the link. GPM texts nobody and keeps no number. The link holds only the words. */
-export default function SendLine({ words, game }: { words: string[]; game: string }) {
+export default function SendLine({ words, game, tag = 'a line sung just for you' }: { words: string[]; game: string; tag?: string }) {
   const [note, setNote] = useState('');
   const link = `${window.location.origin}${window.location.pathname}?line=${words.map(encodeURIComponent).join(',')}`;
-  const message = `"${words.join(' ')}" — a line sung just for you`;
+  const message = `"${words.join(' ')}" — ${tag}`;
   const text = `${message}\n${link}`;
 
   async function dm() {

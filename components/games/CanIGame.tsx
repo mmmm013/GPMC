@@ -14,14 +14,19 @@ import { MOODS_FOR, SERENADE, nextSuggestion, useNugPlayer, usePlayerSense } fro
 type Challenge = { id: string; ask: string };
 type Progress = { answered: string[]; heard: string[] };
 
-const KEY = 'meants-game:can-i:v1';
 const LEVELS = [
   { level: 1, need: 3, prize: 'holiday-christmas-trio' },
   { level: 2, need: 5, prize: 'ten-free-downloads' },
   { level: 3, need: 7, prize: 'free-hug' },
 ] as const;
 
-export default function CanIGame() {
+/* heroes: "Can I Thank a Hero?" (GD, 2026-11-04): the same game with the seven
+   Heroes roles as challenges (game=heroes on k-kut), asking "Would it thank them?". */
+export default function CanIGame({ heroes = false }: { heroes?: boolean }) {
+  const KEY = heroes ? 'meants-game:thank-a-hero:v1' : 'meants-game:can-i:v1';
+  const GAME = heroes ? 'thank-a-hero' : 'can-i';
+  const API = heroes ? `${GAME_API}&game=heroes` : GAME_API;
+  const question = heroes ? 'Would it thank them?' : 'Did it?';
   const audio = useRef<HTMLAudioElement>(null);
   const [challenges, setChallenges] = useState<Challenge[]>([]);
   const [progress, setProgress] = useState<Progress>(() => loadProgress<Progress>(KEY, { answered: [], heard: [] }));
@@ -49,7 +54,7 @@ export default function CanIGame() {
   }, [sense.frustrated]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    fetch(`${GAME_API}&kind=challenges`, { cache: 'no-store' })
+    fetch(`${API}&kind=challenges`, { cache: 'no-store' })
       .then((r) => r.json())
       .then((b: { challenges?: Challenge[] }) => setChallenges(b.challenges ?? []))
       .catch(() => setMessage('The game is loading slowly. Please refresh in a moment.'));
@@ -66,13 +71,13 @@ export default function CanIGame() {
     sense.tap();
     nugs.stop();
     setActive(challenge);
-    gameEvent('game_start', { game: 'can-i', round: challenge.id });
+    gameEvent('game_start', { game: GAME, round: challenge.id });
     setBusy(true);
     setMessage('');
     setElement(null);
     try {
       const params = new URLSearchParams({ kind: 'tug', challenge: challenge.id, q: search, skip: progress.heard.join(',') });
-      const body = (await (await fetch(`${GAME_API}&${params}`, { cache: 'no-store' })).json()) as { element: GameElement | null };
+      const body = (await (await fetch(`${API}&${params}`, { cache: 'no-store' })).json()) as { element: GameElement | null };
       if (!body.element) {
         setMessage(search ? `No song matched “${search}” for this one. Clear the search and try again.` : 'Nothing found for this one yet.');
         return;
@@ -94,9 +99,9 @@ export default function CanIGame() {
   function answer(yes: boolean) {
     if (!active || !element) return;
     sense.tap();
-    gameEvent('game_finish', { game: 'can-i', round: active.id });
+    gameEvent('game_finish', { game: GAME, round: active.id });
     if (element.reference) {
-      void sendAnswer({ type: 'did-it', reference: element.reference, challenge: active.id, ask: active.ask, answer: yes ? 'yes' : 'no' });
+      void sendAnswer({ type: 'did-it', reference: element.reference, challenge: active.id, ask: active.ask, answer: yes ? 'yes' : 'no', ...(heroes ? { game: 'heroes' } : {}) });
     }
     const updated: Progress = {
       answered: progress.answered.includes(active.id) ? progress.answered : [...progress.answered, active.id],
@@ -104,7 +109,7 @@ export default function CanIGame() {
     };
     setProgress(updated);
     saveProgress(KEY, updated);
-    setMessage(yes ? 'The song wins this one!' : 'You win this one. Try another challenge.');
+    setMessage(heroes ? (yes ? 'Thank you. That one is saved for heroes.' : 'Thanks for telling us. Try another hero.') : yes ? 'The song wins this one!' : 'You win this one. Try another challenge.');
     setLast({ id: active.id, yes });
     setElement(null);
     setActive(null);
@@ -118,7 +123,7 @@ export default function CanIGame() {
     <div>
       <div className="rounded-2xl border border-white/10 bg-black/30 p-4">
         <p className="text-sm font-bold uppercase tracking-[0.2em] text-[#FFD54F]">
-          {next ? `Level ${next.level}` : 'All 3 levels cleared'} · {done} of 7 challenges
+          {next ? `Level ${next.level}` : 'All 3 levels cleared'} · {done} of 7 {heroes ? 'heroes' : 'challenges'}
         </p>
         {next && <p className="mt-1 text-sm text-[#D7CCC8]">Answer {next.need - done} more to clear level {next.level}.</p>}
       </div>
@@ -148,7 +153,7 @@ export default function CanIGame() {
         <div className="mt-4 rounded-2xl border border-[#FFD54F]/40 bg-black/40 p-4">
           <p className="text-xl font-bold">“{element.words}”</p>
           <p className="mt-1 text-sm text-[#D7CCC8]">from {element.song} · a TUG</p>
-          <p className="mt-4 font-bold">{active.ask} Did it?</p>
+          <p className="mt-4 font-bold">{active.ask} {question}</p>
           <div className="mt-3 flex gap-3">
             <button type="button" onClick={() => answer(true)} className="min-h-12 flex-1 rounded-2xl bg-[#FFD54F] px-4 py-3 font-bold text-black">Yes</button>
             <button type="button" onClick={() => answer(false)} className="min-h-12 flex-1 rounded-2xl border border-white/30 px-4 py-3 font-bold">No</button>
@@ -166,7 +171,7 @@ export default function CanIGame() {
       )}
 
       {cleared.map((l) => (
-        <PrizeClaim key={l.level} game="can-i" level={l.level} prize={PRIZES[l.prize]} reference={progress.heard.at(-1) ?? null} />
+        <PrizeClaim key={l.level} game={GAME} level={l.level} prize={PRIZES[l.prize]} reference={progress.heard.at(-1) ?? null} />
       ))}
     </div>
   );

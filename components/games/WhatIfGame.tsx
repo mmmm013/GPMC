@@ -17,14 +17,18 @@ type WhatIf = { id: string; kind: string; ask: string };
 type Mood = { id: string; line: string };
 type Progress = { answered: string[]; heard: string[] };
 
-const KEY = 'meants-game:what-if:v1';
 const LEVELS = [
   { level: 1, need: 3, prize: 'holiday-christmas-trio' },
   { level: 2, need: 5, prize: 'ten-free-downloads' },
   { level: 3, need: 7, prize: 'free-hug' },
 ] as const;
 
-export default function WhatIfGame() {
+/* heroes: "What if...? Heroes" (GD, 2026-11-04): the same game with hero
+   scenarios and kind moods (game=heroes on k-kut). */
+export default function WhatIfGame({ heroes = false }: { heroes?: boolean }) {
+  const KEY = heroes ? 'meants-game:what-if-heroes:v1' : 'meants-game:what-if:v1';
+  const GAME = heroes ? 'what-if-heroes' : 'what-if';
+  const API = heroes ? `${GAME_API}&game=heroes` : GAME_API;
   const audio = useRef<HTMLAudioElement>(null);
   const [kinds, setKinds] = useState<Kind[]>([]);
   const [whatIfs, setWhatIfs] = useState<WhatIf[]>([]);
@@ -42,7 +46,7 @@ export default function WhatIfGame() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    fetch(`${GAME_API}&kind=what-ifs`, { cache: 'no-store' })
+    fetch(`${API}&kind=what-ifs`, { cache: 'no-store' })
       .then((r) => r.json())
       .then((b: { kinds?: Kind[]; scenarios?: WhatIf[]; moods?: Mood[] }) => {
         setKinds(b.kinds ?? []);
@@ -67,12 +71,12 @@ export default function WhatIfGame() {
     setMessage('');
     setBusy(true);
     audio.current?.pause();
-    if (!sameMood) gameEvent('game_start', { game: 'what-if', round: whatIf.id });
+    if (!sameMood) gameEvent('game_start', { game: GAME, round: whatIf.id });
     try {
       const shown = sameMood ? [...roundSeen, ...choices.map((c) => c.reference).filter((r): r is string => Boolean(r))] : [];
       setRoundSeen(shown);
       const params = new URLSearchParams({ kind: 'what-if', scenario: whatIf.id, mood: m?.id ?? '', skip: [...progress.heard, ...shown].join(',') });
-      const body = (await (await fetch(`${GAME_API}&${params}`, { cache: 'no-store' })).json()) as { elements?: GameElement[] };
+      const body = (await (await fetch(`${API}&${params}`, { cache: 'no-store' })).json()) as { elements?: GameElement[] };
       const found = body.elements ?? [];
       setChoices(found);
       if (!found.length) setMessage('No song fits this one yet. Type a word below, or try another What if.');
@@ -116,7 +120,7 @@ export default function WhatIfGame() {
 
   function pick(element: GameElement) {
     if (!active) return;
-    gameEvent('game_finish', { game: 'what-if', round: active.id });
+    gameEvent('game_finish', { game: GAME, round: active.id });
     if (element.reference) {
       void sendAnswer({
         type: 'would-send',
@@ -125,6 +129,7 @@ export default function WhatIfGame() {
         ask: active.ask,
         mood: mood?.id ?? '',
         tier: element.tier,
+        ...(heroes ? { game: 'heroes' } : {}),
       });
     }
     const offered = choices.map((c) => c.reference).filter((r): r is string => Boolean(r));
@@ -149,14 +154,14 @@ export default function WhatIfGame() {
         {next && <p className="mt-1 text-sm text-[#D7CCC8]">Answer {next.need - done} more to clear level {next.level}.</p>}
       </div>
 
-      <div className="mt-6 flex flex-wrap gap-2" role="tablist" aria-label="Kinds of What if">
+      {kinds.length > 1 && <div className="mt-6 flex flex-wrap gap-2" role="tablist" aria-label="Kinds of What if">
         {kinds.map((k) => (
           <button key={k.id} type="button" role="tab" aria-selected={kind === k.id} onClick={() => setKind(k.id)}
             className={`min-h-12 rounded-full border px-4 py-2 font-bold ${kind === k.id ? 'border-[#FFD54F] bg-[#FFD54F] text-black' : 'border-white/30 text-white'}`}>
             {k.label}
           </button>
         ))}
-      </div>
+      </div>}
 
       <div className="mt-4 grid gap-3">
         {whatIfs.filter((w) => w.kind === kind).map((w) => (
@@ -210,7 +215,7 @@ export default function WhatIfGame() {
       {message && <p className="mt-4 text-[#D7CCC8]" role="status">{message}</p>}
 
       {cleared.map((l) => (
-        <PrizeClaim key={l.level} game="what-if" level={l.level} prize={PRIZES[l.prize]} reference={progress.heard.at(-1) ?? null} />
+        <PrizeClaim key={l.level} game={GAME} level={l.level} prize={PRIZES[l.prize]} reference={progress.heard.at(-1) ?? null} />
       ))}
     </div>
   );

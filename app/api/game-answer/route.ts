@@ -35,15 +35,17 @@ export async function POST(request: Request) {
     const challenge = str(body.challenge, 40);
     const answer = body.answer === 'yes' ? 'Yes' : body.answer === 'no' ? 'No' : '';
     if (!challenge || !answer) return NextResponse.json({ error: 'Missing answer.' }, { status: 400 });
-    said = `${str(body.ask, 80)} Did it? ${answer}`;
-    surface = `gpm-game:can-i:${challenge}`;
+    /* game=heroes: "Can I Thank a Hero?" (GD, 2026-11-04), filed under its own surface. */
+    const heroes = body.game === 'heroes';
+    said = `${str(body.ask, 80)} ${heroes ? 'Would it thank them?' : 'Did it?'} ${answer}`;
+    surface = heroes ? `gpm-game:thank-a-hero:${challenge}` : `gpm-game:can-i:${challenge}`;
   } else if (body.type === 'would-send') {
     /* "What if...?": the Element a player would send for a scenario, in the round's mood. */
     const scenario = str(body.scenario, 40);
     if (!scenario) return NextResponse.json({ error: 'Missing answer.' }, { status: 400 });
     const tier = body.tier === 'BUG' ? 'BUG' : 'TUG';
     said = `${str(body.ask, 120)} Would send this ${tier} (mood: ${str(body.mood, 20) || 'none'})`;
-    surface = `gpm-game:what-if:${scenario}`;
+    surface = body.game === 'heroes' ? `gpm-game:what-if-heroes:${scenario}` : `gpm-game:what-if:${scenario}`;
   } else if (body.type === 'prize-claim') {
     /* A Golden NUG win: the free BUG to send goes to this email. */
     const prize = str(body.prize, 60);
