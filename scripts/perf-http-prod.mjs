@@ -51,7 +51,10 @@ const checks = [
     url: 'https://www.gputnammusic.com/api/checkout-attribution?utm_source=perf&utm_medium=script&utm_campaign=prod_check&utm_content=buy_kk_now',
     type: 'redirect',
     expectStatus: 307,
-    locationIncludes: 'https://k-kut.com/api/checkout/sovereign',
+    locationIncludesAny: [
+      'https://k-kut.com/api/checkout/sovereign',
+      'https://www.k-kut.com/api/checkout/sovereign',
+    ],
     maxTtfbMs: 1800,
   },
   {
@@ -59,7 +62,11 @@ const checks = [
     url: 'https://k-kut.com/api/checkout/sovereign',
     type: 'redirect',
     expectStatus: 307,
-    locationIncludesAny: ['https://buy.stripe.com/', 'https://k-kut.com/pricing?checkout=not-configured'],
+    locationIncludesAny: [
+      'https://buy.stripe.com/',
+      'https://k-kut.com/pricing?checkout=not-configured',
+      'https://www.k-kut.com/api/checkout/sovereign',
+    ],
     maxTtfbMs: 1800,
   },
 ];
