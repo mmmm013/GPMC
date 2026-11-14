@@ -29,13 +29,36 @@ export default function HomePage() {
           >
             ▶ Listen
           </Link>
-          <a
-            href="https://www.k-kut.com/motivation"
-            className="rounded-full border-2 border-[#8B4513] px-10 py-5 text-xl font-black text-[#8B4513] hover:bg-[#8B4513] hover:text-white"
-          >
-            Send a HUG
-          </a>
         </div>
+        {/*
+          GD, 2026-11-13: "we need to get a link, a very opulent link, on the Gputnam Music site on the
+          landing page, alerting people to the opportunity to send a sentiment ... people are going to
+          Gputnam Music and you don't even see anything about MEANTs." Wording approved; "Replace it":
+          this card takes the place of the small outlined "Send a HUG" button that used to sit beside
+          Listen. Prices are the three live tiers (k-kut config/payment-links.json). The card goes to the
+          one page that takes money.
+        */}
+        <a
+          href="https://www.k-kut.com/motivation"
+          className="mt-12 block rounded-3xl bg-[#3B1E12] px-7 py-8 text-left text-white shadow-2xl ring-1 ring-[#FFD54F]/40 hover:bg-[#4A2617]"
+        >
+          <span className="block text-sm font-black uppercase tracking-[0.25em] text-[#FFD54F]">
+            New · SentiMEANTs
+          </span>
+          <span className="mt-2 block text-3xl font-black leading-tight md:text-4xl">
+            Send a feeling, not a card.
+          </span>
+          <span className="mt-4 block text-lg leading-relaxed text-white/90">
+            A moment of a real song, chosen for exactly what you mean, sent privately to one person. They
+            tap. They hear it. No app, no sign-in, nothing to download.
+          </span>
+          <span className="mt-4 block text-base font-bold text-[#FFE082]">
+            A single sung word $1.99 · a line $4.99 · a whole verse or chorus $7.99
+          </span>
+          <span className="mt-6 inline-block rounded-full bg-[#FFD54F] px-8 py-3 text-xl font-black text-[#2A1506] shadow-lg">
+            Send one now →
+          </span>
+        </a>
         <RiffRunsBanner />
         {/* GD, 2026-10-23: "Games must be SUB-level." The games are reached from the footer, not from home. */}
         {showHalloween && (
