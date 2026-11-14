@@ -92,7 +92,7 @@ export default function Header() {
             rel="noopener noreferrer"
             className="text-sm bg-[#FFD54F] text-[#2A1506] px-4 py-1.5 rounded-full font-bold text-center hover:bg-[#FFE082] transition-colors tracking-wide"
           >
-            Send a HUG
+            Send a SentiMEANT
           </a>
           <Link href="/listen" className="text-sm text-[#FFD54F] hover:text-[#FFE082] font-bold tracking-wide transition-colors">Listen</Link>
           <Link href="/mip" className="text-sm text-[#FFD54F] hover:text-[#FFE082] font-bold tracking-wide transition-colors">{menuMip1}</Link>
@@ -126,7 +126,7 @@ export default function Header() {
             onClick={() => setMenuOpen(false)}
             className="text-sm bg-[#FFD54F] text-[#2A1506] px-4 py-3 rounded-full font-bold text-center hover:bg-[#FFE082] transition-colors tracking-wide"
           >
-            Send a HUG
+            Send a SentiMEANT
           </a>
         </div>
       )}
