@@ -2,6 +2,7 @@ import Link from 'next/link';
 import RiffRunsBanner from '@/components/RiffRunsBanner';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import FreeSendStrip from '@/components/FreeSendStrip';
 
 /**
  * HOME. GD, 2026-10-11, "do A": point the home page at Listen with one line.
@@ -59,6 +60,8 @@ export default function HomePage() {
             Send one now →
           </span>
         </a>
+        {/* GD, 2026-11-26: a free HUG or TUG to send, use and lose. Shows only while k-kut.com says it is open. */}
+        <FreeSendStrip />
         <RiffRunsBanner />
         {/* GD, 2026-10-23: "Games must be SUB-level." The games are reached from the footer, not from home. */}
         {showHalloween && (
