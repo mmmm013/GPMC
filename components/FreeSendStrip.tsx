@@ -98,7 +98,7 @@ export default function FreeSendStrip() {
   if (!featured.length) return null;
 
   return (
-    <section className="mt-12 rounded-3xl bg-white px-6 py-8 text-left shadow-xl ring-1 ring-[#8B4513]/20">
+    <section id="free-send" className="mt-12 rounded-3xl bg-white px-6 py-8 text-left shadow-xl ring-1 ring-[#8B4513]/20">
       <p className="text-sm font-black uppercase tracking-[0.25em] text-[#8B4513]">Free from G Putnam Music</p>
       <h2 className="mt-2 text-3xl font-black leading-tight text-[#2C2418] md:text-4xl">Send a HUG or a TUG, free.</h2>
       <p className="mt-3 text-lg leading-relaxed text-[#2C2418]/80">
