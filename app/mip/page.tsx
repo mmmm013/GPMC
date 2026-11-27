@@ -98,7 +98,7 @@ export default function MipPage() {
          <BraveEaglePromo
             links={[
                { href: '/heroes', label: 'Back to Heroes' },
-               { href: '/uru', label: 'URU Mood List' },
+               { href: '/uru', label: 'URU Playlists' },
                { href: '/tt', label: 'TT Tale Tell' },
                { href: '/gift', label: 'Gift Support' },
             ]}

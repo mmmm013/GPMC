@@ -14,7 +14,7 @@ type BraveEaglePromoProps = {
 
 const DEFAULT_LINKS: PromoLink[] = [
   { href: '/mip', label: 'MIP1 Recognition Form' },
-  { href: '/uru', label: 'URU Mood List' },
+  { href: '/uru', label: 'URU Playlists' },
   { href: '/tt', label: 'TT Tale Tell' },
   { href: '/gift', label: 'Gift Support' },
 ];
