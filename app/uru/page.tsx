@@ -1,92 +1,58 @@
-'use client';
-
-import { useState, useEffect } from 'react';
-import { Fingerprint, Lock, Music, ArrowRight, ShieldCheck, DollarSign, Play } from 'lucide-react';
+import type { Metadata } from 'next';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { supabase } from '@/lib/supabaseClient';
-import BraveEaglePromo from '@/components/BraveEaglePromo';
+import UruPlaylists from '@/components/uru/UruPlaylists';
 
-export default function UruPage() {
-  const [snippets, setSnippets] = useState<any[]>([]);
+/* URU -- your own playlists. GD, 2026-11-27: "URU playlists: let users build their own playlists." On a card
+   he chose: full songs (from /listen), kept on the person's own phone (no sign-in, nothing kept by us),
+   shareable by a link, and this page replaces the old sponsor-snippet URU page, whose per-second prices broke
+   his rule that length never counts. Songs and their signed stream addresses come from k-kut.com/api/fm, the
+   same as /listen; a playlist stores only song ids, so a saved or shared list never holds an address that
+   expires. Stream only. */
+export const dynamic = 'force-dynamic';
+export const metadata: Metadata = {
+  title: 'URU · Your playlists | G Putnam Music',
+  description: 'Make your own playlists of G Putnam Music songs. No sign-in. Share one with a link.',
+  alternates: { canonical: 'https://www.gputnammusic.com/uru' },
+  openGraph: {
+    title: 'URU: make your own playlist.',
+    description: 'Pick the songs, put them in your order, share it with a link. No sign-in.',
+    url: 'https://www.gputnammusic.com/uru',
+    siteName: 'G Putnam Music',
+    type: 'website',
+  },
+};
 
-  useEffect(() => {
-    async function fetchSnippets() {
-      // THE MAGIC QUERY: Find assets shorter than 11 seconds
-      const { data } = await supabase
-        .from('tracks')
-        .select('*')
-        .lte('duration', 11)
-        .limit(10);
-      if (data) setSnippets(data);
-    }
-    fetchSnippets();
-  }, []);
+type Track = { id: string; artist: string; title: string; src: string };
 
+async function tracks(): Promise<{ tracks: Track[]; onRequest: Track[] }> {
+  try {
+    const res = await fetch('https://www.k-kut.com/api/fm', { cache: 'no-store', headers: { 'User-Agent': 'GPM-flagship/1' } });
+    if (!res.ok) return { tracks: [], onRequest: [] };
+    const body = (await res.json()) as { tracks?: Track[]; onRequest?: Track[] };
+    const slim = (l?: Track[]) => (l ?? []).map(({ id, artist, title, src }) => ({ id, artist, title, src }));
+    return { tracks: slim(body.tracks), onRequest: slim(body.onRequest) };
+  } catch {
+    return { tracks: [], onRequest: [] };
+  }
+}
+
+export default async function UruPage() {
+  const { tracks: list, onRequest } = await tracks();
   return (
-    <main className="min-h-screen w-full bg-gradient-to-b from-[#FFD54F] to-[#FF8F00] text-[#3E2723] font-sans selection:bg-[#3E2723] selection:text-[#FFD54F]">
+    <main className="min-h-screen bg-[#FFF0F5] text-[#2C2418]">
       <Header />
-      <BraveEaglePromo
-        links={[
-          { href: '/heroes', label: 'Back to Heroes' },
-          { href: '/mip', label: 'MIP1 Recognition Form' },
-          { href: '/tt', label: 'TT Tale Tell' },
-          { href: '/gift', label: 'Gift Support' },
-        ]}
-      />
-
-      <div className="container mx-auto px-4 mt-16 text-center max-w-3xl">
-        <div className="inline-block p-6 rounded-full bg-[#3E2723] mb-8 shadow-xl"><Fingerprint size={48} className="text-[#FFD54F]" strokeWidth={1.5} /></div>
-        <h1 className="text-6xl md:text-8xl font-black text-[#3E2723] mb-4 tracking-tight drop-shadow-sm leading-none">URU</h1>
-        <p className="text-xl font-bold text-[#3E2723] opacity-80 mb-12 uppercase tracking-widest">Your Life. Your Story. Your Sound.</p>
-      </div>
-
-      <div className="container mx-auto px-4 pb-20 max-w-4xl">
-        <div className="bg-[#FFF8E1] border-2 border-[#3E2723] rounded-3xl p-8 md:p-12 shadow-[12px_12px_0px_0px_rgba(62,39,35,1)] text-center relative overflow-hidden">
-          <Fingerprint className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[#3E2723] opacity-5 w-96 h-96" />
-
-          <div className="relative z-10">
-            <div className="flex justify-center gap-4 mb-6 text-[#E65100]"><ShieldCheck size={32} /><Music size={32} /></div>
-            <h2 className="text-3xl font-black uppercase tracking-tight mb-4">Exclusive Sponsor Access</h2>
-
-            {/* LIVE SNIPPET PREVIEW */}
-            {snippets.length > 0 && (
-              <div className="mb-8">
-                <h3 className="text-sm font-bold opacity-50 uppercase mb-4">Available Snippets (Preview)</h3>
-                <div className="flex flex-wrap justify-center gap-2">
-                  {snippets.map(s => (
-                    <span key={s.id} className="bg-[#3E2723] text-[#FFD54F] px-3 py-1 rounded text-xs font-bold flex items-center gap-1">
-                      <Music size={10} /> {s.duration}s
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <div className="bg-white border-2 border-[#3E2723] rounded-2xl p-6 mb-8 max-w-lg mx-auto shadow-sm">
-              <div className="flex items-center justify-center gap-2 mb-4 border-b-2 border-[#3E2723]/10 pb-2">
-                <DollarSign size={20} className="text-[#3E2723]" />
-                <h3 className="font-black text-lg uppercase text-[#3E2723]">Audio Snippet Pricing</h3>
-              </div>
-              <div className="grid grid-cols-2 gap-y-2 text-sm font-bold text-[#3E2723]">
-                <div className="bg-[#FFECB3] p-2 rounded-l-lg">1 - 2 Seconds</div><div className="bg-[#FFF8E1] p-2 rounded-r-lg border-l border-[#3E2723]/20 text-right">$0.55</div>
-                <div className="bg-[#FFECB3] p-2 rounded-l-lg">3 - 4 Seconds</div><div className="bg-[#FFF8E1] p-2 rounded-r-lg border-l border-[#3E2723]/20 text-right">$0.62</div>
-                <div className="bg-[#FFECB3] p-2 rounded-l-lg">5 - 6 Seconds</div><div className="bg-[#FFF8E1] p-2 rounded-r-lg border-l border-[#3E2723]/20 text-right">$0.70</div>
-                <div className="bg-[#FFECB3] p-2 rounded-l-lg">7 - 8 Seconds</div><div className="bg-[#FFF8E1] p-2 rounded-r-lg border-l border-[#3E2723]/20 text-right">$0.77</div>
-                <div className="bg-[#FFECB3] p-2 rounded-l-lg">9 - 10 Seconds</div><div className="bg-[#FFF8E1] p-2 rounded-r-lg border-l border-[#3E2723]/20 text-right">$0.85</div>
-              </div>
-            </div>
-
-            <div className="flex flex-col items-center gap-4">
-              <a href="/join" className="bg-[#3E2723] text-[#FFD54F] px-8 py-4 rounded-xl font-black uppercase hover:scale-105 transition shadow-lg flex items-center gap-2">
-                Become a Sponsor to Unlock <ArrowRight size={20} />
-              </a>
-              <p className="text-[10px] font-bold opacity-50 uppercase flex items-center gap-1"><Lock size={10} /> Requires Active Sponsorship</p>
-            </div>
-          </div>
+      <section className="mx-auto max-w-3xl px-4 py-10">
+        <h1 className="text-5xl font-black tracking-tight text-[#8B4513] md:text-7xl">URU</h1>
+        <p className="mt-2 text-lg font-bold text-[#5D4037]">Your playlists. Pick the songs, put them in your order, play them, share them.</p>
+        <div className="mt-6">
+          {list.length ? (
+            <UruPlaylists tracks={list} onRequest={onRequest} />
+          ) : (
+            <p className="rounded-2xl border border-[#8B4513]/20 bg-white p-6">The songs are loading slowly. Please refresh in a moment.</p>
+          )}
         </div>
-      </div>
-
+      </section>
       <Footer />
     </main>
   );
