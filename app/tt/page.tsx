@@ -37,7 +37,7 @@ export default function TaleTellPage() {
         links={[
           { href: '/heroes', label: 'Back to Heroes' },
           { href: '/mip', label: 'MIP1 Recognition Form' },
-          { href: '/uru', label: 'URU Mood List' },
+          { href: '/uru', label: 'URU Playlists' },
           { href: '/gift', label: 'Gift Support' },
         ]}
       />
