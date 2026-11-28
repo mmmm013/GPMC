@@ -24,6 +24,7 @@ import Link from 'next/link';
 import { Upload, Trash2, Eye, EyeOff, Music, Image as Img, FileText, Video } from 'lucide-react';
 import GpmBot from '@/components/GpmBot';
 import { createClient } from '@supabase/supabase-js';
+import SchererFlyBy from '@/components/SchererFlyBy';
 
 // GD-BOT journey steps for all creators
 // Creators only bio-access + upload — 4PE-MSC handles ingestion automatically.
@@ -272,6 +273,7 @@ export default function CreatorPortalPage() {
           </h1>
           <p className="text-white/40 text-sm mb-2">{creator.role}</p>
           <p className="text-white/30 text-xs mb-6">{creator.tagline}</p>
+          {creator.brand === 'MSJ' && <SchererFlyBy />}
 
           {/* PIXIE-BOT guided walk-through */}
           {isPixie && (
@@ -505,6 +507,8 @@ export default function CreatorPortalPage() {
             )}
           </div>
         )}
+
+        {creator.brand === 'MSJ' && <SchererFlyBy />}
 
         {/* Scope filter tabs */}
         <div className="flex flex-wrap gap-2 mb-6">

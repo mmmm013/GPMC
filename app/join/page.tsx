@@ -11,6 +11,7 @@ import Link from 'next/link';
 import PromoBar from '@/components/PromoBar';
 import CashSprintBanner from '@/components/CashSprintBanner';
 import { KEZ_DONATE_URL } from '@/config/kez';
+import SchererFlyBy from '@/components/SchererFlyBy';
 
 // FOUNDER SPECIAL: first N slots
 const FOUNDER_TOTAL = 50;
@@ -35,7 +36,7 @@ const FLASH_SPECIALS = [
   { 
     emoji: '🎷', 
     title: 'MSJ Jazz Pack', 
-    desc: 'Support Michael Scherer + unlock 3 exclusive jazz stems.', 
+    desc: "Support Michael Scherer's family", 
     // GD, 2026-11-28: "yes, send it to the GoFundMe." (docs/governance/KEZ-GOES-TO-GOFUNDME-2026-11-28.md)
     href: KEZ_DONATE_URL, 
     external: true,
@@ -255,6 +256,7 @@ export default function JoinPage() {
                 Stream MSJ Now
               </button>
             </div>
+            <SchererFlyBy />
           </div>
         </div>
       </section>

@@ -291,7 +291,7 @@ export default function KleighT20Grid() {
         <div className="flex items-center justify-between gap-3 mb-4">
           <div className="min-w-0">
             <p className="text-[10px] uppercase tracking-[0.3em] text-[#C8A882]/40 mb-0.5">
-              KLEIGH · BTI Library
+              KLEIGH Library
             </p>
             <h2 className="text-sm md:text-base font-bold text-[#C8A882] tracking-wide">
               Top 20 Streaming Activities
