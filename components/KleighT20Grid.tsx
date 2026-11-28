@@ -288,8 +288,8 @@ export default function KleighT20Grid() {
       <div className="max-w-7xl mx-auto">
 
         {/* Header */}
-        <div className="flex items-center justify-between mb-4">
-          <div>
+        <div className="flex items-center justify-between gap-3 mb-4">
+          <div className="min-w-0">
             <p className="text-[10px] uppercase tracking-[0.3em] text-[#C8A882]/40 mb-0.5">
               KLEIGH · BTI Library
             </p>
@@ -297,11 +297,12 @@ export default function KleighT20Grid() {
               Top 20 Streaming Activities
             </h2>
             <p className="text-[10px] text-[#C8A882]/40 mt-0.5">
-              KLEIGH PIX only · Moods cycle automatically
+              KLEIGH only · Moods cycle automatically
             </p>
           </div>
-          {/* Mobile dots */}
-          <div className="md:hidden flex items-center gap-1">
+          {/* Mobile dots. Each is a 44px touch target, so they wrap instead of pushing the page
+              sideways on a phone (it scrolled sideways at 390px). */}
+          <div className="md:hidden flex flex-wrap items-center justify-end gap-1 max-w-[55%]">
             {mobileGroups.map((_, i) => (
               <button
                 key={i}

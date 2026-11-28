@@ -46,8 +46,6 @@ html[data-season="christmas"] .gpm-season-garland {
   overflow: hidden;
   pointer-events: none;
   background-color: var(--gpm-xmas-band);
-  /* drawn above the page's snow layer, so no flake ever drifts across the lights */
-  z-index: 1;
   background-image:
     radial-gradient(circle, var(--gpm-xmas-light-amber) 0 2px, transparent 2.6px),
     radial-gradient(circle, var(--gpm-xmas-warm-white) 0 2px, transparent 2.6px),
@@ -95,60 +93,83 @@ html[data-season="christmas"] .gpm-bulb-green {
   filter: drop-shadow(0 0 2.5px rgba(63, 163, 99, 0.9));
 }
 
+/* 2kleigh.com opens on a full-screen "Start the music" screen, shown only when the page first loads
+   (the page is at its top). It starts just below the lights band instead of over it, so the first
+   screen shows the lights and the trees, and the band never covers any of the start screen. */
+html[data-season="christmas"] [role="dialog"][aria-label="Start the music"] {
+  top: 58px;
+}
+
 /* 2. Soft falling snow, BEHIND the page's content. The page's own <main> becomes its own layer so the
-      snow can sit between the page's background color and everything on it: text, buttons, cards and
-      the player are always drawn on top of it. Two slow layers; flakes have a white core and a slate
-      slate edge so they show on light pages and on dark ones. */
+      snow can sit between the page's background color and everything on it: text, buttons, cards,
+      the player and any pop-up are always drawn on top of it. One still sheet, pinned to the screen,
+      whose flakes drift down slowly at two speeds; flakes have a white core and a slate edge so they
+      show on light pages and on dark ones. The sheet is clear across the lights band, so no flake
+      ever drifts over the lights; as the band scrolls away, the clear strip goes with it. */
 html[data-season="christmas"] main {
   isolation: isolate;
 }
 
+@property --gpm-snow-clear {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 58px;
+}
+
 html[data-season="christmas"] main::before,
-html[data-season="christmas"] main::after,
 html[data-season="christmas"] body:not(:has(main))::before {
   content: "";
   position: fixed;
-  left: 0;
-  right: 0;
-  top: calc(-1 * var(--gpm-snow-tile-h));
-  height: calc(100vh + var(--gpm-snow-tile-h));
+  inset: 0;
   z-index: -1;
   pointer-events: none;
-  background-repeat: repeat;
-  animation: gpm-snow-fall var(--gpm-snow-speed) linear infinite;
-  will-change: transform;
-}
-
-html[data-season="christmas"] main::before,
-html[data-season="christmas"] body:not(:has(main))::before {
-  --gpm-snow-tile-h: 240px;
-  --gpm-snow-speed: 26s;
   opacity: 0.95;
+  --gpm-snow-clear: 58px; /* the height of the lights band */
+  -webkit-mask-image: linear-gradient(to bottom, transparent var(--gpm-snow-clear), #000 calc(var(--gpm-snow-clear) + 20px));
+  mask-image: linear-gradient(to bottom, transparent var(--gpm-snow-clear), #000 calc(var(--gpm-snow-clear) + 20px));
   background-image:
     radial-gradient(circle, rgba(255, 255, 255, 0.95) 0 2.2px, rgba(96, 116, 146, 0.7) 3px, transparent 3.8px),
     radial-gradient(circle, rgba(255, 255, 255, 0.95) 0 1.8px, rgba(96, 116, 146, 0.65) 2.5px, transparent 3.2px),
-    radial-gradient(circle, rgba(255, 255, 255, 0.9) 0 2.4px, rgba(96, 116, 146, 0.7) 3.2px, transparent 4px);
-  background-size: 220px 240px;
-  background-position: 30px 40px, 140px 120px, 80px 200px;
-}
-
-html[data-season="christmas"] main::after {
-  --gpm-snow-tile-h: 380px;
-  --gpm-snow-speed: 40s;
-  opacity: 0.85;
-  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.9) 0 2.4px, rgba(96, 116, 146, 0.7) 3.2px, transparent 4px),
     radial-gradient(circle, rgba(255, 255, 255, 0.95) 0 2.8px, rgba(96, 116, 146, 0.7) 3.7px, transparent 4.6px),
     radial-gradient(circle, rgba(255, 255, 255, 0.9) 0 2px, rgba(96, 116, 146, 0.65) 2.7px, transparent 3.4px);
-  background-size: 340px 380px;
-  background-position: 250px 70px, 60px 290px;
+  background-size: 220px 240px, 220px 240px, 220px 240px, 340px 380px, 340px 380px;
+  background-position: 30px 40px, 140px 120px, 80px 200px, 250px 70px, 60px 290px;
+  background-repeat: repeat;
+  /* In one cycle the small flakes fall two tiles and the large ones one: two speeds, never a jump. */
+  animation: gpm-snow-fall 52s linear infinite;
 }
 
 @keyframes gpm-snow-fall {
   from {
-    transform: translate3d(0, 0, 0);
+    background-position: 30px 40px, 140px 120px, 80px 200px, 250px 70px, 60px 290px;
   }
   to {
-    transform: translate3d(0, var(--gpm-snow-tile-h), 0);
+    background-position: 30px 520px, 140px 600px, 80px 680px, 250px 450px, 60px 670px;
+  }
+}
+
+/* Where the browser can follow the scroll, the clear strip shrinks as the band scrolls away, so
+   snow reaches the top of the screen once the lights are gone. */
+@supports (animation-timeline: scroll()) {
+  @keyframes gpm-snow-unclear {
+    from {
+      --gpm-snow-clear: 58px;
+    }
+    to {
+      --gpm-snow-clear: 0px;
+    }
+  }
+
+  html[data-season="christmas"] main::before,
+  html[data-season="christmas"] body:not(:has(main))::before {
+    animation-name: gpm-snow-fall, gpm-snow-unclear;
+    animation-duration: 52s, auto;
+    animation-timing-function: linear, linear;
+    animation-iteration-count: infinite, 1;
+    animation-fill-mode: none, both;
+    animation-timeline: auto, scroll(root);
+    animation-range: normal, 0 58px;
   }
 }
 
@@ -187,16 +208,14 @@ html[data-season="christmas"] [class*="ring-1"]:is([class*="rounded-xl"], [class
 /* Still, for anyone who asks their device for less motion. */
 @media (prefers-reduced-motion: reduce) {
   html[data-season="christmas"] main::before,
-  html[data-season="christmas"] main::after,
   html[data-season="christmas"] body:not(:has(main))::before {
-    animation: none;
+    animation-name: none;
   }
 }
 
 @media print {
   .gpm-season-garland,
   html[data-season] main::before,
-  html[data-season] main::after,
   html[data-season] body::before {
     display: none !important;
   }
