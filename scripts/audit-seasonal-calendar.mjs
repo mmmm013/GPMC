@@ -10,7 +10,8 @@
  *     and a start and end in MM-DD form;
  *   - Christmas turns itself off after Dec 26;
  *   - the general holidays are all on the calendar;
- *   - the dates are read in America/Chicago.
+ *   - the dates are read in America/Chicago;
+ *   - no red and no pink in any look. GD, 2026-11-28: "Pink, number one, pink and red are not my colors."
  * A guard that silently checks nothing is worse than no guard (LLBP-004): it fails if it finds no holidays.
  */
 import { readFileSync } from 'node:fs';
@@ -54,6 +55,31 @@ for (const id of general) if (!list.some((h) => h.id === id)) fail.push(`${id} i
 if (!/<SeasonalTouch\s*\/>/.test(layout)) fail.push('app/layout.tsx does not render <SeasonalTouch />, so no page gets the look');
 if (!/prefers-reduced-motion:\s*reduce/.test(css)) fail.push('app/seasonal.css does not respect prefers-reduced-motion');
 if (/@keyframes[^{]*\{[^}]*opacity/.test(css)) fail.push('a seasonal animation changes opacity: nothing may flash or blink');
+
+// No red, no pink: every color a look draws, by hue. Browns (hue ~20-45) are the sites' own and pass.
+function hue(hex) {
+  const h = hex.length === 4 ? hex.slice(1).split('').map((c) => c + c).join('') : hex.slice(1, 7);
+  const [r, g, b] = [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16) / 255);
+  const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
+  if (d === 0) return { h: 0, s: 0 };
+  let H = max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+  H = (H * 60 + 360) % 360;
+  const l = (max + min) / 2;
+  return { h: H, s: d / (1 - Math.abs(2 * l - 1)) };
+}
+for (const [file, text] of [['app/seasonal.css', css], ['components/SeasonalTouch.tsx', tsx]]) {
+  const code = text.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '');
+  for (const hex of code.match(/#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b/g) ?? []) {
+    const { h, s } = hue(hex);
+    if (s > 0.3 && (h < 15 || h > 290)) fail.push(`${file}: ${hex} is red or pink`);
+  }
+  for (const m of code.matchAll(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/g)) {
+    const hex = '#' + [m[1], m[2], m[3]].map((n) => Number(n).toString(16).padStart(2, '0')).join('');
+    const { h, s } = hue(hex);
+    if (s > 0.3 && (h < 15 || h > 290)) fail.push(`${file}: ${m[0]}) is red or pink`);
+  }
+  if (/\b(red|pink|crimson|hotpink|deeppink|magenta)\b\s*[;,)]/i.test(code)) fail.push(`${file}: names a red or pink color`);
+}
 
 if (fail.length) {
   console.error('[seasonal-calendar] FAIL');

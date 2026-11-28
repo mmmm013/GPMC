@@ -21,7 +21,7 @@
       "start": "11-28",
       "end": "12-26",
       "look_shown_to_gd": false,
-      "notes": "Thin garland line along the top, soft falling snow behind the page's content, thin deep-red or evergreen edges on cards. Turns itself off after Dec 26 (America/Chicago). The PR holding it is a draft until GD has seen the pictures."
+      "notes": "A string of lights draped across both top corners and a small tree in the left corner (evergreen, light amber and warm white bulbs; no red, no pink, per GD 2026-11-28), soft falling snow behind the page's content, thin evergreen edges on cards. Turns itself off after Dec 26 (America/Chicago). The PR holding it is a draft until GD has seen the pictures."
     },
     { "id": "new-years",        "name": "New Year's",        "status": "draft", "look": null, "date_rule": "fixed 01-01",                    "start": null, "end": null, "look_shown_to_gd": false },
     { "id": "valentines",       "name": "Valentine's Day",   "status": "draft", "look": null, "date_rule": "fixed 02-14",                    "start": null, "end": null, "look_shown_to_gd": false },
