@@ -35,8 +35,10 @@ const FLASH_SPECIALS = [
   { 
     emoji: '🎷', 
     title: 'MSJ Jazz Pack', 
-    desc: 'Support Michael Scherer + unlock 3 exclusive jazz stems. One-time $4.99.', 
-    href: '/gift', 
+    desc: 'Support Michael Scherer + unlock 3 exclusive jazz stems.', 
+    // GD, 2026-11-28: "yes, send it to the GoFundMe." (docs/governance/KEZ-GOES-TO-GOFUNDME-2026-11-28.md)
+    href: KEZ_DONATE_URL, 
+    external: true,
     cta: 'GRAB IT' 
   },
   { 
@@ -142,12 +144,23 @@ export default function JoinPage() {
               <p className="text-sm opacity-60 font-medium">{flash.desc}</p>
             </div>
           </div>
-          <Link 
-            href={flash.href}
-            className="whitespace-nowrap bg-white text-black px-6 py-2 font-black text-xs uppercase tracking-widest hover:bg-[#FFD54F] transition-colors"
-          >
-            {flash.cta}
-          </Link>
+          {'external' in flash && flash.external ? (
+            <a
+              href={flash.href}
+              target="_blank"
+              rel="noopener"
+              className="whitespace-nowrap bg-white text-black px-6 py-2 font-black text-xs uppercase tracking-widest hover:bg-[#FFD54F] transition-colors"
+            >
+              {flash.cta}
+            </a>
+          ) : (
+            <Link 
+              href={flash.href}
+              className="whitespace-nowrap bg-white text-black px-6 py-2 font-black text-xs uppercase tracking-widest hover:bg-[#FFD54F] transition-colors"
+            >
+              {flash.cta}
+            </Link>
+          )}
         </div>
       </section>
 

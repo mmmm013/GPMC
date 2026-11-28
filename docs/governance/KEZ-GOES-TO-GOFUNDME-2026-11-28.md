@@ -22,6 +22,17 @@ https://www.gofundme.com/f/support-3-yr-augusts-recovery-after-dog-attack
 - /creator/[brand]: no KEZ donate button there. `KEZ_CAMPAIGN` in config/creators.ts is an asset
   upload scope, not a link, so it is unchanged.
 
+## Added the same day: the MSJ Jazz Pack card on /join
+
+GD, 2026-11-28:
+
+> "yes, send it to the GoFundMe."
+
+The /join flash card "MSJ Jazz Pack" ("Support Michael Scherer + unlock 3 exclusive jazz stems.")
+went to /gift (Heart-Tap). Its GRAB IT button now opens `KEZ_DONATE_URL` in a new tab
+(`rel="noopener"`). The card's words are unchanged except its price: "One-time $4.99." is removed,
+because GoFundMe sets no fixed amount. Nothing else on the card changed.
+
 ## Not changed
 
 - /gift's Heart-Tap tiers stay as they are (GD, option a). They are gifts, not the KEZ path.
