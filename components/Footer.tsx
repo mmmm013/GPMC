@@ -47,7 +47,7 @@ export default function Footer() {
   return (
     <footer className="w-full bg-[#1a100e] border-t border-[#5C3A1E]/30">
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Both /gift links follow HEART_TAP_SHOWN (GD, 2026-11-28: "yes, hide the ringtones"). */}
+        {/* Both /gift links follow HEART_TAP_SHOWN (lib/gift-protocol.ts). */}
         {isKleighDomain && HEART_TAP_SHOWN && (
           <div className="mb-6 text-center">
             <Link
