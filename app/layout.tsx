@@ -1,9 +1,11 @@
 // sites/k-kut/app/layout.tsx
 
 import "./globals.css";
+import "./seasonal.css";
 import type { Metadata } from "next";
 import SiteVisit from "@/components/SiteVisit";
 import HelpLine988 from "@/components/HelpLine988";
+import SeasonalTouch from "@/components/SeasonalTouch";
 
 export const metadata: Metadata = {
   title: "G Putnam Music",
@@ -16,8 +18,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    // suppressHydrationWarning: SeasonalTouch sets data-season on <html> before React hydrates.
+    <html lang="en" suppressHydrationWarning>
       <body>
+        <SeasonalTouch />
         {children}
         <HelpLine988 />
         <SiteVisit />

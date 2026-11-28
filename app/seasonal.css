@@ -1,0 +1,203 @@
+/*
+ * SEASONAL LOOKS. GD, 2026-11-28: "let's add a little Christmassy stuff to every platform, right? And we
+ * do that seasonally, and we do that for holidays, for general holidays."
+ *
+ * The calendar is config/seasonal-calendar.json; components/SeasonalTouch.tsx sets
+ * <html data-season="..."> on the right days. Nothing here does anything without that attribute.
+ *
+ * Every look follows the same rules:
+ *   - It ADDS and never replaces. Each site keeps its own colors; no background, border or shadow
+ *     a page already has is changed.
+ *   - It never covers text, buttons or the music player. The lights and trees take a band of their own
+ *     at the top of the page; the snow falls BEHIND the page's content; card edges are an outline outside
+ *     the card, and never on the player, a button, or anything pinned to the screen.
+ *   - CSS and inline drawing only, no image files. Nothing flashes or blinks. Anyone whose device
+ *     asks for reduced motion gets a still picture.
+ *   - No red and no pink. GD, 2026-11-28: "pink and red are not my colors." Evergreen, light amber
+ *     and warm white.
+ *   - It reads on light pages and on dark ones, and on a 390px phone.
+ */
+
+.gpm-season-garland {
+  display: none;
+}
+
+/* ============================== CHRISTMAS ============================== */
+
+html[data-season="christmas"] {
+  /* GD, 2026-11-28: "Pink, number one, pink and red are not my colors." No red, no pink, anywhere. */
+  --gpm-xmas-green: #1f6b3d; /* evergreen */
+  --gpm-xmas-green-bright: #3fa363; /* evergreen bulb, lit */
+  --gpm-xmas-light-amber: #ffd54f; /* light amber, GD's own */
+  --gpm-xmas-warm-white: #fff4d6; /* warm white */
+  --gpm-xmas-band: #1a1207; /* the sites' own dark brown */
+}
+
+/* 1. Christmas at a glance, on the first screen. A band of its own at the very top of the page, in the
+      sites' own dark brown: a string of lights draped across BOTH top corners, a small tree in each top
+      corner, and a thin evergreen strand between them. The band takes its own space in the page, so it
+      sits on nothing: never on the header text, the nav or a button. The bulbs glow softly and hold
+      still; nothing blinks. */
+html[data-season="christmas"] .gpm-season-garland {
+  display: block;
+  position: relative;
+  height: 58px;
+  width: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  background-color: var(--gpm-xmas-band);
+  /* drawn above the page's snow layer, so no flake ever drifts across the lights */
+  z-index: 1;
+  background-image:
+    radial-gradient(circle, var(--gpm-xmas-light-amber) 0 2px, transparent 2.6px),
+    radial-gradient(circle, var(--gpm-xmas-warm-white) 0 2px, transparent 2.6px),
+    linear-gradient(
+      to bottom,
+      transparent 7px,
+      var(--gpm-xmas-green) 7px,
+      var(--gpm-xmas-green) 8.5px,
+      transparent 8.5px
+    );
+  background-size: 36px 16px, 36px 16px, 100% 16px;
+  background-position: 9px 0, 27px 0, 0 0;
+  background-repeat: repeat-x;
+}
+
+html[data-season="christmas"] .gpm-season-corner {
+  position: absolute;
+  top: 0;
+  display: block;
+  /* the corners sit over the thin middle strand, not beside it */
+  background-color: var(--gpm-xmas-band);
+}
+
+html[data-season="christmas"] .gpm-season-corner-left {
+  left: 0;
+}
+
+html[data-season="christmas"] .gpm-season-corner-right {
+  right: 0;
+  transform: scaleX(-1); /* the same drape, hung from the right-hand corner */
+}
+
+html[data-season="christmas"] .gpm-bulb-amber {
+  fill: var(--gpm-xmas-light-amber);
+  filter: drop-shadow(0 0 2.5px rgba(255, 213, 79, 0.9));
+}
+
+html[data-season="christmas"] .gpm-bulb-white {
+  fill: var(--gpm-xmas-warm-white);
+  filter: drop-shadow(0 0 2.5px rgba(255, 244, 214, 0.9));
+}
+
+html[data-season="christmas"] .gpm-bulb-green {
+  fill: var(--gpm-xmas-green-bright);
+  filter: drop-shadow(0 0 2.5px rgba(63, 163, 99, 0.9));
+}
+
+/* 2. Soft falling snow, BEHIND the page's content. The page's own <main> becomes its own layer so the
+      snow can sit between the page's background color and everything on it: text, buttons, cards and
+      the player are always drawn on top of it. Two slow layers; flakes have a white core and a slate
+      slate edge so they show on light pages and on dark ones. */
+html[data-season="christmas"] main {
+  isolation: isolate;
+}
+
+html[data-season="christmas"] main::before,
+html[data-season="christmas"] main::after,
+html[data-season="christmas"] body:not(:has(main))::before {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: calc(-1 * var(--gpm-snow-tile-h));
+  height: calc(100vh + var(--gpm-snow-tile-h));
+  z-index: -1;
+  pointer-events: none;
+  background-repeat: repeat;
+  animation: gpm-snow-fall var(--gpm-snow-speed) linear infinite;
+  will-change: transform;
+}
+
+html[data-season="christmas"] main::before,
+html[data-season="christmas"] body:not(:has(main))::before {
+  --gpm-snow-tile-h: 240px;
+  --gpm-snow-speed: 26s;
+  opacity: 0.95;
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.95) 0 2.2px, rgba(96, 116, 146, 0.7) 3px, transparent 3.8px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.95) 0 1.8px, rgba(96, 116, 146, 0.65) 2.5px, transparent 3.2px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.9) 0 2.4px, rgba(96, 116, 146, 0.7) 3.2px, transparent 4px);
+  background-size: 220px 240px;
+  background-position: 30px 40px, 140px 120px, 80px 200px;
+}
+
+html[data-season="christmas"] main::after {
+  --gpm-snow-tile-h: 380px;
+  --gpm-snow-speed: 40s;
+  opacity: 0.85;
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.95) 0 2.8px, rgba(96, 116, 146, 0.7) 3.7px, transparent 4.6px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.9) 0 2px, rgba(96, 116, 146, 0.65) 2.7px, transparent 3.4px);
+  background-size: 340px 380px;
+  background-position: 250px 70px, 60px 290px;
+}
+
+@keyframes gpm-snow-fall {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, var(--gpm-snow-tile-h), 0);
+  }
+}
+
+/* 3. Thin evergreen edges on cards: an outline just outside the card, so the card's own
+      border, ring and shadow stay exactly as they were. Only the outermost card gets one. Never on a
+      button, a pill, anything pinned (the player is sticky), a decorative bar, or a focus ring. */
+html[data-season="christmas"]
+  :is(div, section, article, aside, li, a, figure, form):is(
+    [class*="rounded-xl"],
+    [class*="rounded-2xl"],
+    [class*="rounded-3xl"]
+  ):is([class*="border"], [class*="shadow"], [class*="ring-"], [class*="bg-"]):not(
+    [class*="absolute"],
+    [class*="sticky"],
+    [class*="fixed"],
+    [class*="rounded-full"],
+    :focus-visible
+  ):not(
+    :is([class*="rounded-xl"], [class*="rounded-2xl"], [class*="rounded-3xl"]):is(
+      [class*="border"],
+      [class*="shadow"],
+      [class*="ring-"],
+      [class*="bg-"]
+    )
+    *
+  ):not([class*="sticky"] *, [class*="fixed"] *) {
+  outline: 1px solid var(--gpm-xmas-green);
+  outline-offset: var(--gpm-edge-offset, 1px);
+}
+
+/* A card that already has a ring (drawn just outside it) keeps it: the edge steps out past the ring. */
+html[data-season="christmas"] [class*="ring-1"]:is([class*="rounded-xl"], [class*="rounded-2xl"], [class*="rounded-3xl"]) {
+  --gpm-edge-offset: 2px;
+}
+
+/* Still, for anyone who asks their device for less motion. */
+@media (prefers-reduced-motion: reduce) {
+  html[data-season="christmas"] main::before,
+  html[data-season="christmas"] main::after,
+  html[data-season="christmas"] body:not(:has(main))::before {
+    animation: none;
+  }
+}
+
+@media print {
+  .gpm-season-garland,
+  html[data-season] main::before,
+  html[data-season] main::after,
+  html[data-season] body::before {
+    display: none !important;
+  }
+}

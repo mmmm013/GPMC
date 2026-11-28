@@ -28,6 +28,9 @@ jobs:
       - name: Lint
         run: npm run lint --if-present
 
+      - name: Seasonal calendar guard
+        run: npm run seasonal:audit
+
       - name: Type-check
         run: npx tsc --noEmit
 

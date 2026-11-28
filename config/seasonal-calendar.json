@@ -1,0 +1,37 @@
+{
+  "_ruling": {
+    "who": "GD",
+    "date": "2026-11-28",
+    "words": "let's add a little Christmassy stuff to every platform, right? And we do that seasonally, and we do that for holidays, for general holidays."
+  },
+  "_how_it_works": [
+    "Every public page of gputnammusic.com and 2kleigh.com reads this file (components/SeasonalTouch.tsx).",
+    "Only an entry with status \"live\" AND a look turns anything on. A \"draft\" entry shows nothing, anywhere.",
+    "Dates are month-day, inclusive at both ends, read in time_zone. A window may wrap the new year (start after end).",
+    "A look adds and never replaces: it keeps each site's own colors, never covers text, buttons or the music player, never flashes, and holds still for anyone who asks their device for reduced motion.",
+    "Each draft look is built and shown to GD before its date. Its status moves to \"live\" only on his yes."
+  ],
+  "time_zone": "America/Chicago",
+  "holidays": [
+    {
+      "id": "christmas",
+      "name": "Christmas",
+      "status": "live",
+      "look": "christmas",
+      "start": "11-28",
+      "end": "12-26",
+      "look_shown_to_gd": false,
+      "notes": "A string of lights draped across both top corners and a small tree in each top corner (evergreen, light amber and warm white bulbs; no red, no pink, per GD 2026-11-28), soft falling snow behind the page's content, thin evergreen edges on cards. Turns itself off after Dec 26 (America/Chicago). The PR holding it is a draft until GD has seen the pictures."
+    },
+    { "id": "new-years",        "name": "New Year's",        "status": "draft", "look": null, "date_rule": "fixed 01-01",                    "start": null, "end": null, "look_shown_to_gd": false },
+    { "id": "valentines",       "name": "Valentine's Day",   "status": "draft", "look": null, "date_rule": "fixed 02-14",                    "start": null, "end": null, "look_shown_to_gd": false },
+    { "id": "st-patricks",      "name": "St. Patrick's Day", "status": "draft", "look": null, "date_rule": "fixed 03-17",                    "start": null, "end": null, "look_shown_to_gd": false },
+    { "id": "easter",           "name": "Easter",            "status": "draft", "look": null, "date_rule": "Western Easter Sunday (moves every year)", "start": null, "end": null, "look_shown_to_gd": false },
+    { "id": "mothers-day",      "name": "Mother's Day",      "status": "draft", "look": null, "date_rule": "2nd Sunday of May",              "start": null, "end": null, "look_shown_to_gd": false },
+    { "id": "memorial-day",     "name": "Memorial Day",      "status": "draft", "look": null, "date_rule": "last Monday of May",             "start": null, "end": null, "look_shown_to_gd": false },
+    { "id": "fathers-day",      "name": "Father's Day",      "status": "draft", "look": null, "date_rule": "3rd Sunday of June",             "start": null, "end": null, "look_shown_to_gd": false },
+    { "id": "independence-day", "name": "Independence Day",  "status": "draft", "look": null, "date_rule": "fixed 07-04",                    "start": null, "end": null, "look_shown_to_gd": false },
+    { "id": "halloween",        "name": "Halloween",         "status": "draft", "look": null, "date_rule": "fixed 10-31",                    "start": null, "end": null, "look_shown_to_gd": false },
+    { "id": "thanksgiving",     "name": "Thanksgiving",      "status": "draft", "look": null, "date_rule": "4th Thursday of November",       "start": null, "end": null, "look_shown_to_gd": false }
+  ]
+}

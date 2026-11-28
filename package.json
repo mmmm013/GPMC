@@ -24,7 +24,8 @@
     "audio:e2e:prod": "PLAYWRIGHT_BASE_URL=https://www.gputnammusic.com playwright test tests/audio.e2e.spec.ts",
     "deploy:flagship:prod": "DEPLOY_CONFIRM=gputnammusic.com bash scripts/deploy-flagship.sh",
     "deploy:kkut:prod": "DEPLOY_CONFIRM=k-kut.com bash scripts/deploy-k-kut.sh",
-    "deploy:hygiene": "bash scripts/check-deploy-hygiene.sh"
+    "deploy:hygiene": "bash scripts/check-deploy-hygiene.sh",
+    "seasonal:audit": "node scripts/audit-seasonal-calendar.mjs"
   },
   "dependencies": {
     "@simplewebauthn/browser": "^13.3.0",
