@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { GIFT_TIERS, HEART_TAP_SHOWN, type TierConfig, type GiftTier, initiateCheckout} from '@/lib/gift-protocol';
+import { GIFT_TIERS, type TierConfig, type GiftTier, initiateCheckout} from '@/lib/gift-protocol';
 import GiftTierCard from '@/components/GiftTierCard';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -48,25 +48,6 @@ export default function GiftPage() {
       setIsLoading(false);
     }
   };
-
-  /* Heart-Tap tiers hidden (lib/gift-protocol.ts HEART_TAP_SHOWN; GD, 2026-11-28). */
-  if (!HEART_TAP_SHOWN) {
-    return (
-      <main className="min-h-screen bg-gradient-to-b from-black via-gray-950 to-black text-white">
-        <Header />
-        <section className="mx-auto max-w-lg px-4 py-24 text-center">
-          <p className="text-xl text-white/80">Heart-Tap gifts are not offered right now.</p>
-          <Link
-            href="/listen"
-            className="mt-8 inline-block rounded-full bg-[#FFD54F] px-8 py-3 text-lg font-black text-[#2A1506] hover:bg-[#FFE082]"
-          >
-            ▶ Listen
-          </Link>
-        </section>
-        <Footer />
-      </main>
-    );
-  }
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-black via-gray-950 to-black text-white">

@@ -1,4 +1,21 @@
-# gputnammusic.com /gift: the Heart-Tap ringtone tiers are hidden
+# gputnammusic.com /gift: the Heart-Tap ringtone tiers, hidden and then brought back
+
+## CURRENT STATE: SHOWN. Reversed by GD the same day, 2026-11-28.
+
+GD chose option a: bring all four Heart-Tap tiers back for now, ringtones included. The reason:
+the KEZ "give" path for the Scherer family (/scherer, "Become a KEZ") goes to /gift, and with the
+tiers hidden that path had no way to give. It has to work through Christmas. **Ringtones get
+discussed later.**
+
+- `HEART_TAP_SHOWN` in `lib/gift-protocol.ts` is `true` again.
+- The footer's /gift links ("Gift", and "Send a HUG" on the KLEIGH domain) show again.
+- The "Heart-Tap gifts are not offered right now." page is removed; /gift is exactly as it was
+  before the hide.
+- The ringtone question is open, not closed. Raise it with GD after Christmas.
+
+Everything below is the record of the first ruling, kept as it was written.
+
+---
 
 Ruling: GD, 2026-11-28.
 

@@ -13,12 +13,11 @@ export interface TierConfig {
   color: string;
 }
 
-/* HIDDEN, NOT DELETED. GD, 2026-11-28: "yes, hide the ringtones". Every Heart-Tap tier is filled
-   from the Digital Mixed Bag, whose items include ringtones and digital stickers (ASSET_TYPES
-   below), so no tier is shown while this is false. He wants to look into ringtones later: turning
-   this back to true restores the page, its nav and footer links, exactly as they were.
+/* SHOWN AGAIN. GD, 2026-11-28 hid the ringtone tiers ("yes, hide the ringtones"), then the same day
+   chose to bring all four back, ringtones included, so the KEZ "give" path for the Scherer family
+   works through Christmas. Ringtones get discussed later. While true, the footer's /gift links show.
    docs/governance/GIFT-RINGTONE-TIERS-HIDDEN-2026-11-28.md */
-export const HEART_TAP_SHOWN = false;
+export const HEART_TAP_SHOWN = true;
 
 export const GIFT_TIERS: TierConfig[] = [
   {
