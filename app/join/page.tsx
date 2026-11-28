@@ -10,6 +10,7 @@ import Footer from '@/components/Footer';
 import Link from 'next/link';
 import PromoBar from '@/components/PromoBar';
 import CashSprintBanner from '@/components/CashSprintBanner';
+import { KEZ_DONATE_URL } from '@/config/kez';
 
 // FOUNDER SPECIAL: first N slots
 const FOUNDER_TOTAL = 50;
@@ -229,9 +230,14 @@ export default function JoinPage() {
               Michael is fighting through serious personal challenges. Your support goes directly to keeping his craft alive. Press a key. Keep him playing.
             </p>
             <div className="flex flex-wrap gap-4">
-              <button className="bg-white text-blue-600 px-8 py-3 font-black text-sm uppercase tracking-widest hover:bg-[#FFD54F] transition-colors">
+              <a
+                href={KEZ_DONATE_URL}
+                target="_blank"
+                rel="noopener"
+                className="bg-white text-blue-600 px-8 py-3 font-black text-sm uppercase tracking-widest hover:bg-[#FFD54F] transition-colors"
+              >
                 Become a KEZ
-              </button>
+              </a>
               <button className="border-2 border-white px-8 py-3 font-black text-sm uppercase tracking-widest hover:bg-white hover:text-blue-600 transition-colors">
                 Stream MSJ Now
               </button>
