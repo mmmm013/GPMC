@@ -3,6 +3,7 @@ import Footer from '@/components/Footer';
 import SongPlayer from '@/components/listen/SongPlayer';
 import { Heart, Music2, MapPin } from 'lucide-react';
 import { KEZ_DONATE_URL } from '@/config/kez';
+import SchererFlyBy from '@/components/SchererFlyBy';
 
 type Track = { id: string; artist: string; title: string; src: string };
 
@@ -106,6 +107,7 @@ export default async function SchererPage() {
               Stream His Music ↓
             </a>
           </div>
+          <SchererFlyBy />
         </div>
       </section>
 

@@ -134,7 +134,7 @@ export default function KleighPage() {
       </section>
 
       {/* ══════════════════════════════════════════════
-          BEHIND THE MUSIC — BTI ASSETS
+          BEHIND THE MUSIC
       ══════════════════════════════════════════════ */}
       <section className="py-16 bg-[#2C241B] text-[#FFFDF5]">
         <div className="max-w-4xl mx-auto px-6">
