@@ -252,9 +252,12 @@ export default function JoinPage() {
               >
                 Become a KEZ
               </a>
-              <button className="border-2 border-white px-8 py-3 font-black text-sm uppercase tracking-widest hover:bg-white hover:text-blue-600 transition-colors">
+              <Link
+                href="/scherer#catalog"
+                className="border-2 border-white px-8 py-3 font-black text-sm uppercase tracking-widest hover:bg-white hover:text-blue-600 transition-colors"
+              >
                 Stream MSJ Now
-              </button>
+              </Link>
             </div>
             <SchererFlyBy />
           </div>
