@@ -2,6 +2,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SongPlayer from '@/components/listen/SongPlayer';
 import { Heart, Music2, MapPin } from 'lucide-react';
+import { KEZ_DONATE_URL } from '@/config/kez';
 
 type Track = { id: string; artist: string; title: string; src: string };
 
@@ -91,7 +92,9 @@ export default async function SchererPage() {
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
             <a
-              href="/gift"
+              href={KEZ_DONATE_URL}
+              target="_blank"
+              rel="noopener"
               className="bg-red-600 text-white px-10 py-4 rounded-full font-black uppercase tracking-wider text-base hover:bg-red-500 transition-colors shadow-2xl shadow-red-900/60"
             >
               🎹 Become a KEZ — Help Michael
@@ -150,7 +153,9 @@ export default async function SchererPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
             <a
-              href="/gift"
+              href={KEZ_DONATE_URL}
+              target="_blank"
+              rel="noopener"
               className="bg-red-600 text-white px-10 py-4 rounded-full font-black uppercase tracking-wider hover:bg-red-500 transition-colors shadow-xl shadow-red-900/50"
             >
               🎹 Become a KEZ
