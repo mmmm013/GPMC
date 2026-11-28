@@ -169,7 +169,7 @@ function RiffOff({ week, pair, names, playing, play, stop }: { week: string; pai
               <button onClick={() => (playing === r ? stop() : play(r))} className="rounded-full border border-white/30 px-4 py-2">{playing === r ? '■ Stop' : '▶ Listen'}</button>
               <button onClick={() => vote(r)} className="rounded-full bg-[#FFD54F] px-4 py-2 font-black text-[#1a1207]">{pick === r ? 'Your vote ✓' : 'Vote'}</button>
             </div>
-            {counts && total > 0 && <p className="mt-2 text-sm text-[#D7CCC8]">{Math.round(((counts[r] ?? 0) / total) * 100)}% of {total} votes</p>}
+            {counts && total > 0 && <p className="mt-2 text-sm text-[#D7CCC8]">{Math.round(((counts[r] ?? 0) / total) * 100)}% of {total} {total === 1 ? 'vote' : 'votes'}</p>}
           </div>
         ))}
       </div>
@@ -197,7 +197,7 @@ function Nameboard() {
           {board.map((w) => (
             <li key={w.week} className="flex justify-between gap-3 border-t border-white/10 pt-2">
               <span>Week of {new Date(`${w.week}T12:00:00`).toLocaleDateString(undefined, { month: 'long', day: 'numeric' })}: <b>{w.name}</b></span>
-              <span className="text-[#D7CCC8]">{w.votes} votes</span>
+              <span className="text-[#D7CCC8]">{w.votes} {w.votes === 1 ? 'vote' : 'votes'}</span>
             </li>
           ))}
         </ol>

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import BraveEaglePromo from '@/components/BraveEaglePromo';
+import { useVeteransDayOpen } from '@/components/VeteransDayStrip';
 import { HEROES_GAMES } from '@/components/games/HeroesNote';
 
 // BRANDING CONSTANTS
@@ -59,6 +60,7 @@ walks in his footsteps.`,
 export default function HeroesPage() {
   const [form, setForm] = useState({ name: '', hero: '', category: '', story: '' });
   const [submitted, setSubmitted] = useState(false);
+  const veteransDay = useVeteransDayOpen();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,7 +79,10 @@ export default function HeroesPage() {
       />
       <div className="max-w-5xl mx-auto px-6 py-16">
 
-        {/* VETERANS DAY — GD, 2026-11-02: "Mention Veterans Day. Give a free hug to veterans." */}
+        {/* VETERANS DAY — GD, 2026-11-02: "Mention Veterans Day. Give a free hug to veterans."
+            Ends itself after the day, in the same window as the header strip. GD, 2026-11-28:
+            "all the holidays need to go away after they're done." */}
+        {veteransDay && (
         <section className="mb-12 rounded-2xl border-2 border-sky-300/40 bg-[#0a1e35] p-8 text-center shadow-2xl">
           <p className="text-xs font-black uppercase tracking-[0.3em] text-sky-200">Veterans Day · November 11</p>
           <h2 className="mt-3 text-3xl font-black">To everyone who served: thank you.</h2>
@@ -89,6 +94,7 @@ export default function HeroesPage() {
             Send a free HUG
           </a>
         </section>
+        )}
 
         {/* HEROES GAMES — GD, 2026-11-04: "create 3 Heroes\" games". Free for everyone. */}
         <section className="mb-12 rounded-2xl border border-amber-400/40 bg-zinc-900 p-6">

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SongPlayer, { type Playlist, type Track } from '@/components/listen/SongPlayer';
+import { withDisplayTitle } from '@/lib/displayTitle';
 
 export const metadata: Metadata = {
   title: 'Listen | G Putnam Music',
@@ -23,7 +24,11 @@ async function tracks(): Promise<Feed> {
     });
     if (!res.ok) return { tracks: [], onRequest: [], playlists: [] };
     const body = (await res.json()) as Partial<Feed>;
-    return { tracks: body.tracks ?? [], onRequest: body.onRequest ?? [], playlists: body.playlists ?? [] };
+    return {
+      tracks: (body.tracks ?? []).map(withDisplayTitle),
+      onRequest: (body.onRequest ?? []).map(withDisplayTitle),
+      playlists: body.playlists ?? [],
+    };
   } catch {
     return { tracks: [], onRequest: [], playlists: [] };
   }

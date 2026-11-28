@@ -3,6 +3,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SadPlayer, { type SadList } from '@/components/sad/SadPlayer';
 import { SAD_PLAYLISTS } from '@/config/sadPlaylists';
+import { displayTitle } from '@/lib/displayTitle';
 
 export const metadata: Metadata = {
   title: 'Sad Playlists | G Putnam Music',
@@ -38,7 +39,7 @@ export default async function SadPage() {
     name: p.name,
     tracks: p.tracks.flatMap((t) => {
       const fm = t.stream ? byId.get(t.stream) : undefined;
-      return fm ? [{ id: fm.id, artist: fm.artist, title: fm.title, src: fm.src }] : [];
+      return fm ? [{ id: fm.id, artist: fm.artist, title: displayTitle(fm.title), src: fm.src }] : [];
     }),
   })).filter((p) => p.tracks.length > 0);
 
