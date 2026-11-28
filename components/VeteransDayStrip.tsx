@@ -13,7 +13,9 @@ import { useEffect, useState } from 'react';
  */
 export const FREE_HUG_FOR_HEROES = 'https://www.k-kut.com/heroes';
 
-export default function VeteransDayStrip() {
+/** True only inside the Veterans Day window; false on the server and after the day ends.
+ *  GD, 2026-11-28: "all the holidays need to go away after they're done." */
+export function useVeteransDayOpen(): boolean {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -24,6 +26,11 @@ export default function VeteransDayStrip() {
     setOpen(now >= day - 28 * 86400000 && now < close);
   }, []);
 
+  return open;
+}
+
+export default function VeteransDayStrip() {
+  const open = useVeteransDayOpen();
   if (!open) return null;
   return (
     <a

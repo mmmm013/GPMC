@@ -17,11 +17,16 @@ export const revalidate = 3600;
 export default function HomePage() {
   const showHalloween = Date.now() < HALLOWEEN_ENDS;
   return (
-    <main className="min-h-screen bg-[#FFF0F5] text-[#2C2418]">
+    <main className="min-h-screen bg-[#F5E6D3] text-[#2C2418]">
       <Header />
       <section className="mx-auto max-w-3xl px-6 py-24 text-center">
+        {/* GD, 2026-11-28: "go back to the tan ... Get back to the regular background, light tan. And
+            change the heading to Songs for Moments. And spell it M-O dash, then capital M, capital E,
+            capital A, capital N, capital T, small case s. Tap to listen."
+            His own spelling of his own heading: this one heading may show MEANTs
+            (docs/governance/HOME-HEADING-AND-TAN-2026-11-28.md). */}
         <h1 className="text-4xl font-black leading-tight text-[#8B4513] md:text-6xl">
-          Songs by G Putnam Music. Tap to listen.
+          Songs for Mo-MEANTs. Tap to listen.
         </h1>
         <div className="mt-10 flex flex-wrap justify-center gap-4">
           <Link

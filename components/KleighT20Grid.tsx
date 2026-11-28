@@ -48,10 +48,10 @@ const KLEIGH_PIX: KleighPix[] = [
   { title: 'Optimistic Expectations',   vocalist: 'Kleigh', src: '/pix/kleigh--optimistic-expectations.mp3',                    moods: ['morning', 'workout', 'running'] },
   { title: 'Is It Us? (Prod)',          vocalist: 'Kleigh', src: '/pix/kleigh--is-it-us-prod-amin-84bpm-master.mp3',            moods: ['romance', 'party', 'driving'] },
   // ── MICHAEL CLAY INSTROS (occasional palate cleansers) ──────────────────
-  { title: 'Rhythm Play',               vocalist: 'Michael Clay', src: '/pix/rhythm-play.mp3',      moods: ['party', 'gaming', 'workout'],   isInstro: true, artist: 'Michael Clay' },
-  { title: 'I Am a Fighter (Instro)',   vocalist: 'Michael Clay', src: '/pix/i-am-a-fighter--el-mix-instro.mp3', moods: ['workout', 'running', 'driving'], isInstro: true, artist: 'Michael Clay' },
-  { title: 'I Live Free (Instro)',      vocalist: 'Michael Clay', src: '/pix/i-live-free--instro.mp3', moods: ['morning', 'outdoor', 'road-trip'], isInstro: true, artist: 'Michael Clay' },
-  { title: 'Score 3: The End',          vocalist: 'Michael Clay', src: '/pix/score-3--the-end.mp3', moods: ['background', 'study', 'coffee'],  isInstro: true, artist: 'Michael Clay' },
+  { title: 'Rhythm Play',               vocalist: 'Kleigh', src: '/pix/rhythm-play.mp3',      moods: ['party', 'gaming', 'workout'],   isInstro: true, artist: 'Kleigh' },
+  { title: 'I Am a Fighter (Instro)',   vocalist: 'Kleigh', src: '/pix/i-am-a-fighter--el-mix-instro.mp3', moods: ['workout', 'running', 'driving'], isInstro: true, artist: 'Kleigh' },
+  { title: 'I Live Free (Instro)',      vocalist: 'Kleigh', src: '/pix/i-live-free--instro.mp3', moods: ['morning', 'outdoor', 'road-trip'], isInstro: true, artist: 'Kleigh' },
+  { title: 'Score 3: The End',          vocalist: 'Kleigh', src: '/pix/score-3--the-end.mp3', moods: ['background', 'study', 'coffee'],  isInstro: true, artist: 'Kleigh' },
 ];
 
 // Ordered list of mood IDs to cycle through when auto-advancing

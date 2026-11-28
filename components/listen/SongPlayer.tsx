@@ -2,6 +2,7 @@
 
 import { useMemo, useRef, useState } from 'react';
 import DownloadReturn from './DownloadReturn';
+import { withDisplayTitle } from '@/lib/displayTitle';
 
 export type Track = {
   id: string;
@@ -181,7 +182,7 @@ export default function SongPlayer({
       const res = await fetch('https://www.k-kut.com/api/fm', { cache: 'no-store' });
       if (!res.ok) return;
       const body = (await res.json()) as { tracks?: Track[] };
-      const fresh = body.tracks ?? [];
+      const fresh = (body.tracks ?? []).map(withDisplayTitle);
       if (!fresh.length) return;
       setTracks(fresh);
       const byId = new Map(fresh.map((t) => [t.id, t]));

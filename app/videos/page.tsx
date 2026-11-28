@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 /* All videos on the flagship (config/videos.ts; GD, 2026-10-28: "I want all videos
-   on flagship"). Michael Clay's play from 2kleigh.com, where they live; the
+   on flagship"). The KLEIGH videos play from 2kleigh.com, where they live; the
    Halloween videos are links to the page that sells them. */
 export const revalidate = 3600;
 
@@ -45,7 +45,7 @@ export default function VideosPage() {
         <h1 className="text-4xl font-black uppercase tracking-tight text-[#8B4513] md:text-6xl">Videos</h1>
         <p className="mt-2 text-sm font-bold uppercase tracking-[0.2em] text-[#5D4037]">{total} videos · tap to watch</p>
 
-        <h2 className="mt-10 text-2xl font-black uppercase tracking-tight text-[#8B4513]">Michael Clay</h2>
+        <h2 className="mt-10 text-2xl font-black uppercase tracking-tight text-[#8B4513]">KLEIGH</h2>
         <div className="mt-4">
           <VideoStage videos={michaelClayVideos} />
         </div>

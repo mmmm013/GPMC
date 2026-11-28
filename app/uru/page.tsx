@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import UruPlaylists from '@/components/uru/UruPlaylists';
+import { displayTitle } from '@/lib/displayTitle';
 
 /* URU -- your own playlists. GD, 2026-11-27: "URU playlists: let users build their own playlists." On a card
    he chose: full songs (from /listen), kept on the person's own phone (no sign-in, nothing kept by us),
@@ -30,7 +31,7 @@ async function tracks(): Promise<{ tracks: Track[]; onRequest: Track[] }> {
     const res = await fetch('https://www.k-kut.com/api/fm', { cache: 'no-store', headers: { 'User-Agent': 'GPM-flagship/1' } });
     if (!res.ok) return { tracks: [], onRequest: [] };
     const body = (await res.json()) as { tracks?: Track[]; onRequest?: Track[] };
-    const slim = (l?: Track[]) => (l ?? []).map(({ id, artist, title, src }) => ({ id, artist, title, src }));
+    const slim = (l?: Track[]) => (l ?? []).map(({ id, artist, title, src }) => ({ id, artist, title: displayTitle(title), src }));
     return { tracks: slim(body.tracks), onRequest: slim(body.onRequest) };
   } catch {
     return { tracks: [], onRequest: [] };

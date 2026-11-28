@@ -76,8 +76,8 @@ export default async function SchererPage() {
           <div className="bg-white/5 border border-white/10 rounded-2xl p-5 text-sm text-white/70 leading-relaxed max-w-xl mx-auto">
             <Music2 className="w-4 h-4 text-amber-400 mx-auto mb-2" />
             <p>
-              G Putnam is donating most of the publishing on Michael&apos;s originals, and
-              <strong className="text-white"> all of both sides</strong> on the great hits
+              G Putnam is donating most of the publishing on Michael&apos;s originals, and{' '}
+              <strong className="text-white">all of both sides</strong>{' '}on the great hits
               they&apos;ve co-written together. Every stream, every purchase, every KEZ — it goes
               to Michael&apos;s family directly. He is dynamite to work with. Truly a JOY.
             </p>

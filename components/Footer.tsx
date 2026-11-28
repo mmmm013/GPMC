@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { HEART_TAP_SHOWN } from '@/lib/gift-protocol';
 
 type StiTemplateResponse = {
   slots?: Record<string, unknown>;
@@ -46,7 +47,8 @@ export default function Footer() {
   return (
     <footer className="w-full bg-[#1a100e] border-t border-[#5C3A1E]/30">
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {isKleighDomain && (
+        {/* Both /gift links follow HEART_TAP_SHOWN (GD, 2026-11-28: "yes, hide the ringtones"). */}
+        {isKleighDomain && HEART_TAP_SHOWN && (
           <div className="mb-6 text-center">
             <Link
               href="/gift"
@@ -61,7 +63,7 @@ export default function Footer() {
         <div className="flex flex-wrap justify-center gap-2 mb-6">
           <Link href="/who" className="text-sm text-[#C4A882]/70 hover:text-[#D4A017] transition-colors min-h-[44px] flex items-center px-3">Who</Link>
           <Link href="/heroes" className="text-sm text-[#C4A882]/70 hover:text-[#D4A017] transition-colors min-h-[44px] flex items-center px-3">{menuHeroes}</Link>
-          <Link href="/gift" className="text-sm text-[#C4A882]/70 hover:text-[#D4A017] transition-colors min-h-[44px] flex items-center px-3">{menuGift}</Link>
+          {HEART_TAP_SHOWN && <Link href="/gift" className="text-sm text-[#C4A882]/70 hover:text-[#D4A017] transition-colors min-h-[44px] flex items-center px-3">{menuGift}</Link>}
           <Link href="/games" className="text-sm text-[#C4A882]/70 hover:text-[#D4A017] transition-colors min-h-[44px] flex items-center px-3">Games</Link>
           {/* Flagship only: GD, 2026-10-28, "KLEIGH on KLEIGH". */}
           {!isKleighDomain && (

@@ -32,7 +32,7 @@ export default function WhoPage() {
         </div>
         <div className="prose prose-lg mx-auto text-[#2C2418]">
           <p>
-            G Putnam Music (GPMC) is a multi-genre production house dedicated to the art of the stream.
+            G Putnam Music is a multi-genre production house dedicated to the art of the stream.
             From the legacy vocals of Kleigh to the smooth jazz of Michael Scherer, we build soundscapes
             that match your moment.
           </p>
