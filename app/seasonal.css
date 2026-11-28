@@ -8,7 +8,7 @@
  * Every look follows the same rules:
  *   - It ADDS and never replaces. Each site keeps its own colors; no background, border or shadow
  *     a page already has is changed.
- *   - It never covers text, buttons or the music player. The lights and tree take a band of their own
+ *   - It never covers text, buttons or the music player. The lights and trees take a band of their own
  *     at the top of the page; the snow falls BEHIND the page's content; card edges are an outline outside
  *     the card, and never on the player, a button, or anything pinned to the screen.
  *   - CSS and inline drawing only, no image files. Nothing flashes or blinks. Anyone whose device
@@ -34,7 +34,7 @@ html[data-season="christmas"] {
 }
 
 /* 1. Christmas at a glance, on the first screen. A band of its own at the very top of the page, in the
-      sites' own dark brown: a string of lights draped across BOTH top corners, a small tree in the left
+      sites' own dark brown: a string of lights draped across BOTH top corners, a small tree in each top
       corner, and a thin evergreen strand between them. The band takes its own space in the page, so it
       sits on nothing: never on the header text, the nav or a button. The bulbs glow softly and hold
       still; nothing blinks. */
@@ -46,6 +46,8 @@ html[data-season="christmas"] .gpm-season-garland {
   overflow: hidden;
   pointer-events: none;
   background-color: var(--gpm-xmas-band);
+  /* drawn above the page's snow layer, so no flake ever drifts across the lights */
+  z-index: 1;
   background-image:
     radial-gradient(circle, var(--gpm-xmas-light-amber) 0 2px, transparent 2.6px),
     radial-gradient(circle, var(--gpm-xmas-warm-white) 0 2px, transparent 2.6px),

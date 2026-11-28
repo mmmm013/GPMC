@@ -34,7 +34,7 @@ var t=m+'-'+d;
 for(var i=0;i<L.length;i++){var s=L[i].start,e=L[i].end;if(s<=e?(t>=s&&t<=e):(t>=s||t<=e)){r.setAttribute('data-season',L[i].look);return;}}
 }catch(e){}})();`;
 
-/* ---- Christmas corners: a string of lights draped across each top corner, and a small tree. ----
+/* ---- Christmas corners: a string of lights draped across each top corner, and a small tree in each. ----
    GD, 2026-11-28, on the first pictures: "I need to see at the top corners, put some Christmas lights
    or put a Christmas tree in there or do something." and "Pink, number one, pink and red are not my
    colors." So the bulbs are evergreen, light amber and warm white only. Drawn inline; no image files. */
@@ -89,11 +89,6 @@ const LEFT: Seg[] = [
   { from: [46, 3], ctrl: [76, 30], to: [108, 9] },
   { from: [108, 9], ctrl: [142, 32], to: [176, 4] },
 ];
-const RIGHT: Seg[] = [
-  { from: [2, 2], ctrl: [36, 30], to: [72, 9] },
-  { from: [72, 9], ctrl: [106, 32], to: [140, 7] },
-  { from: [140, 7], ctrl: [160, 22], to: [178, 3] },
-];
 
 export default function SeasonalTouch() {
   return (
@@ -107,7 +102,9 @@ export default function SeasonalTouch() {
           <Strand segs={LEFT} />
         </svg>
         <svg className="gpm-season-corner gpm-season-corner-right" viewBox="0 0 180 58" width="180" height="58" focusable="false">
-          <Strand segs={RIGHT} start={1} />
+          {/* the same tree and drape, hung from the right-hand corner (the whole drawing is mirrored) */}
+          <Tree />
+          <Strand segs={LEFT} start={1} />
         </svg>
       </div>
     </>
